@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "mikestead.dotenv",
+    "kevinkyang.auto-comment-blocks",
+    "steoates.autoimport",
+    "aaron-bond.better-comments",
+    "EliverLara.andromeda",
+    "usernamehw.errorlens",
+    "AbhijoyBasak.nestjs-files",
+    "christian-kohler.path-intellisense"
+  ]
+}

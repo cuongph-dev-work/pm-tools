@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "esModuleInterop": true,
+    "paths": {
+      "@configs/*": ["src/configs/*"],
+      "@filters/*": ["src/filters/*"],
+      "@modules/*": ["src/modules/*"],
+      "@guards/*": ["src/guards/*"],
+      "@decorators/*": ["src/decorators/*"],
+      "@commands/*": ["src/commands/*"],
+      "@shared/*": ["src/shared/*"],
+      "@utils/*": ["src/utils/*"],
+      "@entities/*": ["src/database/entities/*"],
+      "@repositories/*": ["src/database/repositories/*"],
+      "@seeds/*": ["src/database/seeds/*"]
+    }
+  },
+  "include": ["src/**/*", "ecosystem.config.js", ".eslintrc.cjs"],
+  "exclude": ["node_modules", "dist"]
+}

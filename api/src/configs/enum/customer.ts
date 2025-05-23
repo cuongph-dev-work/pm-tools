@@ -1,0 +1,13 @@
+export enum GENDER {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
+}
+
+export enum GROUP_TYPE {
+  INDIVIDUAL = 'INDIVIDUAL',
+  BUSINESS = 'BUSINESS',
+  COLLABORATOR = 'COLLABORATOR',
+  PARTNER = 'PARTNER',
+}
+

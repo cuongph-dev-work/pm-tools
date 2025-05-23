@@ -1,0 +1,12 @@
+{
+  "wrong_account": "Tài khoản hoặc mật khẩu không đúng.",
+  "login_attempts_exceeded": "Tài khoản của bạn đã tạm thời bị khóa trong 2 giờ do nhiều lần đăng nhập không thành công. Vui lòng thử lại sau hoặc liên hệ hỗ trợ.",
+  "token_expired": "Mã đã hết hạn sử dụng.",
+  "account_blocked": "Tài khoản của bạn đã bị khóa đến {time}.",
+  "user_not_found": "Không tìm thấy thông tin người dùng.",
+  "password_incorrect": "Mật khẩu hiện tại không đúng.",
+  "reset_password_success": "Mật khẩu đã được đặt lại thành công. Vui lòng kiểm tra email để đặt lại mật khẩu mới.",
+  "invalid_reset_token": "Mã khôi phục mật khẩu không hợp lệ.",
+  "set_first_password_success": "Mật khẩu đã được đặt lại thành công. Vui lòng đăng nhập lại.",
+  "file_not_found": "Không tìm thấy file."
+}

@@ -1,0 +1,41 @@
+# docker-compose.yml
+
+services:
+  db:
+    image: postgres:17.0
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - '${DB_PORT}:5432'
+    networks:
+      - match-up-network
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - '${REDIS_PORT}:6379'
+    networks:
+      - match-up-network
+
+  maildev:
+    build:
+      context: .
+      dockerfile: maildev.Dockerfile
+    ports:
+      - 1080:1080
+      - 1025:1025
+    networks:
+      - match-up-network
+
+volumes:
+  postgres:
+
+networks:
+  match-up-network:
+    driver: bridge
