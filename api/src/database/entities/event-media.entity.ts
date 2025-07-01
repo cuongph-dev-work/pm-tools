@@ -1,4 +1,5 @@
-import { BaseEntity, Entity, ManyToOne, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, Property } from '@mikro-orm/core';
+import { BaseEntity } from './base.entity';
 import { Event } from './event.entity';
 import { FileStorage } from './file-storage.entity';
 

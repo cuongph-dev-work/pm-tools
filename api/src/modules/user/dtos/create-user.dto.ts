@@ -1,5 +1,3 @@
-import { ADMIN_ROLE } from '@configs/enum/user';
-import { EnumField } from '@decorators/validation/enum.decorator';
 import { StringField } from '@decorators/validation/string.decorator';
 
 export class CreateUserDto {
@@ -35,9 +33,4 @@ export class CreateUserDto {
     max: 13,
   })
   phone: string;
-
-  @EnumField(() => ADMIN_ROLE, {
-    isOptional: true,
-  })
-  role: ADMIN_ROLE;
 }

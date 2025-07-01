@@ -1,4 +1,5 @@
-import { BaseEntity, Entity, Enum, Property } from '@mikro-orm/core';
+import { Entity, Enum, Property } from '@mikro-orm/core';
+import { BaseEntity } from './base.entity';
 
 /**
  * Enum defining the types of events that can be created

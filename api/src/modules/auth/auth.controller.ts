@@ -1,21 +1,8 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Public } from '@decorators/auth.decorator';
+import { Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { RequestWithUser } from 'src/types/request.type';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local.guard';
-import { RequestWithUser } from 'src/types/request.type';
-import { Public } from '@decorators/auth.decorator';
-import {
-  ChangePasswordDto,
-  ResetPasswordDto,
-  SetFirstPasswordDto,
-} from './dtos';
 
 @Controller('auth')
 export class AuthController {
@@ -28,25 +15,25 @@ export class AuthController {
     return this.authService.signIn(req.user);
   }
 
-  @Get('user-info')
-  userInfo(@Req() req: RequestWithUser) {
-    return this.authService.userInfo(req.user);
-  }
+  // @Get('user-info')
+  // userInfo(@Req() req: RequestWithUser) {
+  //   return this.authService.userInfo(req.user);
+  // }
 
-  @Patch('password/change')
-  changePassword(@Body() body: ChangePasswordDto, @Req() req: RequestWithUser) {
-    return this.authService.changePassword(body, req.user);
-  }
+  // @Patch('password/change')
+  // changePassword(@Body() body: ChangePasswordDto, @Req() req: RequestWithUser) {
+  //   return this.authService.changePassword(body, req.user);
+  // }
 
-  @Public()
-  @Patch('password/reset')
-  resetPassword(@Body() body: ResetPasswordDto) {
-    return this.authService.resetPassword(body);
-  }
+  // @Public()
+  // @Patch('password/reset')
+  // resetPassword(@Body() body: ResetPasswordDto) {
+  //   return this.authService.resetPassword(body);
+  // }
 
-  @Public()
-  @Patch('password/set-first')
-  setFirstPassword(@Body() body: SetFirstPasswordDto) {
-    return this.authService.setFirstPassword(body);
-  }
+  // @Public()
+  // @Patch('password/set-first')
+  // setFirstPassword(@Body() body: SetFirstPasswordDto) {
+  //   return this.authService.setFirstPassword(body);
+  // }
 }

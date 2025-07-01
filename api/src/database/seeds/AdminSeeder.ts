@@ -1,17 +1,16 @@
+import { ADMIN_ROLE, Administrator } from '@entities/administator.entity';
 import type { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { ADMIN_ROLE } from '../../configs/enum/user';
-import { User } from '../entities/user.entity';
 
 export class AdminSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
-    const user = new User();
-    user.email = 'admin@example.com';
-    user.password = 'Password@123';
-    user.role = ADMIN_ROLE.SUPER_ADMIN;
-    user.first_name = 'Super';
-    user.last_name = 'Admin';
+    const admin = new Administrator();
+    admin.email = 'admin@example.com';
+    admin.password = 'Password@123';
+    admin.first_name = 'Super';
+    admin.last_name = 'Admin';
+    admin.role = ADMIN_ROLE.SUPER_ADMIN;
 
-    await em.persistAndFlush(user);
+    await em.persistAndFlush(admin);
   }
 }

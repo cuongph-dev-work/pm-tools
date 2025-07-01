@@ -1,11 +1,11 @@
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-local';
-import { AuthService } from '../auth.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Request } from 'express';
+import { PassportStrategy } from '@nestjs/passport';
 import { plainToClass } from 'class-transformer';
 import { validate as classValidate } from 'class-validator';
+import { Request } from 'express';
 import { I18nService } from 'nestjs-i18n';
+import { Strategy } from 'passport-local';
+import { AuthService } from '../auth.service';
 import { SignInDTO } from '../dtos/sign-in.dto';
 
 @Injectable()

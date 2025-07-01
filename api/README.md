@@ -1,6 +1,6 @@
-# match-up API
+# pm-tools API
 
-A NestJS-based API for the match-up application.
+A NestJS-based API for the pm-tools application.
 
 ## Prerequisites
 
@@ -43,7 +43,7 @@ docker-compose ps
   - Used for BullMQ job queue
 
 - **MailDev**: Running on ports 1025 (SMTP) and 1080 (Web Interface)
-  - Access the web interface at http://localhost:1080
+  - Access the web interface at <http://localhost:1080>
   - Configure your application to use SMTP port 1025 for sending emails
 
 ### Docker Commands
@@ -75,7 +75,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_USER=postgres
 DB_PASSWORD=qkqDwVzP2a60Tkx
-DB_NAME=match-up-dev
+DB_NAME=pm-tools-dev
 
 # Redis
 REDIS_HOST=localhost

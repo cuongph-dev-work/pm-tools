@@ -13,7 +13,7 @@ services:
     ports:
       - '${DB_PORT}:5432'
     networks:
-      - match-up-network
+      - pm-tools-network
 
   redis:
     image: redis:latest
@@ -21,7 +21,7 @@ services:
     ports:
       - '${REDIS_PORT}:6379'
     networks:
-      - match-up-network
+      - pm-tools-network
 
   maildev:
     build:
@@ -31,11 +31,11 @@ services:
       - 1080:1080
       - 1025:1025
     networks:
-      - match-up-network
+      - pm-tools-network
 
 volumes:
   postgres:
 
 networks:
-  match-up-network:
+  pm-tools-network:
     driver: bridge

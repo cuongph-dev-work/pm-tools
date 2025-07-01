@@ -9,11 +9,6 @@ export class UpdateUserDto {
   @StringField({
     max: 255,
   })
-  middle_name: string;
-
-  @StringField({
-    max: 255,
-  })
   last_name: string;
 
   @StringField({

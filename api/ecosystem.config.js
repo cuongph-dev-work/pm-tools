@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'match-up-api',
+      name: 'pm-tools-api',
       script: 'pnpm',
       args: 'start:prod',
       // exec_mode: 'cluster', // Use cluster mode for better performance, not show log

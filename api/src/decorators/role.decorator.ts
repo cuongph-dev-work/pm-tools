@@ -1,4 +1,9 @@
-import { ADMIN_ROLE } from '@configs/enum/user';
 import { Reflector } from '@nestjs/core';
 
-export const Roles = Reflector.createDecorator<ADMIN_ROLE[]>();
+export enum ROLE {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  EVENT_MANAGER = 'EVENT_MANAGER',
+  USER = 'USER',
+}
+
+export const Roles = Reflector.createDecorator<ROLE[]>();

@@ -1,5 +1,4 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import { ADMIN_ROLE } from '../../../configs/enum/user';
 
 @Exclude()
 export class ShowUserResponseDto {
@@ -26,9 +25,6 @@ export class ShowUserResponseDto {
 
   @Expose()
   avatar_url?: string;
-
-  @Expose()
-  role: ADMIN_ROLE;
 
   @Expose()
   @Type(() => Date)

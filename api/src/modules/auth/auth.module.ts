@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { PassportModule } from '@nestjs/passport';
+import { AdministratorModule } from '@modules/administrator/administrator.module';
 import { UserModule } from '@modules/user/user.module';
-import { JwtModule } from '@nestjs/jwt';
+import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt-access-token.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 
@@ -19,6 +20,7 @@ import { LocalStrategy } from './strategies/local.strategy';
       }),
       inject: [ConfigService],
     }),
+    AdministratorModule,
     UserModule,
   ],
   controllers: [AuthController],

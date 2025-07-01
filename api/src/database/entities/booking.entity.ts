@@ -1,12 +1,6 @@
 import { GENDER } from '@configs/enum/customer';
-import {
-  BaseEntity,
-  Entity,
-  Enum,
-  ManyToOne,
-  Property,
-  Unique,
-} from '@mikro-orm/core';
+import { Entity, Enum, ManyToOne, Property, Unique } from '@mikro-orm/core';
+import { BaseEntity } from './base.entity';
 import { Event } from './event.entity';
 import { User } from './user.entity';
 

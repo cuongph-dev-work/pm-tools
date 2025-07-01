@@ -1,14 +1,15 @@
-import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import compression from 'compression';
+import { configSwagger } from '@configs/api-docs.config';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { I18nService } from 'nestjs-i18n';
-import { useContainer } from 'class-validator';
-import { HttpExceptionFilter } from './filters/http-exception.filter';
-import helmet from 'helmet';
+import { NestFactory } from '@nestjs/core';
 import { ValidationErrorFactory } from '@shared/validation.factory';
+import { useContainer } from 'class-validator';
+import compression from 'compression';
+import helmet from 'helmet';
+import { I18nService } from 'nestjs-i18n';
+import 'reflect-metadata';
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 async function bootstrap() {
   const logger = new Logger(bootstrap.name);
@@ -16,7 +17,7 @@ async function bootstrap() {
     bufferLogs: true,
     logger: ['error', 'warn', 'debug', 'log'],
   });
-
+  configSwagger(app);
   app.setGlobalPrefix('/api');
   app.enableCors({
     origin: '*',
