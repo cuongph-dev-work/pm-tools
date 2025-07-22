@@ -1,16 +1,16 @@
 import {
-  ExceptionFilter,
-  Catch,
   ArgumentsHost,
+  Catch,
+  ExceptionFilter,
   HttpException,
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { I18nService } from 'nestjs-i18n';
-import { isEmpty, isString } from 'lodash';
 import { ValidationError } from 'class-validator';
+import { Request, Response } from 'express';
+import { isEmpty } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {

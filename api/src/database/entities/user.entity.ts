@@ -51,8 +51,8 @@ export class User extends BaseEntity {
   /**
    * ID of the user's avatar/profile image
    */
-  @ManyToOne(() => FileStorage)
-  avatar: Opt<FileStorage>;
+  @ManyToOne(() => FileStorage, { nullable: true })
+  avatar?: Opt<FileStorage>;
 
   /**
    * User's first name

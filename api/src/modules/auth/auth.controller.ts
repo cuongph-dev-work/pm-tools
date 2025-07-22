@@ -1,6 +1,7 @@
 import { Public } from '@decorators/auth.decorator';
-import { Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { RequestWithUser } from 'src/types/request.type';
+import { CurrentUser } from '@decorators/current-user.decorator';
+import { User } from '@entities/user.entity';
+import { Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local.guard';
 
@@ -11,8 +12,8 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('sign-in')
-  signIn(@Req() req: RequestWithUser) {
-    return this.authService.signIn(req.user);
+  signIn(@CurrentUser() user: User) {
+    return this.authService.signIn(user);
   }
 
   // @Get('user-info')

@@ -5,11 +5,15 @@ import { RolesGuard } from '@guards/roles.guard';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { JwtAccessTokenGuard } from '@modules/auth/guards/jwt-access-token.guard';
 import { BullModule } from '@nestjs/bullmq';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AlsMiddleware } from '@shared/modules/async-local-storage/als.middleware';
+import { AlsModule } from '@shared/modules/async-local-storage/als.module';
+import { PerformanceMiddleware } from '@shared/modules/performance/performance.middleware';
+import { PerformanceModule } from '@shared/modules/performance/performance.module';
 import * as Joi from 'joi';
 import {
   AcceptLanguageResolver,
@@ -83,6 +87,8 @@ import modules from './modules';
         index: false,
       },
     }),
+    AlsModule,
+    PerformanceModule,
     ...modules,
   ],
   controllers: [],
@@ -97,4 +103,14 @@ import modules from './modules';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor() {}
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AlsMiddleware, PerformanceMiddleware).forRoutes('*');
+  }
+
+  onModuleInit() {
+    // patchSlowQueryLoggingGlobal(this.orm, this.ctxService, 1000);
+  }
+}

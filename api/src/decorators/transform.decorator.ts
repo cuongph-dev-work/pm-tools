@@ -1,11 +1,6 @@
 import { formatDate, toISOString } from '@utils/date';
 import { Transform } from 'class-transformer';
-import {
-  registerDecorator,
-  type ValidationArguments,
-  type ValidationOptions,
-} from 'class-validator';
-import { isArray, isNil, map, trim, castArray } from 'lodash';
+import { castArray, isArray, isNil, map, trim } from 'lodash';
 
 export function Trim(): PropertyDecorator {
   return Transform((params) => {

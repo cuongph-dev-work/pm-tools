@@ -1,4 +1,3 @@
-import { AdministratorModule } from '@modules/administrator/administrator.module';
 import { UserModule } from '@modules/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -20,7 +19,6 @@ import { LocalStrategy } from './strategies/local.strategy';
       }),
       inject: [ConfigService],
     }),
-    AdministratorModule,
     UserModule,
   ],
   controllers: [AuthController],
