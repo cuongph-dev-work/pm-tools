@@ -19,6 +19,9 @@ export interface AppConfig {
   redisPort: number;
   redisPassword: string;
   backendUrl: string;
+  enableQueryLog?: boolean;
+  enableSlowQueryLog?: boolean;
+  slowQueryThresholdMs?: number;
 }
 
 export interface DatabaseConfig {

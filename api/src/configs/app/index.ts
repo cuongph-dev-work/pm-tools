@@ -17,6 +17,11 @@ const configs = (): Config => {
       redisPort: parseInt(process.env.REDIS_PORT || '6379'),
       redisPassword: process.env.REDIS_PASSWORD || '',
       backendUrl: process.env.BACKEND_URL || 'http://localhost:3000',
+      enableQueryLog: process.env.ENABLE_QUERY_LOG === 'true',
+      enableSlowQueryLog: process.env.ENABLE_SLOW_QUERY_LOG === 'true',
+      slowQueryThresholdMs: parseInt(
+        process.env.SLOW_QUERY_THRESHOLD_MS || '500',
+      ),
     },
     database: {
       host: process.env.DB_HOST || 'localhost',
