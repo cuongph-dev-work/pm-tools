@@ -10,4 +10,3 @@ export enum GROUP_TYPE {
   COLLABORATOR = 'COLLABORATOR',
   PARTNER = 'PARTNER',
 }
-

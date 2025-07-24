@@ -6,9 +6,7 @@ import { DateTime } from 'luxon';
  * @returns ISO string
  */
 export const toISOString = (date: Date | DateTime): string => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.toISO() || '';
 };
 
@@ -19,9 +17,7 @@ export const toISOString = (date: Date | DateTime): string => {
  * @returns Formatted string
  */
 export const formatDate = (date: Date | DateTime, format: string): string => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.toFormat(format);
 };
 
@@ -40,9 +36,7 @@ export const parseDate = (dateString: string, format: string): DateTime => {
  * @param timezone Timezone (e.g. 'Asia/Ho_Chi_Minh')
  * @returns DateTime object
  */
-export const getCurrentDate = (
-  timezone: string = 'Asia/Ho_Chi_Minh',
-): DateTime => {
+export const getCurrentDate = (timezone: string = 'Asia/Ho_Chi_Minh'): DateTime => {
   return DateTime.now().setZone(timezone);
 };
 
@@ -53,9 +47,7 @@ export const getCurrentDate = (
  * @returns DateTime object
  */
 export const addDays = (date: Date | DateTime, days: number): DateTime => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.plus({ days });
 };
 
@@ -66,9 +58,7 @@ export const addDays = (date: Date | DateTime, days: number): DateTime => {
  * @returns DateTime object
  */
 export const subtractDays = (date: Date | DateTime, days: number): DateTime => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.minus({ days });
 };
 
@@ -78,9 +68,7 @@ export const subtractDays = (date: Date | DateTime, days: number): DateTime => {
  * @returns DateTime object
  */
 export const startOfDay = (date: Date | DateTime): DateTime => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.startOf('day');
 };
 
@@ -90,9 +78,7 @@ export const startOfDay = (date: Date | DateTime): DateTime => {
  * @returns DateTime object
  */
 export const endOfDay = (date: Date | DateTime): DateTime => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.endOf('day');
 };
 
@@ -102,9 +88,7 @@ export const endOfDay = (date: Date | DateTime): DateTime => {
  * @returns boolean
  */
 export const isToday = (date: Date | DateTime): boolean => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.hasSame(DateTime.now(), 'day');
 };
 
@@ -114,9 +98,7 @@ export const isToday = (date: Date | DateTime): boolean => {
  * @returns boolean
  */
 export const isPast = (date: Date | DateTime): boolean => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate < DateTime.now();
 };
 
@@ -126,9 +108,7 @@ export const isPast = (date: Date | DateTime): boolean => {
  * @returns boolean
  */
 export const isFuture = (date: Date | DateTime): boolean => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate > DateTime.now();
 };
 
@@ -138,16 +118,9 @@ export const isFuture = (date: Date | DateTime): boolean => {
  * @param date2 Second date
  * @returns number of days
  */
-export const getDaysDifference = (
-  date1: Date | DateTime,
-  date2: Date | DateTime,
-): number => {
-  const luxonDate1 = DateTime.isDateTime(date1)
-    ? date1
-    : DateTime.fromJSDate(date1);
-  const luxonDate2 = DateTime.isDateTime(date2)
-    ? date2
-    : DateTime.fromJSDate(date2);
+export const getDaysDifference = (date1: Date | DateTime, date2: Date | DateTime): number => {
+  const luxonDate1 = DateTime.isDateTime(date1) ? date1 : DateTime.fromJSDate(date1);
+  const luxonDate2 = DateTime.isDateTime(date2) ? date2 : DateTime.fromJSDate(date2);
   return luxonDate2.diff(luxonDate1, 'days').days;
 };
 
@@ -157,9 +130,7 @@ export const getDaysDifference = (
  * @returns Unix timestamp
  */
 export const toUnixTimestamp = (date: Date | DateTime): number => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.toUnixInteger();
 };
 
@@ -177,12 +148,8 @@ export const fromUnixTimestamp = (timestamp: number): DateTime => {
  * @param date Date to get difference for
  * @returns Human readable string
  */
-export const getHumanReadableTimeDifference = (
-  date: Date | DateTime,
-): string => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+export const getHumanReadableTimeDifference = (date: Date | DateTime): string => {
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.toRelative() || '';
 };
 
@@ -208,13 +175,8 @@ export const getNowInUTC = (): DateTime => {
  * @param minutes Number of minutes to add
  * @returns DateTime object
  */
-export const addMinutes = (
-  date: Date | DateTime,
-  minutes: number,
-): DateTime => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+export const addMinutes = (date: Date | DateTime, minutes: number): DateTime => {
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.plus({ minutes });
 };
 
@@ -225,8 +187,6 @@ export const addMinutes = (
  * @returns DateTime object
  */
 export const addHours = (date: Date | DateTime, hours: number): DateTime => {
-  const luxonDate = DateTime.isDateTime(date)
-    ? date
-    : DateTime.fromJSDate(date);
+  const luxonDate = DateTime.isDateTime(date) ? date : DateTime.fromJSDate(date);
   return luxonDate.plus({ hours });
 };

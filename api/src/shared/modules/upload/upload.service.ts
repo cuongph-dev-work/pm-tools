@@ -40,11 +40,7 @@ export class UploadService {
    * @param options - The options to delete the file
    * @returns The file storage entity
    */
-  deleteFile(
-    id: string,
-    driver: STORAGE_DRIVER,
-    options?: { extension?: string },
-  ) {
+  deleteFile(id: string, driver: STORAGE_DRIVER, options?: { extension?: string }) {
     switch (driver) {
       case STORAGE_DRIVER.CLOUDINARY:
         return this.cloudinaryService.delete(id);

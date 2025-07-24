@@ -19,9 +19,7 @@ const configs = (): Config => {
       backendUrl: process.env.BACKEND_URL || 'http://localhost:3000',
       enableQueryLog: process.env.ENABLE_QUERY_LOG === 'true',
       enableSlowQueryLog: process.env.ENABLE_SLOW_QUERY_LOG === 'true',
-      slowQueryThresholdMs: parseInt(
-        process.env.SLOW_QUERY_THRESHOLD_MS || '500',
-      ),
+      slowQueryThresholdMs: parseInt(process.env.SLOW_QUERY_THRESHOLD_MS || '500'),
     },
     database: {
       host: process.env.DB_HOST || 'localhost',
@@ -53,9 +51,7 @@ const configs = (): Config => {
       frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
     },
     storage: {
-      driver:
-        (toUpper(process.env.STORAGE_DRIVER) as STORAGE_DRIVER) ||
-        STORAGE_DRIVER.CLOUDINARY,
+      driver: (toUpper(process.env.STORAGE_DRIVER) as STORAGE_DRIVER) || STORAGE_DRIVER.CLOUDINARY,
       deleteMode:
         (toUpper(process.env.STORAGE_DELETE_MODE) as STORAGE_DELETE_MODE) ||
         STORAGE_DELETE_MODE.SOFT,

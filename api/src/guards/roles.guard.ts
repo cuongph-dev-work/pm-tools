@@ -1,10 +1,5 @@
 import { Roles } from '@decorators/role.decorator';
-import {
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { I18nService } from 'nestjs-i18n';
 
@@ -21,7 +16,7 @@ export class RolesGuard implements CanActivate {
     if (!roles || !roles.length || !request.user) {
       return true;
     }
-    const isMatch = roles.some((role) => role === request.user.role);
+    const isMatch = roles.some(role => role === request.user.role);
     if (!isMatch) {
       throw new ForbiddenException(this.i18n.t('app.http.forbidden'));
     }

@@ -6,14 +6,28 @@ import {
   Enum,
   Filter,
   ManyToOne,
+  OneToMany,
   Opt,
   Property,
 } from '@mikro-orm/core';
 import * as bcrypt from 'bcryptjs';
 import { BaseEntity } from './base.entity';
 import { FileStorage } from './file-storage.entity';
+import { ProjectInviteMember } from './project-invite-member.entity';
+import { ProjectMember } from './project-member.entity';
+import { Project } from './project.entity';
 
 const SALT_ROUND = 11;
+
+export enum USER_ROLE {
+  OWNER = 'OWNER', // project owner
+  PM = 'PROJECT_MANAGER', // project manager
+  DEVELOPER = 'DEVELOPER', // developer
+  QA = 'QUALITY_ASSURANCE', // quality assurance
+  QC = 'QUALITY_CONTROL', // tester
+  BR_COMT = 'BRSE_COMTOR', // Bridge Software Engineer
+}
+
 /**
  * User entity representing the user table in the database
  * Stores user authentication and profile information
@@ -40,13 +54,13 @@ export class User extends BaseEntity {
    * Token used for password reset functionality
    */
   @Property({ nullable: true, length: 255 })
-  reset_token: Opt<string>;
+  reset_token?: Opt<string>;
 
   /**
    * Expiration date for the reset token
    */
   @Property({ nullable: true, columnType: 'timestamp with time zone' })
-  reset_token_expired_at: Opt<Date>;
+  reset_token_expired_at?: Opt<Date>;
 
   /**
    * ID of the user's avatar/profile image
@@ -58,13 +72,13 @@ export class User extends BaseEntity {
    * User's first name
    */
   @Property({ nullable: true, length: 255 })
-  first_name: Opt<string>;
+  first_name?: Opt<string>;
 
   /**
    * User's last name
    */
   @Property({ nullable: true, length: 255 })
-  last_name: Opt<string>;
+  last_name?: Opt<string>;
 
   /**
    * User's full name
@@ -78,37 +92,61 @@ export class User extends BaseEntity {
    * User's gender
    */
   @Enum({ items: () => GENDER, default: GENDER.MALE })
-  gender: Opt<GENDER> = GENDER.MALE;
+  gender?: Opt<GENDER> = GENDER.MALE;
 
   /**
    * User's phone number, limited to 13 characters
    */
   @Property({ nullable: true, length: 13 })
-  phone: Opt<string>;
+  phone?: Opt<string>;
 
   /**
    * User's biography or description about themselves
    */
   @Property({ nullable: true, length: 3000, type: 'text' })
-  bio: Opt<string>;
+  bio?: Opt<string>;
 
   /**
    * User's city information
    */
   @Property({ nullable: true, length: 255 })
-  city: Opt<string>;
+  city?: Opt<string>;
 
   /**
    * User's address information
    */
   @Property({ nullable: true, length: 500 })
-  address: Opt<string>;
+  address?: Opt<string>;
 
   /**
    * Date until which the user is blocked/suspended
    */
   @Property({ nullable: true, columnType: 'timestamp with time zone' })
-  block_to: Opt<Date>;
+  block_to?: Opt<Date>;
+
+  /**
+   * User's role
+   */
+  @Enum({ items: () => USER_ROLE })
+  role!: USER_ROLE;
+
+  /**
+   * Projects owned by this user
+   */
+  @OneToMany(() => Project, project => project.owner)
+  owned_projects?: Project[];
+
+  /**
+   * Project memberships of this user
+   */
+  @OneToMany(() => ProjectMember, member => member.user)
+  project_memberships?: ProjectMember[];
+
+  /**
+   * Project invitations sent by this user
+   */
+  @OneToMany(() => ProjectInviteMember, invite => invite.invited_by)
+  sent_invitations?: ProjectInviteMember[];
 
   /**
    * Hash a password using bcrypt

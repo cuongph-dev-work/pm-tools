@@ -1,7 +1,4 @@
-import {
-  access_token_private_key,
-  refresh_token_private_key,
-} from '@configs/jwt.constraints';
+import { access_token_private_key, refresh_token_private_key } from '@configs/jwt.constraints';
 import { UserService } from '@modules/user/user.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -74,8 +71,7 @@ export class AuthService {
    * @returns Authenticated user entity
    */
   async getAuthenticatedUser(email: string, password: string): Promise<User> {
-    const user: User | null =
-      await this.userService.findByEmailWithPassword(email);
+    const user: User | null = await this.userService.findByEmailWithPassword(email);
 
     if (!user) {
       throw new UnauthorizedException(this.i18n.t('message.wrong_account'));

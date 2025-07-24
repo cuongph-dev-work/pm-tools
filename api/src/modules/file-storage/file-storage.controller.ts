@@ -22,10 +22,7 @@ export class FileStorageController {
 
   @Post('/')
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(
-    @UploadedFile() file: Express.Multer.File,
-    @Req() req: RequestWithUser,
-  ) {
+  uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: RequestWithUser) {
     return this.fileStorageService.uploadFile(file, req.user);
   }
 

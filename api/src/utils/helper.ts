@@ -40,9 +40,7 @@ export function generateRandomId(length = 20) {
  */
 export function transformValidationErrors(
   key: string,
-  params:
-    | Record<string, string | number | boolean | Array<string>>
-    | Array<number>,
+  params: Record<string, string | number | boolean | Array<string>> | Array<number>,
   customProperty?: string, // custom label name
 ): string {
   return JSON.stringify(
@@ -68,11 +66,8 @@ interface IError {
  * @param params The constraints of the validation error
  * @returns An object with the key and constraints
  */
-export function transformToValidationError(
-  errors: IError[],
-  i18n: I18nService,
-) {
-  const message: ValidationError[] = errors.map((error) => {
+export function transformToValidationError(errors: IError[], i18n: I18nService) {
+  const message: ValidationError[] = errors.map(error => {
     const newError = new ValidationError();
     newError.property = error.property;
     newError.constraints = {

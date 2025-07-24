@@ -22,15 +22,11 @@ export class MailConsumer extends WorkerHost {
           throw new Error(`Job name ${job.name} not found`);
       }
       this.logger.log(
-        `Email ${job.data.template || ''} has been sent with context ${
-          JSON.stringify(job.data.context) || ''
-        }`,
+        `Email ${job.data.template || ''} has been sent with context ${JSON.stringify(job.data.context) || ''}`,
       );
     } catch (e) {
       this.logger.error(
-        `An error occur while sending email ${
-          job.data.template || ''
-        } with context ${JSON.stringify(job.data.context) || ''}`,
+        `An error occur while sending email ${job.data.template || ''} with context ${JSON.stringify(job.data.context) || ''}`,
         e,
       );
     }

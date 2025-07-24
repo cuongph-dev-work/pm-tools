@@ -1,16 +1,10 @@
 import { baseConfig } from '@configs/mikro-orm.config';
 import { Highlighter, LoadStrategy, LoggerNamespace } from '@mikro-orm/core';
-import {
-  MikroOrmModuleSyncOptions,
-  MikroOrmOptionsFactory,
-} from '@mikro-orm/nestjs';
+import { MikroOrmModuleSyncOptions, MikroOrmOptionsFactory } from '@mikro-orm/nestjs';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  MikroLogger,
-  MikroLoggerOptions,
-} from '@shared/modules/logger/mikro.logger';
+import { MikroLogger, MikroLoggerOptions } from '@shared/modules/logger/mikro.logger';
 import { AsyncLocalStorage } from 'async_hooks';
 /**
  * Service responsible for configuring the MikroORM module
@@ -49,14 +43,8 @@ export class MikroOrmConfigService implements MikroOrmOptionsFactory {
       'app.enableQueryLog',
       false,
     );
-    const enableSlowQueryLog = this.configService.get<boolean>(
-      'app.enableSlowQueryLog',
-      false,
-    );
-    const thresholdMs = this.configService.get<number>(
-      'app.slowQueryThresholdMs',
-      500,
-    );
+    const enableSlowQueryLog = this.configService.get<boolean>('app.enableSlowQueryLog', false);
+    const thresholdMs = this.configService.get<number>('app.slowQueryThresholdMs', 500);
     const loggerOptions: MikroLoggerOptions = {
       enableSlowQueryLog,
       thresholdMs,
@@ -77,9 +65,8 @@ export class MikroOrmConfigService implements MikroOrmOptionsFactory {
       debug: enableQueryLog,
       autoLoadEntities: false,
       highlighter: this.getHighlighter(),
-      loggerFactory: (options) =>
-        new MikroLogger(options, loggerOptions, this.als),
-      logger: (message) => {
+      loggerFactory: options => new MikroLogger(options, loggerOptions, this.als),
+      logger: message => {
         this.logger.log(message);
       },
     };

@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  BullRootModuleOptions,
-  SharedBullConfigurationFactory,
-} from '@nestjs/bullmq';
+import { BullRootModuleOptions, SharedBullConfigurationFactory } from '@nestjs/bullmq';
 
 /**
  * Service responsible for configuring the BullMQ module

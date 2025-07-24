@@ -62,15 +62,7 @@ export class CloudinaryDriver {
    * @returns Object containing the optimized URL
    */
   get(id: string, query: GetFileDto) {
-    const {
-      quality,
-      fetch_format,
-      crop,
-      gravity,
-      width,
-      height,
-      aspect_ratio,
-    } = query;
+    const { quality, fetch_format, crop, gravity, width, height, aspect_ratio } = query;
 
     const optimizeUrl = cloudinary.url(id, {
       fetch_format,

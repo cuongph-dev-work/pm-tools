@@ -1,8 +1,4 @@
-import {
-  ChangePasswordDto,
-  ResetPasswordDto,
-  SetFirstPasswordDto,
-} from '@modules/auth/dtos';
+import { ChangePasswordDto, ResetPasswordDto, SetFirstPasswordDto } from '@modules/auth/dtos';
 import {
   BadRequestException,
   forwardRef,
@@ -18,12 +14,7 @@ import { compare } from 'bcryptjs';
 import { plainToInstance } from 'class-transformer';
 import { I18nService } from 'nestjs-i18n';
 import { User } from '../../database/entities/user.entity';
-import {
-  CreateUserDto,
-  SearchUserDto,
-  ShowUserResponseDto,
-  UpdateUserDto,
-} from './dtos';
+import { CreateUserDto, SearchUserDto, ShowUserResponseDto, UpdateUserDto } from './dtos';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -106,18 +97,9 @@ export class UserService {
    * Get users
    */
   async getUsers(query: SearchUserDto) {
-    const {
-      data: users,
-      total,
-      pagination,
-    } = await this.userRepository.getUsers(query);
+    const { data: users, total, pagination } = await this.userRepository.getUsers(query);
 
-    return createPaginationResponse(
-      users,
-      total,
-      pagination.page,
-      pagination.limit,
-    );
+    return createPaginationResponse(users, total, pagination.page, pagination.limit);
   }
 
   /**
@@ -125,9 +107,7 @@ export class UserService {
    */
   async changePassword(body: ChangePasswordDto, currentUser: User) {
     const { current_password } = body;
-    const user = await this.userRepository.findById(currentUser.id, [
-      'password',
-    ]);
+    const user = await this.userRepository.findById(currentUser.id, ['password']);
 
     // check if user exists
     if (!user) {
@@ -161,11 +141,7 @@ export class UserService {
     const resetToken = generateToken();
     const resetTokenExpiredAt = addHours(new Date(), 3);
 
-    await this.userRepository.updateResetToken(
-      user,
-      resetToken,
-      resetTokenExpiredAt.toJSDate(),
-    );
+    await this.userRepository.updateResetToken(user, resetToken, resetTokenExpiredAt.toJSDate());
 
     await this.mailService.sendPasswordResetMail({
       to: user.email,

@@ -24,8 +24,7 @@ import { FileStorageRepository } from './file-storage.repository';
 export class FileStorageService {
   private readonly logger = new Logger(FileStorageService.name);
   private readonly storageDriver: STORAGE_DRIVER = STORAGE_DRIVER.LOCAL;
-  private readonly storageDeleteMode: STORAGE_DELETE_MODE =
-    STORAGE_DELETE_MODE.SOFT;
+  private readonly storageDeleteMode: STORAGE_DELETE_MODE = STORAGE_DELETE_MODE.SOFT;
   constructor(
     @Inject(forwardRef(() => FileStorageRepository))
     private readonly fileStorageRepository: FileStorageRepository,
@@ -34,9 +33,7 @@ export class FileStorageService {
     private readonly uploadService: UploadService,
     private readonly configService: ConfigService,
   ) {
-    this.storageDriver = this.configService.get(
-      'storage.driver',
-    ) as STORAGE_DRIVER;
+    this.storageDriver = this.configService.get('storage.driver') as STORAGE_DRIVER;
   }
 
   /**
@@ -53,7 +50,7 @@ export class FileStorageService {
       );
     }
 
-    return this.em.transactional(async (em) => {
+    return this.em.transactional(async em => {
       // save file to database
       const fileStorage = new FileStorage();
       fileStorage.original_name = file.originalname;
@@ -97,7 +94,7 @@ export class FileStorageService {
       throw new NotFoundException(this.i18n.t('message.file_not_found'));
     }
 
-    return this.em.transactional(async (em) => {
+    return this.em.transactional(async em => {
       if (this.storageDeleteMode === STORAGE_DELETE_MODE.SOFT) {
         // soft delete file
         fileStorage.updated_by = user?.id ?? 'system';
@@ -133,10 +130,6 @@ export class FileStorageService {
       throw new NotFoundException(this.i18n.t('message.file_not_found'));
     }
 
-    return this.uploadService.getFile(
-      fileStorage.url,
-      query,
-      this.storageDriver,
-    );
+    return this.uploadService.getFile(fileStorage.url, query, this.storageDriver);
   }
 }

@@ -46,9 +46,7 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(
-    new HttpExceptionFilter(app.get(ConfigService), app.get(I18nService)),
-  );
+  app.useGlobalFilters(new HttpExceptionFilter(app.get(ConfigService), app.get(I18nService)));
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 

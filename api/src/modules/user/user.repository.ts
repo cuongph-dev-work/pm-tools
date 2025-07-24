@@ -1,11 +1,5 @@
 import { User } from '@entities/user.entity';
-import {
-  EntityRepository,
-  FilterQuery,
-  FindOptions,
-  Populate,
-  wrap,
-} from '@mikro-orm/core';
+import { EntityRepository, FilterQuery, FindOptions, Populate, wrap } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { getPaginationParams } from '@utils/pagination';
@@ -22,14 +16,8 @@ export class UserRepository extends EntityRepository<User> {
    * @param email The email of the user to find
    * @returns The user if found, null otherwise
    */
-  async findByEmail(
-    email: string,
-    populate: Populate<User, 'password'>,
-  ): Promise<User | null> {
-    return this.findOne(
-      { email },
-      { filters: ['isActive'], populate: populate },
-    );
+  async findByEmail(email: string, populate: Populate<User, 'password'>): Promise<User | null> {
+    return this.findOne({ email }, { filters: ['isActive'], populate: populate });
   }
 
   /**
@@ -37,20 +25,14 @@ export class UserRepository extends EntityRepository<User> {
    * @param id The ID of the user to find
    * @returns The user if found, null otherwise
    */
-  async findById(
-    id: string,
-    populate?: Populate<User, 'password'>,
-  ): Promise<User | null> {
+  async findById(id: string, populate?: Populate<User, 'password'>): Promise<User | null> {
     return this.findOne({ id }, { filters: ['isActive'], populate: populate });
   }
 
   /**
    * Find conditions
    */
-  async findConditions(
-    conditions: FilterQuery<User>,
-    options?: FindOptions<User>,
-  ) {
+  async findConditions(conditions: FilterQuery<User>, options?: FindOptions<User>) {
     return this.find(conditions, options);
   }
 
@@ -101,11 +83,7 @@ export class UserRepository extends EntityRepository<User> {
   /**
    * Update reset token
    */
-  async updateResetToken(
-    user: User,
-    resetToken: string,
-    resetTokenExpiredAt: Date,
-  ) {
+  async updateResetToken(user: User, resetToken: string, resetTokenExpiredAt: Date) {
     user.reset_token = resetToken;
     user.reset_token_expired_at = resetTokenExpiredAt;
     await this.em.flush();

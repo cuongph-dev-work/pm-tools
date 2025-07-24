@@ -1,7 +1,7 @@
+import { FILE_KIND } from '@configs/enum/file';
+import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import * as fs from 'fs';
-import { FILE_KIND } from '@configs/enum/file';
 
 /**
  * Get the temporary directory path for file uploads
@@ -37,9 +37,7 @@ export const deleteTempFile = async (filename: string): Promise<void> => {
  * Clean up temporary files older than the specified age
  * @param maxAgeMs Maximum age in milliseconds (default: 1 hour)
  */
-export const cleanupTempFiles = async (
-  maxAgeMs: number = 3600000,
-): Promise<void> => {
+export const cleanupTempFiles = async (maxAgeMs: number = 3600000): Promise<void> => {
   const tempDir = getTempUploadPath();
 
   try {
@@ -59,7 +57,7 @@ export const cleanupTempFiles = async (
 
         if (fileAge > maxAgeMs) {
           await fs.promises.unlink(filePath);
-          console.log(`Deleted old temporary file: ${file}`);
+          console.warn(`Deleted old temporary file: ${file}`);
         }
       } catch (error) {
         console.error(`Error processing file ${file}:`, error);
@@ -97,11 +95,7 @@ export const getFileKindFromMimeType = (mimeType: string): FILE_KIND => {
     type.includes('presentation')
   ) {
     return FILE_KIND.DOCUMENT;
-  } else if (
-    type.includes('compressed') ||
-    type.includes('zip') ||
-    type.includes('archive')
-  ) {
+  } else if (type.includes('compressed') || type.includes('zip') || type.includes('archive')) {
     return FILE_KIND.ARCHIVE;
   } else {
     return FILE_KIND.OTHER;

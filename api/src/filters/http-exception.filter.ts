@@ -90,7 +90,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 
   private translateErrors(errors: ValidationError[], lang: string) {
-    return errors.map((error) => {
+    return errors.map(error => {
       const stringifiedObj = Object.values(error.constraints ?? {})?.[0];
       const parsedObj = JSON.parse(stringifiedObj);
       const params = parsedObj.params;

@@ -44,47 +44,44 @@ export function configSwagger(app: INestApplication) {
   const document = SwaggerModule.createDocument(app, config);
 
   const httpAdapter = app.getHttpAdapter();
-  httpAdapter.use(
-    '/api-docs',
-    (req: Request, res: Response, next: NextFunction) => {
-      function parseAuthHeader(input: string): { name: string; pass: string } {
-        const [, encodedPart] = input.split(' ');
+  httpAdapter.use('/api-docs', (req: Request, res: Response, next: NextFunction) => {
+    function parseAuthHeader(input: string): { name: string; pass: string } {
+      const [, encodedPart] = input.split(' ');
 
-        const buff = Buffer.from(encodedPart, 'base64');
-        const text = buff.toString('ascii');
-        const [name, pass] = text.split(':');
+      const buff = Buffer.from(encodedPart, 'base64');
+      const text = buff.toString('ascii');
+      const [name, pass] = text.split(':');
 
-        return { name, pass };
-      }
+      return { name, pass };
+    }
 
-      function unauthorizedResponse(): void {
-        if (httpAdapter.getType() === 'fastify') {
-          res.statusCode = 401;
-          res.setHeader('WWW-Authenticate', 'Basic');
-        } else {
-          res.status(401);
-          res.set('WWW-Authenticate', 'Basic');
-        }
-
-        next();
-      }
-
-      if (!req.headers.authorization) {
-        return unauthorizedResponse();
-      }
-
-      const credentials = parseAuthHeader(req.headers.authorization);
-
-      if (
-        credentials?.name !== api_documentation_credentials.name ||
-        credentials?.pass !== api_documentation_credentials.pass
-      ) {
-        return unauthorizedResponse();
+    function unauthorizedResponse(): void {
+      if (httpAdapter.getType() === 'fastify') {
+        res.statusCode = 401;
+        res.setHeader('WWW-Authenticate', 'Basic');
+      } else {
+        res.status(401);
+        res.set('WWW-Authenticate', 'Basic');
       }
 
       next();
-    },
-  );
+    }
+
+    if (!req.headers.authorization) {
+      return unauthorizedResponse();
+    }
+
+    const credentials = parseAuthHeader(req.headers.authorization);
+
+    if (
+      credentials?.name !== api_documentation_credentials.name ||
+      credentials?.pass !== api_documentation_credentials.pass
+    ) {
+      return unauthorizedResponse();
+    }
+
+    next();
+  });
   SwaggerModule.setup('api-docs', app, document, {
     swaggerOptions: { persistAuthorization: true },
     customJs: '/swagger-custom.js',

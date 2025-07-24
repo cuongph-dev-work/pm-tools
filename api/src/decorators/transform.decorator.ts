@@ -3,11 +3,11 @@ import { Transform } from 'class-transformer';
 import { castArray, isArray, isNil, map, trim } from 'lodash';
 
 export function Trim(): PropertyDecorator {
-  return Transform((params) => {
+  return Transform(params => {
     const value = params.value as string[] | string;
 
     if (isArray(value)) {
-      return map(value, (v) => trim(v).replace(/\s\s+/g, ' '));
+      return map(value, v => trim(v).replace(/\s\s+/g, ' '));
     }
 
     return trim(value).replace(/\s\s+/g, ' ');
@@ -16,7 +16,7 @@ export function Trim(): PropertyDecorator {
 
 export function ToBoolean(): PropertyDecorator {
   return Transform(
-    (params) => {
+    params => {
       switch (params.value) {
         case 'true':
           return true;
@@ -32,7 +32,7 @@ export function ToBoolean(): PropertyDecorator {
 
 export function ToDate(): PropertyDecorator {
   return Transform(
-    (params) => {
+    params => {
       return formatDate(params.value, 'YYYY-MM-DD');
     },
     { toClassOnly: true },
@@ -41,7 +41,7 @@ export function ToDate(): PropertyDecorator {
 
 export function ToDateISOString(): PropertyDecorator {
   return Transform(
-    (params) => {
+    params => {
       return toISOString(params.value);
     },
     { toClassOnly: true },
@@ -50,7 +50,7 @@ export function ToDateISOString(): PropertyDecorator {
 
 export function ToInt(): PropertyDecorator {
   return Transform(
-    (params) => {
+    params => {
       if (isNil(params.value)) {
         return;
       }
@@ -64,7 +64,7 @@ export function ToInt(): PropertyDecorator {
 
 export function ToNumber(): PropertyDecorator {
   return Transform(
-    (params) => {
+    params => {
       const value = params.value as string;
 
       return Number(value);
@@ -75,7 +75,7 @@ export function ToNumber(): PropertyDecorator {
 
 export function ToFloat(): PropertyDecorator {
   return Transform(
-    (params) => {
+    params => {
       const value = params.value as string;
       return Number.parseFloat(value);
     },
@@ -85,7 +85,7 @@ export function ToFloat(): PropertyDecorator {
 
 export function ToLowerCase(): PropertyDecorator {
   return Transform(
-    (params) => {
+    params => {
       const value = params.value;
 
       if (!value) {
@@ -96,7 +96,7 @@ export function ToLowerCase(): PropertyDecorator {
         return value.toLowerCase();
       }
 
-      return value.map((v) => v.toLowerCase());
+      return value.map(v => v.toLowerCase());
     },
     {
       toClassOnly: true,
@@ -106,7 +106,7 @@ export function ToLowerCase(): PropertyDecorator {
 
 export function ToUpperCase(): PropertyDecorator {
   return Transform(
-    (params) => {
+    params => {
       const value = params.value;
 
       if (!value) {
@@ -117,7 +117,7 @@ export function ToUpperCase(): PropertyDecorator {
         return value.toUpperCase();
       }
 
-      return value.map((v) => v.toUpperCase());
+      return value.map(v => v.toUpperCase());
     },
     {
       toClassOnly: true,
@@ -127,7 +127,7 @@ export function ToUpperCase(): PropertyDecorator {
 
 export function ToArray(): PropertyDecorator {
   return Transform(
-    (params) => {
+    params => {
       const value = params.value;
 
       if (isNil(value)) {

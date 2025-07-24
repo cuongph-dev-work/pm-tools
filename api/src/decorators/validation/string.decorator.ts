@@ -1,27 +1,23 @@
+import { ToInt, Trim } from '@decorators/transform.decorator';
+import { applyDecorators } from '@nestjs/common';
+import { transformValidationErrors } from '@utils/helper';
 import {
-  IsString,
-  ValidationOptions,
-  MinLength,
-  MaxLength,
   IsEmail,
-  IsUrl,
   IsNotEmpty,
   IsNumberString,
-  ValidateBy,
-  ValidationArguments,
   IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+  MinLength,
+  ValidateBy,
   ValidateIf,
+  ValidationArguments,
+  ValidationOptions,
 } from 'class-validator';
-import { applyDecorators } from '@nestjs/common';
-import * as ValidatorJS from 'validator';
-import { ToInt, Trim } from '@decorators/transform.decorator';
-import { ConfigService } from '@nestjs/config';
-import configs from '@configs/app';
 import { isEmpty, isNil } from 'lodash';
-import { transformValidationErrors } from '@utils/helper';
-import { IsURLOptions, IsEmailOptions, IsNumericOptions } from 'validator';
-
-const configService = new ConfigService(configs());
+import * as ValidatorJS from 'validator';
+import { IsEmailOptions, IsNumericOptions, IsURLOptions } from 'validator';
 
 interface IStringValidationOption {
   min?: number;
@@ -73,8 +69,7 @@ export const StringField = (
         ]
       : []),
     IsString({
-      message:
-        validationOptions?.message || transformValidationErrors('IsString', {}),
+      message: validationOptions?.message || transformValidationErrors('IsString', {}),
       ...validationOptions,
     }),
   ];
@@ -164,15 +159,11 @@ export const StringField = (
   return applyDecorators(...decorators);
 };
 
-const IsPassword = (
-  validationOptions?: ValidationOptions,
-): PropertyDecorator => {
+const IsPassword = (validationOptions?: ValidationOptions): PropertyDecorator => {
   return ValidateBy(
     {
       name: 'IsPassword',
-      constraints: [
-        '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-      ],
+      constraints: ['^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'],
       validator: {
         validate(value: string, args: ValidationArguments) {
           const passwordPattern = args.constraints[0];
@@ -190,9 +181,7 @@ const IsPassword = (
   );
 };
 
-const IsPhoneNumber = (
-  validationOptions?: ValidationOptions,
-): PropertyDecorator => {
+const IsPhoneNumber = (validationOptions?: ValidationOptions): PropertyDecorator => {
   return ValidateBy(
     {
       name: 'IsPhoneNumber',
@@ -209,10 +198,7 @@ const IsPhoneNumber = (
   );
 };
 
-const IsSameAs = (
-  property: string,
-  validationOptions?: ValidationOptions,
-): PropertyDecorator => {
+const IsSameAs = (property: string, validationOptions?: ValidationOptions): PropertyDecorator => {
   return ValidateBy(
     {
       name: 'IsSameAs',

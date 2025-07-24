@@ -39,9 +39,7 @@ export class SystemLoggerService {
 
           const levelLabel = levelColor(level.toUpperCase().padEnd(7));
 
-          const time = chalk.white(
-            `[${formatDate(new Date(timestamp), 'yyyy-MM-dd HH:mm:ss')}]`,
-          );
+          const time = chalk.white(`[${formatDate(new Date(timestamp), 'yyyy-MM-dd HH:mm:ss')}]`);
           const ctx = context ? chalk.green(`[${context}]`) : '';
 
           return `${time} ${levelLabel} ${ctx} ${message}`;

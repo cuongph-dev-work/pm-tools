@@ -1,7 +1,5 @@
 {
-  "namespaces": [
-    "public"
-  ],
+  "namespaces": ["public"],
   "name": "public",
   "tables": [
     {
@@ -144,10 +142,7 @@
           "primary": false,
           "nullable": false,
           "default": "'EVENT_MANAGER'",
-          "enumItems": [
-            "SUPER_ADMIN",
-            "EVENT_MANAGER"
-          ],
+          "enumItems": ["SUPER_ADMIN", "EVENT_MANAGER"],
           "mappedType": "enum"
         },
         "block_to": {
@@ -165,9 +160,7 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": [
-            "email"
-          ],
+          "columnNames": ["email"],
           "composite": false,
           "keyName": "administrator_email_unique",
           "constraint": true,
@@ -176,9 +169,7 @@
         },
         {
           "keyName": "administrator_pkey",
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -287,11 +278,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "enumItems": [
-            "speed_dating",
-            "singles_party",
-            "virtual_online"
-          ],
+          "enumItems": ["speed_dating", "singles_party", "virtual_online"],
           "mappedType": "enum"
         },
         "event_status": {
@@ -302,12 +289,7 @@
           "primary": false,
           "nullable": false,
           "default": "'draft'",
-          "enumItems": [
-            "draft",
-            "published",
-            "cancelled",
-            "completed"
-          ],
+          "enumItems": ["draft", "published", "cancelled", "completed"],
           "mappedType": "enum"
         },
         "start_datetime": {
@@ -457,9 +439,7 @@
       "indexes": [
         {
           "keyName": "event_pkey",
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -604,10 +584,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "enumItems": [
-            "LOCAL",
-            "CLOUDINARY"
-          ],
+          "enumItems": ["LOCAL", "CLOUDINARY"],
           "mappedType": "enum"
         }
       },
@@ -616,9 +593,7 @@
       "indexes": [
         {
           "keyName": "file_storage_information_pkey",
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -737,9 +712,7 @@
       "indexes": [
         {
           "keyName": "event_media_entity_pkey",
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -750,25 +723,17 @@
       "foreignKeys": {
         "event_media_entity_event_id_foreign": {
           "constraintName": "event_media_entity_event_id_foreign",
-          "columnNames": [
-            "event_id"
-          ],
+          "columnNames": ["event_id"],
           "localTableName": "public.event_media_entity",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "referencedTableName": "public.event",
           "updateRule": "cascade"
         },
         "event_media_entity_media_id_foreign": {
           "constraintName": "event_media_entity_media_id_foreign",
-          "columnNames": [
-            "media_id"
-          ],
+          "columnNames": ["media_id"],
           "localTableName": "public.event_media_entity",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "referencedTableName": "public.file_storage_information",
           "updateRule": "cascade"
         }
@@ -844,10 +809,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "enumItems": [
-            "push_notification",
-            "news"
-          ],
+          "enumItems": ["push_notification", "news"],
           "mappedType": "enum"
         },
         "title": {
@@ -914,9 +876,7 @@
       "indexes": [
         {
           "keyName": "notification_pkey",
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -927,13 +887,9 @@
       "foreignKeys": {
         "notification_image_id_foreign": {
           "constraintName": "notification_image_id_foreign",
-          "columnNames": [
-            "image_id"
-          ],
+          "columnNames": ["image_id"],
           "localTableName": "public.notification",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "referencedTableName": "public.file_storage_information",
           "updateRule": "cascade"
         }
@@ -1080,11 +1036,7 @@
           "primary": false,
           "nullable": false,
           "default": "'MALE'",
-          "enumItems": [
-            "MALE",
-            "FEMALE",
-            "OTHER"
-          ],
+          "enumItems": ["MALE", "FEMALE", "OTHER"],
           "mappedType": "enum"
         },
         "phone": {
@@ -1142,9 +1094,7 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": [
-            "email"
-          ],
+          "columnNames": ["email"],
           "composite": false,
           "keyName": "user_email_unique",
           "constraint": true,
@@ -1153,9 +1103,7 @@
         },
         {
           "keyName": "user_pkey",
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -1166,13 +1114,9 @@
       "foreignKeys": {
         "user_avatar_id_foreign": {
           "constraintName": "user_avatar_id_foreign",
-          "columnNames": [
-            "avatar_id"
-          ],
+          "columnNames": ["avatar_id"],
           "localTableName": "public.user",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "referencedTableName": "public.file_storage_information",
           "updateRule": "cascade"
         }
@@ -1298,11 +1242,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "enumItems": [
-            "MALE",
-            "FEMALE",
-            "OTHER"
-          ],
+          "enumItems": ["MALE", "FEMALE", "OTHER"],
           "mappedType": "enum"
         },
         "guest_phone": {
@@ -1323,12 +1263,7 @@
           "primary": false,
           "nullable": false,
           "default": "'pending'",
-          "enumItems": [
-            "pending",
-            "confirmed",
-            "cancelled",
-            "completed"
-          ],
+          "enumItems": ["pending", "confirmed", "cancelled", "completed"],
           "mappedType": "enum"
         },
         "ticket_quantity": {
@@ -1416,10 +1351,7 @@
       "indexes": [
         {
           "keyName": "booking_event_id_user_id_unique",
-          "columnNames": [
-            "event_id",
-            "user_id"
-          ],
+          "columnNames": ["event_id", "user_id"],
           "composite": true,
           "constraint": true,
           "primary": false,
@@ -1427,9 +1359,7 @@
         },
         {
           "keyName": "booking_pkey",
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -1440,25 +1370,17 @@
       "foreignKeys": {
         "booking_event_id_foreign": {
           "constraintName": "booking_event_id_foreign",
-          "columnNames": [
-            "event_id"
-          ],
+          "columnNames": ["event_id"],
           "localTableName": "public.booking",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "referencedTableName": "public.event",
           "updateRule": "cascade"
         },
         "booking_user_id_foreign": {
           "constraintName": "booking_user_id_foreign",
-          "columnNames": [
-            "user_id"
-          ],
+          "columnNames": ["user_id"],
           "localTableName": "public.booking",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "referencedTableName": "public.user",
           "deleteRule": "set null",
           "updateRule": "cascade"
@@ -1574,9 +1496,7 @@
       "indexes": [
         {
           "keyName": "user_notification_pkey",
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -1587,25 +1507,17 @@
       "foreignKeys": {
         "user_notification_notification_id_foreign": {
           "constraintName": "user_notification_notification_id_foreign",
-          "columnNames": [
-            "notification_id"
-          ],
+          "columnNames": ["notification_id"],
           "localTableName": "public.user_notification",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "referencedTableName": "public.notification",
           "updateRule": "cascade"
         },
         "user_notification_user_id_foreign": {
           "constraintName": "user_notification_user_id_foreign",
-          "columnNames": [
-            "user_id"
-          ],
+          "columnNames": ["user_id"],
           "localTableName": "public.user_notification",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "referencedTableName": "public.user",
           "updateRule": "cascade"
         }

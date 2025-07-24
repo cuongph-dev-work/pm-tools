@@ -30,9 +30,7 @@ import modules from './modules';
     AlsModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test')
-          .required(),
+        NODE_ENV: Joi.string().valid('development', 'production', 'test').required(),
         APP_PORT: Joi.number().required(),
         APP_FALLBACK_LANGUAGE: Joi.string().default('en').required(),
         APP_HEADER_LANGUAGE: Joi.string().default('en').required(),
@@ -59,10 +57,7 @@ import modules from './modules';
     }),
     I18nModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
-        fallbackLanguage: configService.get<string>(
-          'app.fallbackLanguage',
-          'vi',
-        ),
+        fallbackLanguage: configService.get<string>('app.fallbackLanguage', 'vi'),
         loaderOptions: {
           path: join(__dirname, 'i18n'),
           watch: true,

@@ -1,12 +1,4 @@
-import {
-  BeforeCreate,
-  BeforeUpdate,
-  Entity,
-  Enum,
-  Filter,
-  Opt,
-  Property,
-} from '@mikro-orm/core';
+import { BeforeCreate, BeforeUpdate, Entity, Enum, Filter, Opt, Property } from '@mikro-orm/core';
 import * as bcrypt from 'bcryptjs';
 import { BaseEntity } from './base.entity';
 
