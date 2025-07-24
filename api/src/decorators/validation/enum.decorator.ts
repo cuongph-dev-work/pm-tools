@@ -7,6 +7,7 @@ import { isEmpty, isNil } from 'lodash';
 interface IEnumValidationOption {
   each?: boolean;
   isOptional?: boolean;
+  prefix?: string;
 }
 
 export const EnumField = <TEnum>(
@@ -25,9 +26,13 @@ export const EnumField = <TEnum>(
       : []),
     IsEnum(enumValue as object, {
       each: options?.each,
-      message: transformValidationErrors('IsEnum', {
-        enum: Object.values(enumValue as object),
-      }),
+      message: transformValidationErrors(
+        'IsEnum',
+        {
+          enum: Object.values(enumValue as object),
+        },
+        options.prefix,
+      ),
     }),
   ];
 

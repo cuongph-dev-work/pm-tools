@@ -1,21 +1,13 @@
 {
   "label": {
     "email": "Email",
-    "password": "Mật khẩu",
-    "phone": "Số điện thoại",
-    "name": "Tên",
-    "address": "Địa chỉ",
-    "city": "Thành phố",
-    "country": "Quốc gia",
-    "role": "Vai trò",
-    "last_name": "Tên",
-    "middle_name": "Tên đệm",
-    "first_name": "Họ",
-    "new_password": "Mật khẩu mới",
-    "new_password_confirmation": "Xác nhận mật khẩu mới",
-    "current_password": "Mật khẩu hiện tại",
-    "token": "Mã khôi phục mật khẩu",
-    "file": "File"
+    "project": {
+      "name": "Tên dự án",
+      "description": "Mô tả dự án",
+      "tags": "Tags dự án",
+      "start_date": "Ngày bắt đầu",
+      "end_date": "Ngày kết thúc"
+    }
   },
   "IsString": "{property} phải là chuỗi",
   "IsNotEmpty": "{property} không được để trống",
@@ -42,6 +34,7 @@
   "MaxFileSize": "{property} kích thước file không được vượt quá {constraints.0}",
   "ArrayMaxSize": "{property} số lượng file không được vượt quá {constraints.0}",
   "ArrayMinSize": "{property} số lượng file ít nhất {constraints.0}",
+  "ArrayNotEmpty": "{property} không được là mảng rỗng",
   "IsEqualTo": "{property} không bằng {property1}",
   "IsSameAs": "{property} không giống với {property1}",
   "IsPassword": "{property} phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt",

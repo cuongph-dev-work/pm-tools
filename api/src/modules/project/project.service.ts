@@ -1,15 +1,26 @@
 import { Project } from '@entities/project.entity';
 import { User } from '@entities/user.entity';
-import { EntityManager } from '@mikro-orm/core';
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { isUndefined } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
+import { WrapperType } from 'src/types/request.type';
 import { CreateProjectDto, SearchProjectDto, UpdateProjectDto } from './dtos';
+import { ProjectResponseDto } from './dtos/project-response.dto';
 import { ProjectRepository } from './project.repository';
 
 @Injectable()
 export class ProjectService {
   constructor(
-    private readonly projectRepository: ProjectRepository,
-    private readonly em: EntityManager,
+    @Inject(forwardRef(() => ProjectRepository))
+    private readonly projectRepository: WrapperType<ProjectRepository>,
+    private readonly i18n: I18nService,
   ) {}
 
   async createProject(createProjectDto: CreateProjectDto, currentUser: User) {
@@ -27,59 +38,55 @@ export class ProjectService {
       project.end_date = new Date(createProjectDto.end_date);
     }
 
-    await this.em.persistAndFlush(project);
-    return this.findProjectById(project.id);
-  }
-
-  async findProjects(filters: SearchProjectDto, _currentUser: User) {
-    const page = filters.page ? parseInt(filters.page) : 1;
-    const limit = filters.limit ? parseInt(filters.limit) : 10;
-
-    return this.projectRepository.findProjectsWithFilters(filters, page, limit);
-  }
-
-  async findProjectById(id: string) {
-    const project = await this.projectRepository.findProjectById(id);
-    if (!project) {
-      throw new NotFoundException('Project not found');
-    }
-    return project;
+    await this.projectRepository.getEntityManager().persistAndFlush(project);
+    return { id: project.id };
   }
 
   async updateProject(id: string, updateProjectDto: UpdateProjectDto, currentUser: User) {
     const project = await this.findProjectById(id);
-
-    // Check if user is owner or has permission
-    if (project.owner.id !== currentUser.id) {
-      throw new ForbiddenException('You can only update your own projects');
+    if (!project) {
+      throw new NotFoundException(this.i18n.t('message.project_not_found'));
     }
-
-    if (updateProjectDto.name !== undefined) {
+    if (project.owner.id !== currentUser.id) {
+      throw new ForbiddenException(this.i18n.t('message.project_update_forbidden'));
+    }
+    if (!isUndefined(updateProjectDto.name)) {
       project.name = updateProjectDto.name;
     }
-
-    if (updateProjectDto.description !== undefined) {
+    if (!isUndefined(updateProjectDto.description)) {
       project.description = updateProjectDto.description;
     }
-
-    if (updateProjectDto.tags !== undefined) {
+    if (!isUndefined(updateProjectDto.tags)) {
       project.tags = updateProjectDto.tags;
     }
-
-    if (updateProjectDto.status !== undefined) {
+    if (!isUndefined(updateProjectDto.status)) {
       project.status = updateProjectDto.status;
     }
-
-    if (updateProjectDto.start_date !== undefined) {
-      project.start_date = new Date(updateProjectDto.start_date);
+    if (!isUndefined(updateProjectDto.start_date)) {
+      const startDate = new Date(updateProjectDto.start_date);
+      project.start_date = startDate;
     }
-
-    if (updateProjectDto.end_date !== undefined) {
-      project.end_date = new Date(updateProjectDto.end_date);
+    if (!isUndefined(updateProjectDto.end_date)) {
+      const endDate = new Date(updateProjectDto.end_date);
+      project.end_date = endDate;
     }
+    await this.projectRepository.getEntityManager().persistAndFlush(project);
+    return { id: project.id };
+  }
 
-    await this.em.persistAndFlush(project);
-    return this.findProjectById(id);
+  async findProjects(filters: SearchProjectDto, currentUser: User) {
+    const page = filters.page ? parseInt(filters.page) : 1;
+    const limit = filters.limit ? parseInt(filters.limit) : 10;
+
+    return this.projectRepository.findProjectsWithFilters(filters, page, limit, currentUser);
+  }
+
+  async findProjectById(id: string): Promise<ProjectResponseDto> {
+    const project = await this.projectRepository.findProjectById(id);
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+    return plainToInstance(ProjectResponseDto, project);
   }
 
   async deleteProject(id: string, currentUser: User) {
@@ -90,12 +97,8 @@ export class ProjectService {
       throw new ForbiddenException('You can only delete your own projects');
     }
 
-    await this.em.removeAndFlush(project);
-    return { message: 'Project deleted successfully' };
-  }
-
-  async findMyProjects(currentUser: User) {
-    return this.projectRepository.findProjectsByOwner(currentUser.id);
+    await this.projectRepository.getEntityManager().removeAndFlush(project);
+    return { success: true };
   }
 
   async findProjectsIMemberOf(currentUser: User) {
@@ -106,27 +109,27 @@ export class ProjectService {
     return this.projectRepository.findActiveProjects();
   }
 
-  async getProjectStats(id: string, currentUser: User) {
-    const project = await this.findProjectById(id);
+  // async getProjectStats(id: string, currentUser: User) {
+  //   const project = await this.findProjectById(id);
 
-    // Check if user is member or owner
-    const isOwner = project.owner.id === currentUser.id;
-    const isMember = project.members?.some(member => member.user.id === currentUser.id);
+  //   // Check if user is member or owner
+  //   const isOwner = project.owner.id === currentUser.id;
+  //   const isMember = project.members?.some(member => member.user.id === currentUser.id);
 
-    if (!isOwner && !isMember) {
-      throw new ForbiddenException('You do not have access to this project');
-    }
+  //   if (!isOwner && !isMember) {
+  //     throw new ForbiddenException('You do not have access to this project');
+  //   }
 
-    const memberCount = project.members?.filter(member => member.status === 'ACTIVE').length;
-    const inviteCount = project.invites?.filter(invite => invite.status === 'PENDING').length;
+  //   const memberCount = project.members?.filter(member => member.status === 'ACTIVE').length;
+  //   const inviteCount = project.invites?.filter(invite => invite.status === 'PENDING').length;
 
-    return {
-      id: project.id,
-      name: project.name,
-      member_count: memberCount,
-      invite_count: inviteCount,
-      status: project.status,
-      created_at: project.created_at,
-    };
-  }
+  //   return {
+  //     id: project.id,
+  //     name: project.name,
+  //     member_count: memberCount,
+  //     invite_count: inviteCount,
+  //     status: project.status,
+  //     created_at: project.created_at,
+  //   };
+  // }
 }

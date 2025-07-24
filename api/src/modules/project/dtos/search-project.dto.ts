@@ -1,7 +1,6 @@
 import { PROJECT_STATUS } from '@configs/enum/db';
+import { EnumField } from '@decorators/validation/enum.decorator';
 import { StringField } from '@decorators/validation/string.decorator';
-import { Transform } from 'class-transformer';
-import { IsArray, IsEnum, IsOptional } from 'class-validator';
 
 export class SearchProjectDto {
   @StringField({
@@ -16,19 +15,11 @@ export class SearchProjectDto {
   })
   description?: string;
 
-  @IsOptional()
-  @IsEnum(PROJECT_STATUS)
-  status?: PROJECT_STATUS;
-
-  @IsOptional()
-  @IsArray()
-  @Transform(({ value }) => {
-    if (typeof value === 'string') {
-      return value.split(',').map((tag: string) => tag.trim());
-    }
-    return value;
+  @EnumField(() => PROJECT_STATUS, {
+    isOptional: true,
+    prefix: 'project',
   })
-  tags?: string[];
+  status?: PROJECT_STATUS;
 
   @StringField({
     max: 20,

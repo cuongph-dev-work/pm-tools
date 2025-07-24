@@ -29,25 +29,19 @@ export type I18nTranslations = {
         "invalid_reset_token": string;
         "set_first_password_success": string;
         "file_not_found": string;
+        "project_update_forbidden": string;
+        "project_not_found": string;
     };
     "validation": {
         "label": {
             "email": string;
-            "password": string;
-            "phone": string;
-            "name": string;
-            "address": string;
-            "city": string;
-            "country": string;
-            "role": string;
-            "last_name": string;
-            "middle_name": string;
-            "first_name": string;
-            "new_password": string;
-            "new_password_confirmation": string;
-            "current_password": string;
-            "token": string;
-            "file": string;
+            "project": {
+                "name": string;
+                "description": string;
+                "tags": string;
+                "start_date": string;
+                "end_date": string;
+            };
         };
         "IsString": string;
         "IsNotEmpty": string;
@@ -74,6 +68,7 @@ export type I18nTranslations = {
         "MaxFileSize": string;
         "ArrayMaxSize": string;
         "ArrayMinSize": string;
+        "ArrayNotEmpty": string;
         "IsEqualTo": string;
         "IsSameAs": string;
         "IsPassword": string;

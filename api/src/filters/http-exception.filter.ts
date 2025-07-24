@@ -89,44 +89,91 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.status(status).json(errorResponse);
   }
 
+  private processChildren(children): any[] {
+    let allConstraints: any[] = [];
+
+    if (Array.isArray(children)) {
+      children.forEach(childError => {
+        let constraints = childError?.constraints;
+        if (constraints) {
+          constraints = Object.values(childError?.constraints);
+          allConstraints.push({
+            property: childError.property,
+            constraints,
+          });
+        }
+        if (childError?.children && Array.isArray(childError.children)) {
+          allConstraints = allConstraints.concat(this.processChildren(childError.children));
+        }
+      });
+    }
+
+    return allConstraints;
+  }
+
   private translateErrors(errors: ValidationError[], lang: string) {
     return errors.map(error => {
-      const stringifiedObj = Object.values(error.constraints ?? {})?.[0];
-      const parsedObj = JSON.parse(stringifiedObj);
-      const params = parsedObj.params;
-      const key = parsedObj.key;
-      const customProperty = parsedObj.customProperty;
-      const property = this.i18n.t(
-        customProperty
-          ? `validatiton.custom_property.${customProperty}`
-          : `validation.label.${error.property}`,
-        {
-          lang,
-        },
-      );
-
-      if (params.properties) {
-        let i = 1;
-        for (const p of params.properties) {
-          params[`property${i}`] = this.i18n
-            .t(`validation.label.${p}`, {
+      if (!error.constraints && error.children && Array.isArray(error.children)) {
+        const allMessages: { path: string; messages: string }[] = [];
+        this.processChildren(error.children).forEach(childMessage => {
+          const parsedObj = JSON.parse(childMessage.constraints);
+          const key = parsedObj.key;
+          const params = parsedObj.params;
+          const property = this.i18n.t(`validation.label.${childMessage.property}`, { lang });
+          const constraintValues = Object.values(params);
+          allMessages.push({
+            path: childMessage.property,
+            messages: this.i18n.t(`validation.${key}`, {
               lang,
-            })
-            .toLowerCase();
-          i++;
-        }
-      }
-
-      return {
-        path: error.property,
-        messages: this.i18n.t(`validation.${key}`, {
-          lang,
-          args: {
-            property,
-            ...params,
+              args: {
+                property,
+                constraints: constraintValues,
+                ...params,
+              },
+            }),
+          });
+        });
+        return allMessages;
+      } else {
+        const stringifiedObj = Object.values(error.constraints ?? {})?.[0];
+        const parsedObj = JSON.parse(stringifiedObj);
+        const params = parsedObj.params;
+        const key = parsedObj.key;
+        const prefix = parsedObj.prefix;
+        const property = this.i18n.t(
+          prefix
+            ? `validation.label.${prefix}.${error.property}`
+            : `validation.label.${error.property}`,
+          {
+            lang,
           },
-        }),
-      };
+        );
+
+        if (params.properties) {
+          let i = 1;
+          for (const p of params.properties) {
+            params[`property${i}`] = this.i18n
+              .t(`validation.label.${p}`, {
+                lang,
+              })
+              .toLowerCase();
+            i++;
+          }
+        }
+
+        const constraintValues = Object.values(params);
+        return {
+          path: error.property,
+          messages: this.i18n.t(`validation.${key}`, {
+            lang,
+            args: {
+              property,
+              constraints: constraintValues,
+              ...params,
+            },
+          }),
+        };
+      }
     });
   }
 }

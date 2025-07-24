@@ -24,20 +24,13 @@ export class ProjectController {
   @Roles([USER_ROLE.ADMIN, USER_ROLE.PM])
   @Post('/')
   createProject(@Body() body: CreateProjectDto, @CurrentUser() currentUser: User) {
-    console.log(body);
-    // return this.projectService.createProject(body, currentUser);
-  }
-
-  @Roles([USER_ROLE.ADMIN])
-  @Get('/')
-  getProjects(@Query() query: SearchProjectDto, @CurrentUser() currentUser: User) {
-    return this.projectService.findProjects(query, currentUser);
+    return this.projectService.createProject(body, currentUser);
   }
 
   @Roles([])
-  @Get('/my-projects')
-  getMyProjects(@CurrentUser() currentUser: User) {
-    return this.projectService.findMyProjects(currentUser);
+  @Get('/')
+  getProjects(@Query() query: SearchProjectDto, @CurrentUser() currentUser: User) {
+    return this.projectService.findProjects(query, currentUser);
   }
 
   @Roles([])
@@ -58,11 +51,11 @@ export class ProjectController {
     return this.projectService.findProjectById(id);
   }
 
-  @Roles([])
-  @Get('/:id/stats')
-  getProjectStats(@Param('id') id: string, @CurrentUser() currentUser: User) {
-    return this.projectService.getProjectStats(id, currentUser);
-  }
+  // @Roles([])
+  // @Get('/:id/stats')
+  // getProjectStats(@Param('id') id: string, @CurrentUser() currentUser: User) {
+  //   return this.projectService.getProjectStats(id, currentUser);
+  // }
 
   @Roles([])
   @Patch('/:id')

@@ -41,13 +41,13 @@ export function generateRandomId(length = 20) {
 export function transformValidationErrors(
   key: string,
   params: Record<string, string | number | boolean | Array<string>> | Array<number>,
-  customProperty?: string, // custom label name
+  prefix?: string, // custom label name
 ): string {
   return JSON.stringify(
     {
       key,
       params,
-      customProperty,
+      prefix,
     },
     null,
     2,

@@ -1,40 +1,55 @@
 import { PROJECT_STATUS } from '@configs/enum/db';
+import { ArrayField } from '@decorators/validation/array.decorator';
+import { EnumField } from '@decorators/validation/enum.decorator';
 import { StringField } from '@decorators/validation/string.decorator';
-import { Transform } from 'class-transformer';
-import { IsArray, IsDateString, IsEnum, IsOptional } from 'class-validator';
+import { IsOptional } from 'class-validator';
 
 export class UpdateProjectDto {
   @IsOptional()
   @StringField({
     max: 255,
+    isOptional: true,
+    prefix: 'project',
   })
   name?: string;
 
   @StringField({
     max: 3000,
     isOptional: true,
+    prefix: 'project',
   })
   description?: string;
 
-  @IsOptional()
-  @IsArray()
-  @Transform(({ value }) => {
-    if (typeof value === 'string') {
-      return value.split(',').map((tag: string) => tag.trim());
-    }
-    return value;
-  })
+  @ArrayField(
+    () => {
+      return StringField({ isOnlyString: true, max: 50, each: true, prefix: 'project' });
+    },
+    {
+      isOptional: true,
+      prefix: 'project',
+      min: 0,
+      max: 10,
+    },
+  )
   tags?: string[];
 
-  @IsOptional()
-  @IsEnum(PROJECT_STATUS)
+  @EnumField(() => PROJECT_STATUS, {
+    isOptional: true,
+    prefix: 'project',
+  })
   status?: PROJECT_STATUS;
 
-  @IsOptional()
-  @IsDateString()
+  @StringField({
+    isOptional: true,
+    isDateString: true,
+    prefix: 'project',
+  })
   start_date?: string;
 
-  @IsOptional()
-  @IsDateString()
+  @StringField({
+    isOptional: true,
+    isDateString: true,
+    prefix: 'project',
+  })
   end_date?: string;
 }

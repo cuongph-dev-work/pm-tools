@@ -8,5 +8,7 @@
   "reset_password_success": "Mật khẩu đã được đặt lại thành công. Vui lòng kiểm tra email để đặt lại mật khẩu mới.",
   "invalid_reset_token": "Mã khôi phục mật khẩu không hợp lệ.",
   "set_first_password_success": "Mật khẩu đã được đặt lại thành công. Vui lòng đăng nhập lại.",
-  "file_not_found": "Không tìm thấy file."
+  "file_not_found": "Không tìm thấy file.",
+  "project_update_forbidden": "Bạn chỉ có thể cập nhật dự án của mình.",
+  "project_not_found": "Không tìm thấy dự án."
 }

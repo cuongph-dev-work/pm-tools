@@ -1,13 +1,23 @@
-import { EntityRepository } from '@mikro-orm/postgresql';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { PROJECT_STATUS } from '@configs/enum/db';
+import { PROJECT_STATUS, USER_ROLE } from '@configs/enum/db';
 import { Project } from '@entities/project.entity';
-import { SearchProjectDto } from './dtos';
+import { User } from '@entities/user.entity';
+import { plainToInstance } from 'class-transformer';
+import { ProjectResponseDto, SearchProjectDto } from './dtos';
 
 @Injectable()
 export class ProjectRepository extends EntityRepository<Project> {
-  async findProjectsWithFilters(filters: SearchProjectDto, page: number = 1, limit: number = 10) {
+  constructor(em: EntityManager) {
+    super(em, Project);
+  }
+  async findProjectsWithFilters(
+    filters: SearchProjectDto,
+    page: number = 1,
+    limit: number = 10,
+    currentUser: User,
+  ) {
     const qb = this.createQueryBuilder('p')
       .leftJoinAndSelect('p.owner', 'owner')
       .leftJoinAndSelect('p.members', 'members')
@@ -26,16 +36,16 @@ export class ProjectRepository extends EntityRepository<Project> {
       qb.andWhere({ status: filters.status });
     }
 
-    if (filters.tags && filters.tags.length > 0) {
-      qb.andWhere({ tags: { $overlap: filters.tags } });
-    }
-
     if (filters.owner_id) {
       qb.andWhere({ owner: filters.owner_id });
     }
 
     if (filters.member_id) {
       qb.andWhere({ members: { user: filters.member_id } });
+    }
+
+    if (currentUser.role !== USER_ROLE.ADMIN) {
+      qb.andWhere({ owner: currentUser.id });
     }
 
     // Get total count
@@ -51,7 +61,7 @@ export class ProjectRepository extends EntityRepository<Project> {
     const projects = await qb.getResult();
 
     return {
-      data: projects,
+      data: projects.map(project => plainToInstance(ProjectResponseDto, project)),
       total,
       page,
       limit,

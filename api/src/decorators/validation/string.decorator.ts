@@ -21,7 +21,7 @@ import { IsEmailOptions, IsNumericOptions, IsURLOptions } from 'validator';
 
 // const configService = new ConfigService(configs());
 
-interface IIsDateStringOptions {
+interface IsDateStringOptions {
   min?: string | Date;
   max?: string | Date;
 }
@@ -29,7 +29,8 @@ interface IIsDateStringOptions {
 /**
  * Interface defining all possible string validation options
  */
-interface IStringValidationOption {
+export interface IStringValidationOption {
+  prefix?: string;
   min?: number; // Minimum length
   max?: number; // Maximum length
   trim?: boolean; // Whether to trim whitespace
@@ -45,10 +46,11 @@ interface IStringValidationOption {
   emailOptions?: IsEmailOptions; // Email validation options
   urlOptions?: IsURLOptions; // URL validation options
   numericOptions?: IsNumericOptions; // Numeric validation options
-  dateStringOptions?: IIsDateStringOptions; // Date string validation options
+  dateStringOptions?: IsDateStringOptions; // Date string validation options
   toInt?: boolean; // Transform to integer
   toFormatDate?: 'yyyy-MM-dd' | 'yyyy-MM-dd HH:mm:ss'; // Format date with specified format
   isOnlyString?: boolean; // Validate as only string
+  each?: boolean; // Validate each element of the array
 }
 
 /**
@@ -64,6 +66,7 @@ export const StringField = (
   validationOptions?: ValidationOptions,
 ): PropertyDecorator => {
   const {
+    prefix,
     min,
     max,
     trim,
@@ -83,6 +86,7 @@ export const StringField = (
     toInt,
     toFormatDate,
     isOnlyString,
+    each = false,
   } = options || {};
 
   // Group decorators by type
@@ -96,8 +100,9 @@ export const StringField = (
         ]
       : []),
     IsString({
-      message: validationOptions?.message || transformValidationErrors('IsString', {}),
+      message: validationOptions?.message || transformValidationErrors('IsString', {}, prefix),
       ...validationOptions,
+      each,
     }),
   ];
 
@@ -110,7 +115,7 @@ export const StringField = (
   if (!allowEmpty) {
     validationDecorators.push(
       IsNotEmpty({
-        message: transformValidationErrors('IsNotEmpty', {}),
+        message: transformValidationErrors('IsNotEmpty', {}, prefix),
       }),
     );
   }
@@ -119,9 +124,14 @@ export const StringField = (
   if (min) {
     validationDecorators.push(
       MinLength(min, {
-        message: transformValidationErrors('MinLength', {
-          min,
-        }),
+        message: transformValidationErrors(
+          'MinLength',
+          {
+            min,
+          },
+          prefix,
+        ),
+        each,
       }),
     );
   }
@@ -130,9 +140,14 @@ export const StringField = (
   if (max) {
     validationDecorators.push(
       MaxLength(max, {
-        message: transformValidationErrors('MaxLength', {
-          max,
-        }),
+        message: transformValidationErrors(
+          'MaxLength',
+          {
+            max,
+          },
+          prefix,
+        ),
+        each,
       }),
     );
   }
@@ -141,7 +156,7 @@ export const StringField = (
   if (isEmail) {
     validationDecorators.push(
       IsEmail(emailOptions, {
-        message: transformValidationErrors('IsEmail', {}),
+        message: transformValidationErrors('IsEmail', {}, prefix),
       }),
     );
   }
@@ -150,21 +165,21 @@ export const StringField = (
   if (isUrl) {
     validationDecorators.push(
       IsUrl(urlOptions, {
-        message: transformValidationErrors('IsUrl', {}),
+        message: transformValidationErrors('IsUrl', {}, prefix),
       }),
     );
   }
 
   // Apply phone number validation if requested
   if (isPhone) {
-    validationDecorators.push(IsPhoneNumber());
+    validationDecorators.push(IsPhoneNumber(undefined, prefix));
   }
 
   // Apply password validation if requested
   if (isPassword) {
     validationDecorators.push(
       IsPassword({
-        message: transformValidationErrors('IsPassword', {}),
+        message: transformValidationErrors('IsPassword', {}, prefix),
       }),
     );
   }
@@ -173,7 +188,8 @@ export const StringField = (
   if (isNumberString) {
     validationDecorators.push(
       IsNumberString(numericOptions, {
-        message: transformValidationErrors('IsNumber', {}),
+        message: transformValidationErrors('IsNumber', {}, prefix),
+        each,
       }),
     );
   }
@@ -182,22 +198,28 @@ export const StringField = (
   if (isSame) {
     validationDecorators.push(
       IsSameAs(isSame, {
-        message: transformValidationErrors('IsSameAs', {
-          properties: [isSame],
-        }),
+        message: transformValidationErrors(
+          'IsSameAs',
+          {
+            properties: [isSame],
+          },
+          prefix,
+        ),
+        each,
       }),
     );
   }
 
   // Apply date string validation if requested
   if (isDateString) {
-    validationDecorators.push(IsDateString(dateStringOptions));
+    validationDecorators.push(IsDateString(dateStringOptions, undefined, prefix));
   }
 
   if (isOnlyString) {
     validationDecorators.push(
       IsOnlyString({
-        message: transformValidationErrors('IsOnlyString', {}),
+        message: transformValidationErrors('IsOnlyString', {}, prefix),
+        each,
       }),
     );
   }
@@ -255,7 +277,10 @@ const IsPassword = (validationOptions?: ValidationOptions): PropertyDecorator =>
  * @param validationOptions - Additional validation options
  * @returns PropertyDecorator for phone number validation
  */
-const IsPhoneNumber = (validationOptions?: ValidationOptions): PropertyDecorator => {
+const IsPhoneNumber = (
+  validationOptions?: ValidationOptions,
+  prefix?: string,
+): PropertyDecorator => {
   return ValidateBy(
     {
       name: 'IsPhoneNumber',
@@ -265,7 +290,7 @@ const IsPhoneNumber = (validationOptions?: ValidationOptions): PropertyDecorator
           return /^0\d{9,10}$/.test(value);
         },
         defaultMessage: () => {
-          return transformValidationErrors('IsPhoneNumber', {});
+          return transformValidationErrors('IsPhoneNumber', {}, prefix);
         },
       },
     },
@@ -309,8 +334,9 @@ const IsSameAs = (property: string, validationOptions?: ValidationOptions): Prop
  * @returns PropertyDecorator for date string validation
  */
 const IsDateString = (
-  dateStringOptions?: IIsDateStringOptions,
+  dateStringOptions?: IsDateStringOptions,
   validationOptions?: ValidationOptions,
+  prefix?: string,
 ): PropertyDecorator => {
   return ValidateBy(
     {
@@ -331,7 +357,7 @@ const IsDateString = (
           return true;
         },
         defaultMessage() {
-          return transformValidationErrors('IsDateString', {});
+          return transformValidationErrors('IsDateString', {}, prefix);
         },
       },
     },
@@ -345,7 +371,10 @@ const IsDateString = (
  * @param validationOptions - Additional validation options
  * @returns PropertyDecorator for phone number validation
  */
-const IsOnlyString = (validationOptions?: ValidationOptions): PropertyDecorator => {
+const IsOnlyString = (
+  validationOptions?: ValidationOptions,
+  prefix?: string,
+): PropertyDecorator => {
   return ValidateBy(
     {
       name: 'IsOnlyString',
@@ -354,7 +383,7 @@ const IsOnlyString = (validationOptions?: ValidationOptions): PropertyDecorator 
           return /^[A-Za-zÀ-Ỹà-ỹ\s]+$/.test(value);
         },
         defaultMessage: () => {
-          return transformValidationErrors('IsOnlyString', {});
+          return transformValidationErrors('IsOnlyString', {}, prefix);
         },
       },
     },
