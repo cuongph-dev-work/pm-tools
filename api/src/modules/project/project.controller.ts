@@ -24,7 +24,8 @@ export class ProjectController {
   @Roles([USER_ROLE.ADMIN, USER_ROLE.PM])
   @Post('/')
   createProject(@Body() body: CreateProjectDto, @CurrentUser() currentUser: User) {
-    return this.projectService.createProject(body, currentUser);
+    console.log(body);
+    // return this.projectService.createProject(body, currentUser);
   }
 
   @Roles([USER_ROLE.ADMIN])
