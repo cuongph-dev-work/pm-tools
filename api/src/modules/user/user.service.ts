@@ -1,10 +1,10 @@
 import { ChangePasswordDto, ResetPasswordDto, SetFirstPasswordDto } from '@modules/auth/dtos';
 import {
   BadRequestException,
-  forwardRef,
   Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { MailService } from '@shared/modules/mail/mail.service';
 import { addHours } from '@utils/date';
@@ -13,6 +13,7 @@ import { createPaginationResponse } from '@utils/pagination';
 import { compare } from 'bcryptjs';
 import { plainToInstance } from 'class-transformer';
 import { I18nService } from 'nestjs-i18n';
+import { WrapperType } from 'src/types/request.type';
 import { User } from '../../database/entities/user.entity';
 import { CreateUserDto, SearchUserDto, ShowUserResponseDto, UpdateUserDto } from './dtos';
 import { UserRepository } from './user.repository';
@@ -21,7 +22,7 @@ import { UserRepository } from './user.repository';
 export class UserService {
   constructor(
     @Inject(forwardRef(() => UserRepository))
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: WrapperType<UserRepository>,
     private readonly i18n: I18nService,
     private readonly mailService: MailService,
   ) {}

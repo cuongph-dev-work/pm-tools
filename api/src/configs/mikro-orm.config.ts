@@ -1,7 +1,7 @@
 import { defineConfig } from '@mikro-orm/core';
+import { Migrator } from '@mikro-orm/migrations';
 import { Options, PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { config as configDotEnv } from 'dotenv';
-import { Migrator } from '@mikro-orm/migrations';
 
 // Load environment variables from .env file
 configDotEnv();

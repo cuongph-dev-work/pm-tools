@@ -1,15 +1,9 @@
+import { INVITE_STATUS, PROJECT_ROLE } from '@configs/enum/db';
 import { Entity, Enum, Filter, ManyToOne, Opt, Property, Unique } from '@mikro-orm/core';
-import { BaseEntity } from './base.entity';
-import { PROJECT_ROLE } from './project-member.entity';
+import { WrapperType } from 'src/types/request.type';
+import { BaseEntity } from './base.abstract';
 import { Project } from './project.entity';
 import { User } from './user.entity';
-
-export enum INVITE_STATUS {
-  PENDING = 'PENDING',
-  ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED',
-  EXPIRED = 'EXPIRED',
-}
 
 /**
  * Project Invite Member entity representing the project_invite_member table in the database
@@ -24,13 +18,13 @@ export class ProjectInviteMember extends BaseEntity {
    * Project reference
    */
   @ManyToOne(() => Project, { nullable: false })
-  project!: Project;
+  project!: WrapperType<Project>;
 
   /**
    * User who sent the invitation
    */
   @ManyToOne(() => User, { nullable: false })
-  invited_by!: User;
+  invited_by!: WrapperType<User>;
 
   /**
    * Email address of the invited person

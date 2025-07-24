@@ -1,21 +1,9 @@
+import { MEMBER_STATUS, PROJECT_ROLE } from '@configs/enum/db';
 import { Entity, Enum, Filter, ManyToOne, Opt, Property, Unique } from '@mikro-orm/core';
-import { BaseEntity } from './base.entity';
+import { WrapperType } from 'src/types/request.type';
+import { BaseEntity } from './base.abstract';
 import { Project } from './project.entity';
 import { User } from './user.entity';
-
-export enum MEMBER_STATUS {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  LEFT = 'LEFT',
-}
-
-export enum PROJECT_ROLE {
-  PROJECT_MANAGER = 'PROJECT_MANAGER', // project manager
-  DEVELOPER = 'DEVELOPER', // developer
-  QA = 'QUALITY_ASSURANCE', // quality assurance
-  QC = 'QUALITY_CONTROL', // tester
-  BRSE_COMTOR = 'BRSE_COMTOR', // Bridge Software Engineer
-}
 
 /**
  * Project Member entity representing the project_member table in the database
@@ -30,13 +18,13 @@ export class ProjectMember extends BaseEntity {
    * Project reference
    */
   @ManyToOne(() => Project, { nullable: false })
-  project!: Project;
+  project!: WrapperType<Project>;
 
   /**
    * User reference
    */
   @ManyToOne(() => User, { nullable: false })
-  user!: User;
+  user!: WrapperType<User>;
 
   /**
    * Member role in the project

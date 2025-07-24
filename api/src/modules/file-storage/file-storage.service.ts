@@ -10,13 +10,13 @@ import { transformToValidationError } from '@utils/helper';
 
 import { STORAGE_DELETE_MODE, STORAGE_DRIVER } from '@configs/enum/file';
 import { FileStorage } from '@entities/file-storage.entity';
+import { User } from '@entities/user.entity';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { ConfigService } from '@nestjs/config';
 import { UploadService } from '@shared/modules/upload/upload.service';
 import { getFileKindFromMimeType } from '@utils/file';
 import { I18nService } from 'nestjs-i18n';
 import { extname } from 'path';
-import { RequestWithUser } from 'src/types/request.type';
 import { GetFileDto } from './dtos/get-file.dto';
 import { FileStorageRepository } from './file-storage.repository';
 
@@ -42,7 +42,7 @@ export class FileStorageService {
    * @param user - The user who is uploading the file
    * @returns The file storage entity
    */
-  async uploadFile(file: Express.Multer.File, user: RequestWithUser['user']) {
+  async uploadFile(file: Express.Multer.File, user: User) {
     if (!file) {
       throw transformToValidationError(
         [{ property: 'file', key: 'IsMustSelect', params: {} }],
@@ -57,7 +57,7 @@ export class FileStorageService {
       fileStorage.url = '';
       fileStorage.size = file.size;
       fileStorage.mime_type = file.mimetype;
-      fileStorage.created_by = user.id ?? 'system';
+      fileStorage.created_by = user;
       fileStorage.kind = getFileKindFromMimeType(file.mimetype);
       await em.persistAndFlush(fileStorage);
 
@@ -87,7 +87,7 @@ export class FileStorageService {
    * @param user - The user who is deleting the file
    * @returns The file storage entity
    */
-  async deleteFile(id: string, user: RequestWithUser['user']) {
+  async deleteFile(id: string, user: User) {
     const fileStorage = await this.fileStorageRepository.findOneById(id);
 
     if (!fileStorage) {
@@ -97,7 +97,7 @@ export class FileStorageService {
     return this.em.transactional(async em => {
       if (this.storageDeleteMode === STORAGE_DELETE_MODE.SOFT) {
         // soft delete file
-        fileStorage.updated_by = user?.id ?? 'system';
+        fileStorage.updated_by = user;
         fileStorage.deleted_at = new Date();
         await em.persistAndFlush(fileStorage);
       } else {

@@ -1,20 +1,20 @@
+import { CurrentUser } from '@decorators/current-user.decorator';
+import { User } from '@entities/user.entity';
 import {
   Controller,
-  Post,
-  Get,
   Delete,
-  UseInterceptors,
-  UploadedFile,
-  Param,
-  Req,
-  Query,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Post,
+  Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FileStorageService } from './file-storage.service';
-import { RequestWithUser } from 'src/types/request.type';
 import { GetFileDto } from './dtos/get-file.dto';
+import { FileStorageService } from './file-storage.service';
 
 @Controller('file-storage')
 export class FileStorageController {
@@ -22,8 +22,8 @@ export class FileStorageController {
 
   @Post('/')
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: RequestWithUser) {
-    return this.fileStorageService.uploadFile(file, req.user);
+  uploadFile(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: User) {
+    return this.fileStorageService.uploadFile(file, user);
   }
 
   @Get(':id')
@@ -33,7 +33,7 @@ export class FileStorageController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteFile(@Param('id') id: string, @Req() req: RequestWithUser) {
-    return this.fileStorageService.deleteFile(id, req.user);
+  async deleteFile(@Param('id') id: string, @CurrentUser() user: User) {
+    return this.fileStorageService.deleteFile(id, user);
   }
 }

@@ -1,6 +1,6 @@
+import { PROJECT_ROLE } from '@configs/enum/db';
 import { StringField } from '@decorators/validation/string.decorator';
 import { IsEnum } from 'class-validator';
-import { PROJECT_ROLE } from '../../../database/entities/project-member.entity';
 
 export class CreateInviteDto {
   @StringField({

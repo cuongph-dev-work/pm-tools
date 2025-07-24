@@ -1,5 +1,6 @@
-import { INVITE_STATUS, ProjectInviteMember } from '@entities/project-invite-member.entity';
-import { MEMBER_STATUS, PROJECT_ROLE, ProjectMember } from '@entities/project-member.entity';
+import { INVITE_STATUS, MEMBER_STATUS, PROJECT_ROLE } from '@configs/enum/db';
+import { ProjectInviteMember } from '@entities/project-invite-member.entity';
+import { ProjectMember } from '@entities/project-member.entity';
 import { Project } from '@entities/project.entity';
 import { User } from '@entities/user.entity';
 import { EntityManager } from '@mikro-orm/core';
@@ -148,7 +149,7 @@ export class ProjectInviteService {
       throw new BadRequestException('Invitation has already been responded to');
     }
 
-    if (respondInviteDto.action === 'ACCEPT') {
+    if (respondInviteDto.action === INVITE_STATUS.ACCEPTED) {
       // Add user to project members
       const member = new ProjectMember();
       member.project = invite.project;

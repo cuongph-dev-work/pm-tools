@@ -1,3 +1,5 @@
+import { USER_ROLE } from '@configs/enum/db';
+import { EnumField } from '@decorators/validation/enum.decorator';
 import { StringField } from '@decorators/validation/string.decorator';
 
 export class CreateUserDto {
@@ -33,4 +35,9 @@ export class CreateUserDto {
     max: 13,
   })
   phone: string;
+
+  @EnumField(() => USER_ROLE, {
+    isOptional: true,
+  })
+  role: USER_ROLE;
 }

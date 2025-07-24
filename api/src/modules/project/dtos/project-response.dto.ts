@@ -1,4 +1,4 @@
-import { PROJECT_STATUS } from '../../../database/entities/project.entity';
+import { PROJECT_STATUS } from '@configs/enum/db';
 
 export class ProjectResponseDto {
   id: string;

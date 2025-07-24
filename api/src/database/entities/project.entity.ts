@@ -1,15 +1,10 @@
+import { PROJECT_STATUS } from '@configs/enum/db';
 import { Entity, Enum, Filter, ManyToOne, OneToMany, Opt, Property } from '@mikro-orm/core';
-import { BaseEntity } from './base.entity';
+import { WrapperType } from 'src/types/request.type';
+import { BaseEntity } from './base.abstract';
 import { ProjectInviteMember } from './project-invite-member.entity';
 import { ProjectMember } from './project-member.entity';
 import { User } from './user.entity';
-
-export enum PROJECT_STATUS {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-}
 
 /**
  * Project entity representing the project table in the database
@@ -35,7 +30,7 @@ export class Project extends BaseEntity {
    * Project owner - reference to User entity
    */
   @ManyToOne(() => User, { nullable: false })
-  owner!: User;
+  owner!: WrapperType<User>;
 
   /**
    * Project status
@@ -65,11 +60,11 @@ export class Project extends BaseEntity {
    * Project members relationship
    */
   @OneToMany(() => ProjectMember, member => member.project)
-  members?: ProjectMember[];
+  members?: WrapperType<ProjectMember>[];
 
   /**
    * Project invite members relationship
    */
   @OneToMany(() => ProjectInviteMember, invite => invite.project)
-  invites?: ProjectInviteMember[];
+  invites?: WrapperType<ProjectInviteMember>[];
 }

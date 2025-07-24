@@ -1,4 +1,4 @@
-import { GENDER } from '@configs/enum/customer';
+import { USER_ROLE } from '@configs/enum/db';
 import {
   BeforeCreate,
   BeforeUpdate,
@@ -11,22 +11,14 @@ import {
   Property,
 } from '@mikro-orm/core';
 import * as bcrypt from 'bcryptjs';
-import { BaseEntity } from './base.entity';
+import { WrapperType } from 'src/types/request.type';
+import { BaseEntity } from './base.abstract';
 import { FileStorage } from './file-storage.entity';
 import { ProjectInviteMember } from './project-invite-member.entity';
 import { ProjectMember } from './project-member.entity';
 import { Project } from './project.entity';
 
 const SALT_ROUND = 11;
-
-export enum USER_ROLE {
-  OWNER = 'OWNER', // project owner
-  PM = 'PROJECT_MANAGER', // project manager
-  DEVELOPER = 'DEVELOPER', // developer
-  QA = 'QUALITY_ASSURANCE', // quality assurance
-  QC = 'QUALITY_CONTROL', // tester
-  BR_COMT = 'BRSE_COMTOR', // Bridge Software Engineer
-}
 
 /**
  * User entity representing the user table in the database
@@ -89,12 +81,6 @@ export class User extends BaseEntity {
   }
 
   /**
-   * User's gender
-   */
-  @Enum({ items: () => GENDER, default: GENDER.MALE })
-  gender?: Opt<GENDER> = GENDER.MALE;
-
-  /**
    * User's phone number, limited to 13 characters
    */
   @Property({ nullable: true, length: 13 })
@@ -134,19 +120,19 @@ export class User extends BaseEntity {
    * Projects owned by this user
    */
   @OneToMany(() => Project, project => project.owner)
-  owned_projects?: Project[];
+  owned_projects?: WrapperType<Project>[];
 
   /**
    * Project memberships of this user
    */
   @OneToMany(() => ProjectMember, member => member.user)
-  project_memberships?: ProjectMember[];
+  project_memberships?: WrapperType<ProjectMember>[];
 
   /**
    * Project invitations sent by this user
    */
   @OneToMany(() => ProjectInviteMember, invite => invite.invited_by)
-  sent_invitations?: ProjectInviteMember[];
+  sent_invitations?: WrapperType<ProjectInviteMember>[];
 
   /**
    * Hash a password using bcrypt

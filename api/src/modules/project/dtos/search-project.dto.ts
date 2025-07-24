@@ -1,7 +1,7 @@
+import { PROJECT_STATUS } from '@configs/enum/db';
 import { StringField } from '@decorators/validation/string.decorator';
 import { Transform } from 'class-transformer';
 import { IsArray, IsEnum, IsOptional } from 'class-validator';
-import { PROJECT_STATUS } from '../../../database/entities/project.entity';
 
 export class SearchProjectDto {
   @StringField({

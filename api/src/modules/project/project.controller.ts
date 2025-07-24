@@ -1,5 +1,7 @@
+import { USER_ROLE } from '@configs/enum/db';
 import { CurrentUser } from '@decorators/current-user.decorator';
 import { Roles } from '@decorators/role.decorator';
+import { User } from '@entities/user.entity';
 import {
   Body,
   Controller,
@@ -12,7 +14,6 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { User } from '../../database/entities/user.entity';
 import { CreateProjectDto, SearchProjectDto, UpdateProjectDto } from './dtos';
 import { ProjectService } from './project.service';
 
@@ -20,13 +21,13 @@ import { ProjectService } from './project.service';
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
-  @Roles([])
+  @Roles([USER_ROLE.ADMIN, USER_ROLE.PM])
   @Post('/')
   createProject(@Body() body: CreateProjectDto, @CurrentUser() currentUser: User) {
     return this.projectService.createProject(body, currentUser);
   }
 
-  @Roles([])
+  @Roles([USER_ROLE.ADMIN])
   @Get('/')
   getProjects(@Query() query: SearchProjectDto, @CurrentUser() currentUser: User) {
     return this.projectService.findProjects(query, currentUser);

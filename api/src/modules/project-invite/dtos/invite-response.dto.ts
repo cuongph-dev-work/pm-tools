@@ -1,5 +1,4 @@
-import { INVITE_STATUS } from '../../../database/entities/project-invite-member.entity';
-import { PROJECT_ROLE } from '../../../database/entities/project-member.entity';
+import { INVITE_STATUS, PROJECT_ROLE } from '@configs/enum/db';
 
 export class InviteResponseDto {
   id: string;

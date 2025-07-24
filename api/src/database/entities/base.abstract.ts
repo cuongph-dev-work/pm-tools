@@ -9,18 +9,6 @@ export abstract class BaseEntity {
   id: string = generateRandomId();
 
   /**
-   * ID of the user who created this record
-   */
-  @Property({ length: 20, nullable: true })
-  created_by: Opt<string>;
-
-  /**
-   * ID of the user who last updated this record
-   */
-  @Property({ length: 20, nullable: true })
-  updated_by: Opt<string>;
-
-  /**
    * Timestamp when the user record was created
    * Automatically set to current date when record is created
    */

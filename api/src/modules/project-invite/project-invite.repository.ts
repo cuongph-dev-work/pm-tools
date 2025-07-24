@@ -1,4 +1,5 @@
-import { INVITE_STATUS, ProjectInviteMember } from '@entities/project-invite-member.entity';
+import { INVITE_STATUS } from '@configs/enum/db';
+import { ProjectInviteMember } from '@entities/project-invite-member.entity';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 

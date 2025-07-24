@@ -1,7 +1,8 @@
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { Project, PROJECT_STATUS } from '@entities/project.entity';
+import { PROJECT_STATUS } from '@configs/enum/db';
+import { Project } from '@entities/project.entity';
 import { SearchProjectDto } from './dtos';
 
 @Injectable()

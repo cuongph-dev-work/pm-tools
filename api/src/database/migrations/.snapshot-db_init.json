@@ -1,5 +1,7 @@
 {
-  "namespaces": ["public"],
+  "namespaces": [
+    "public"
+  ],
   "name": "public",
   "tables": [
     {
@@ -14,358 +16,6 @@
           "length": 20,
           "mappedType": "string"
         },
-        "created_by": {
-          "name": "created_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "updated_by": {
-          "name": "updated_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp with time zone",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "password": {
-          "name": "password",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "reset_token": {
-          "name": "reset_token",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "reset_token_expired_at": {
-          "name": "reset_token_expired_at",
-          "type": "timestamp with time zone",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "avatar_id": {
-          "name": "avatar_id",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "first_name": {
-          "name": "first_name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "last_name": {
-          "name": "last_name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'EVENT_MANAGER'",
-          "enumItems": ["SUPER_ADMIN", "EVENT_MANAGER"],
-          "mappedType": "enum"
-        },
-        "block_to": {
-          "name": "block_to",
-          "type": "timestamp with time zone",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "administrator",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": ["email"],
-          "composite": false,
-          "keyName": "administrator_email_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "administrator_pkey",
-          "columnNames": ["id"],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {},
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "created_by": {
-          "name": "created_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "updated_by": {
-          "name": "updated_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp with time zone",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "kind": {
-          "name": "kind",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "enumItems": [
-            "DOCUMENT",
-            "VIDEO",
-            "IMAGE",
-            "ARCHIVE",
-            "AUDIO",
-            "OTHER"
-          ],
-          "mappedType": "enum"
-        },
-        "url": {
-          "name": "url",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": -1,
-          "mappedType": "string"
-        },
-        "original_name": {
-          "name": "original_name",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": -1,
-          "mappedType": "string"
-        },
-        "mime_type": {
-          "name": "mime_type",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": -1,
-          "mappedType": "string"
-        },
-        "size": {
-          "name": "size",
-          "type": "integer",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "metadata": {
-          "name": "metadata",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "json"
-        },
-        "driver": {
-          "name": "driver",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "enumItems": ["LOCAL", "CLOUDINARY"],
-          "mappedType": "enum"
-        }
-      },
-      "name": "file_storage_information",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "file_storage_information_pkey",
-          "columnNames": ["id"],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {},
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "created_by": {
-          "name": "created_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "updated_by": {
-          "name": "updated_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -465,17 +115,6 @@
           "nullable": true,
           "length": 255,
           "mappedType": "string"
-        },
-        "gender": {
-          "name": "gender",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'MALE'",
-          "enumItems": ["MALE", "FEMALE", "OTHER"],
-          "mappedType": "enum"
         },
         "phone": {
           "name": "phone",
@@ -535,7 +174,7 @@
           "primary": false,
           "nullable": false,
           "enumItems": [
-            "OWNER",
+            "ADMIN",
             "PROJECT_MANAGER",
             "DEVELOPER",
             "QUALITY_ASSURANCE",
@@ -549,7 +188,9 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": ["email"],
+          "columnNames": [
+            "email"
+          ],
           "composite": false,
           "keyName": "user_email_unique",
           "constraint": true,
@@ -558,7 +199,9 @@
         },
         {
           "keyName": "user_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -569,9 +212,13 @@
       "foreignKeys": {
         "user_avatar_id_foreign": {
           "constraintName": "user_avatar_id_foreign",
-          "columnNames": ["avatar_id"],
+          "columnNames": [
+            "avatar_id"
+          ],
           "localTableName": "public.user",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.file_storage_information",
           "deleteRule": "set null",
           "updateRule": "cascade"
@@ -588,26 +235,6 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "created_by": {
-          "name": "created_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "updated_by": {
-          "name": "updated_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
           "length": 20,
           "mappedType": "string"
         },
@@ -679,7 +306,12 @@
           "primary": false,
           "nullable": false,
           "default": "'ACTIVE'",
-          "enumItems": ["ACTIVE", "INACTIVE", "COMPLETED", "CANCELLED"],
+          "enumItems": [
+            "ACTIVE",
+            "INACTIVE",
+            "COMPLETED",
+            "CANCELLED"
+          ],
           "mappedType": "enum"
         },
         "tags": {
@@ -718,7 +350,9 @@
       "indexes": [
         {
           "keyName": "project_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -729,9 +363,13 @@
       "foreignKeys": {
         "project_owner_id_foreign": {
           "constraintName": "project_owner_id_foreign",
-          "columnNames": ["owner_id"],
+          "columnNames": [
+            "owner_id"
+          ],
           "localTableName": "public.project",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.user",
           "updateRule": "cascade"
         }
@@ -747,26 +385,6 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "created_by": {
-          "name": "created_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "updated_by": {
-          "name": "updated_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
           "length": 20,
           "mappedType": "string"
         },
@@ -844,7 +462,11 @@
           "primary": false,
           "nullable": false,
           "default": "'ACTIVE'",
-          "enumItems": ["ACTIVE", "INACTIVE", "LEFT"],
+          "enumItems": [
+            "ACTIVE",
+            "INACTIVE",
+            "LEFT"
+          ],
           "mappedType": "enum"
         },
         "joined_at": {
@@ -873,7 +495,10 @@
       "indexes": [
         {
           "keyName": "project_member_project_id_user_id_unique",
-          "columnNames": ["project_id", "user_id"],
+          "columnNames": [
+            "project_id",
+            "user_id"
+          ],
           "composite": true,
           "constraint": true,
           "primary": false,
@@ -881,7 +506,9 @@
         },
         {
           "keyName": "project_member_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -892,17 +519,25 @@
       "foreignKeys": {
         "project_member_project_id_foreign": {
           "constraintName": "project_member_project_id_foreign",
-          "columnNames": ["project_id"],
+          "columnNames": [
+            "project_id"
+          ],
           "localTableName": "public.project_member",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.project",
           "updateRule": "cascade"
         },
         "project_member_user_id_foreign": {
           "constraintName": "project_member_user_id_foreign",
-          "columnNames": ["user_id"],
+          "columnNames": [
+            "user_id"
+          ],
           "localTableName": "public.project_member",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.user",
           "updateRule": "cascade"
         }
@@ -918,26 +553,6 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "created_by": {
-          "name": "created_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "updated_by": {
-          "name": "updated_by",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
           "length": 20,
           "mappedType": "string"
         },
@@ -1035,7 +650,12 @@
           "primary": false,
           "nullable": false,
           "default": "'PENDING'",
-          "enumItems": ["PENDING", "ACCEPTED", "REJECTED", "EXPIRED"],
+          "enumItems": [
+            "PENDING",
+            "ACCEPTED",
+            "REJECTED",
+            "EXPIRED"
+          ],
           "mappedType": "enum"
         },
         "expired_at": {
@@ -1083,7 +703,9 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": ["token"],
+          "columnNames": [
+            "token"
+          ],
           "composite": false,
           "keyName": "project_invite_member_token_unique",
           "constraint": true,
@@ -1092,7 +714,10 @@
         },
         {
           "keyName": "project_invite_member_project_id_invited_email_unique",
-          "columnNames": ["project_id", "invited_email"],
+          "columnNames": [
+            "project_id",
+            "invited_email"
+          ],
           "composite": true,
           "constraint": true,
           "primary": false,
@@ -1100,7 +725,9 @@
         },
         {
           "keyName": "project_invite_member_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "constraint": true,
           "primary": true,
@@ -1111,18 +738,212 @@
       "foreignKeys": {
         "project_invite_member_project_id_foreign": {
           "constraintName": "project_invite_member_project_id_foreign",
-          "columnNames": ["project_id"],
+          "columnNames": [
+            "project_id"
+          ],
           "localTableName": "public.project_invite_member",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.project",
           "updateRule": "cascade"
         },
         "project_invite_member_invited_by_id_foreign": {
           "constraintName": "project_invite_member_invited_by_id_foreign",
-          "columnNames": ["invited_by_id"],
+          "columnNames": [
+            "invited_by_id"
+          ],
           "localTableName": "public.project_invite_member",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.user",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 20,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "created_by_id": {
+          "name": "created_by_id",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 20,
+          "mappedType": "string"
+        },
+        "updated_by_id": {
+          "name": "updated_by_id",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 20,
+          "mappedType": "string"
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "enumItems": [
+            "DOCUMENT",
+            "VIDEO",
+            "IMAGE",
+            "ARCHIVE",
+            "AUDIO",
+            "OTHER"
+          ],
+          "mappedType": "enum"
+        },
+        "url": {
+          "name": "url",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": -1,
+          "mappedType": "string"
+        },
+        "original_name": {
+          "name": "original_name",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": -1,
+          "mappedType": "string"
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": -1,
+          "mappedType": "string"
+        },
+        "size": {
+          "name": "size",
+          "type": "integer",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
+        },
+        "driver": {
+          "name": "driver",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "enumItems": [
+            "LOCAL",
+            "CLOUDINARY"
+          ],
+          "mappedType": "enum"
+        }
+      },
+      "name": "file_storage_information",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "file_storage_information_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "file_storage_information_created_by_id_foreign": {
+          "constraintName": "file_storage_information_created_by_id_foreign",
+          "columnNames": [
+            "created_by_id"
+          ],
+          "localTableName": "public.file_storage_information",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "file_storage_information_updated_by_id_foreign": {
+          "constraintName": "file_storage_information_updated_by_id_foreign",
+          "columnNames": [
+            "updated_by_id"
+          ],
+          "localTableName": "public.file_storage_information",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       },

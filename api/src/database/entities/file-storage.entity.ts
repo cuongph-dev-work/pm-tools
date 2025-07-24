@@ -1,6 +1,6 @@
 import { FILE_KIND, STORAGE_DRIVER } from '@configs/enum/file';
 import { Entity, Enum, Filter, Opt, Property } from '@mikro-orm/core';
-import { BaseEntity } from './base.entity';
+import { AuditableEntity } from './auditable.abstract';
 
 /**
  * FileStorage entity representing the file_storage_information table in the database
@@ -8,7 +8,7 @@ import { BaseEntity } from './base.entity';
  */
 @Entity({ tableName: 'file_storage_information' })
 @Filter({ name: 'isActive', cond: { deleted_at: null } })
-export class FileStorage extends BaseEntity {
+export class FileStorage extends AuditableEntity {
   /**
    * Type/kind of the file (DOCUMENT | VIDEO | IMAGE)
    */

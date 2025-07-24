@@ -11,9 +11,9 @@ const api_documentation_credentials = {
 export function configSwagger(app: INestApplication) {
   const apiEndpoint = app.get(ConfigService).get('app.backendUrl');
   const config = new DocumentBuilder()
-    .setTitle('S-Tour project')
+    .setTitle('APP project')
     .setDescription(
-      '## The S-Tour API description\n\n### API Versioning\nAPI version is controlled via the `version` header. Default version is `1`.',
+      '## The APP API description\n\n### API Versioning\nAPI version is controlled via the `version` header. Default version is `1`.',
     )
     .setVersion('1.0')
     .addServer(`${apiEndpoint}/api`)

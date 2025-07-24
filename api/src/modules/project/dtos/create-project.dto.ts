@@ -1,6 +1,5 @@
+import { ArrayField } from '@decorators/validation/array.decorator';
 import { StringField } from '@decorators/validation/string.decorator';
-import { Transform } from 'class-transformer';
-import { IsArray, IsDateString, IsOptional } from 'class-validator';
 
 export class CreateProjectDto {
   @StringField({
@@ -14,21 +13,20 @@ export class CreateProjectDto {
   })
   description?: string;
 
-  @IsOptional()
-  @IsArray()
-  @Transform(({ value }) => {
-    if (typeof value === 'string') {
-      return value.split(',').map((tag: string) => tag.trim());
-    }
-    return value;
+  @ArrayField(String, {
+    isOptional: true,
   })
   tags?: string[];
 
-  @IsOptional()
-  @IsDateString()
+  @StringField({
+    isOptional: true,
+    isDateString: true,
+  })
   start_date?: string;
 
-  @IsOptional()
-  @IsDateString()
+  @StringField({
+    isOptional: true,
+    isDateString: true,
+  })
   end_date?: string;
 }
