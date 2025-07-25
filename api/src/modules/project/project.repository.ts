@@ -1,7 +1,8 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { PROJECT_STATUS, USER_ROLE } from '@configs/enum/db';
+import { MEMBER_STATUS, PROJECT_ROLE, PROJECT_STATUS, USER_ROLE } from '@configs/enum/db';
+import { ProjectMember } from '@entities/project-member.entity';
 import { Project } from '@entities/project.entity';
 import { User } from '@entities/user.entity';
 import { plainToInstance } from 'class-transformer';
@@ -73,7 +74,8 @@ export class ProjectRepository extends EntityRepository<Project> {
     return this.findOne(
       { id },
       {
-        populate: ['owner', 'members.user', 'members.user.avatar', 'invites'],
+        populate: ['owner', 'members.user', 'invites'],
+        filters: ['isActive'],
       },
     );
   }
@@ -106,5 +108,28 @@ export class ProjectRepository extends EntityRepository<Project> {
         orderBy: { created_at: 'DESC' },
       },
     );
+  }
+
+  async createPrjAndAddMember(payload: Project, currentUser: User) {
+    return this.em.transactional(async em => {
+      const project = new Project();
+      project.name = payload.name;
+      project.description = payload.description;
+      project.owner = currentUser;
+      project.tags = payload.tags;
+
+      await em.persistAndFlush(project);
+
+      const member = new ProjectMember();
+      member.user = currentUser;
+      member.project = project;
+      member.role = PROJECT_ROLE.PROJECT_MANAGER;
+      member.status = MEMBER_STATUS.ACTIVE;
+      member.joined_at = new Date();
+
+      await em.persistAndFlush(member);
+
+      return { id: project.id };
+    });
   }
 }

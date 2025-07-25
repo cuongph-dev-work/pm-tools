@@ -1,4 +1,3 @@
-import { ArrayField } from '@decorators/validation/array.decorator';
 import { StringField } from '@decorators/validation/string.decorator';
 
 export class CreateProjectDto {
@@ -15,18 +14,11 @@ export class CreateProjectDto {
   })
   description?: string;
 
-  @ArrayField(
-    () => {
-      return StringField({ isOnlyString: true, max: 50, each: true, prefix: 'project' });
-    },
-    {
-      isOptional: true,
-      prefix: 'project',
-      min: 1,
-      max: 10,
-    },
-  )
-  tags?: string[];
+  @StringField({
+    isOptional: true,
+    prefix: 'project',
+  })
+  tags?: string;
 
   @StringField({
     isOptional: true,

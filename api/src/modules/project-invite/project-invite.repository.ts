@@ -1,10 +1,14 @@
 import { INVITE_STATUS } from '@configs/enum/db';
 import { ProjectInviteMember } from '@entities/project-invite-member.entity';
-import { EntityRepository } from '@mikro-orm/postgresql';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ProjectInviteRepository extends EntityRepository<ProjectInviteMember> {
+  constructor(em: EntityManager) {
+    super(em, ProjectInviteMember);
+  }
+
   async findInviteByToken(token: string) {
     return this.findOne(
       { token },
@@ -71,5 +75,14 @@ export class ProjectInviteRepository extends EntityRepository<ProjectInviteMembe
 
     await this.em.persistAndFlush(invite);
     return invite;
+  }
+
+  async findPendingInviteByEmail(projectId: string, email: string) {
+    return this.findOne({
+      project: projectId,
+      invited_email: email,
+      status: INVITE_STATUS.PENDING,
+      expired_at: { $gt: new Date() },
+    });
   }
 }

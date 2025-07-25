@@ -31,6 +31,9 @@ export type I18nTranslations = {
         "file_not_found": string;
         "project_update_forbidden": string;
         "project_not_found": string;
+        "project_invite_permission_denied": string;
+        "user_already_member": string;
+        "invitation_already_sent": string;
     };
     "validation": {
         "label": {
@@ -41,6 +44,11 @@ export type I18nTranslations = {
                 "tags": string;
                 "start_date": string;
                 "end_date": string;
+            };
+            "projectInvite": {
+                "invited_email": string;
+                "role": string;
+                "message": string;
             };
         };
         "IsString": string;

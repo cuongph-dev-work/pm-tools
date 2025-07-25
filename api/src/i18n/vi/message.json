@@ -10,5 +10,8 @@
   "set_first_password_success": "Mật khẩu đã được đặt lại thành công. Vui lòng đăng nhập lại.",
   "file_not_found": "Không tìm thấy file.",
   "project_update_forbidden": "Bạn chỉ có thể cập nhật dự án của mình.",
-  "project_not_found": "Không tìm thấy dự án."
+  "project_not_found": "Không tìm thấy dự án.",
+  "project_invite_permission_denied": "Bạn không có quyền mời người dùng vào dự án.",
+  "user_already_member": "Người dùng đã là thành viên của dự án.",
+  "invitation_already_sent": "Người dùng đã được mời vào dự án."
 }

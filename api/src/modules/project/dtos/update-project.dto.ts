@@ -1,5 +1,4 @@
 import { PROJECT_STATUS } from '@configs/enum/db';
-import { ArrayField } from '@decorators/validation/array.decorator';
 import { EnumField } from '@decorators/validation/enum.decorator';
 import { StringField } from '@decorators/validation/string.decorator';
 import { IsOptional } from 'class-validator';
@@ -20,18 +19,11 @@ export class UpdateProjectDto {
   })
   description?: string;
 
-  @ArrayField(
-    () => {
-      return StringField({ isOnlyString: true, max: 50, each: true, prefix: 'project' });
-    },
-    {
-      isOptional: true,
-      prefix: 'project',
-      min: 0,
-      max: 10,
-    },
-  )
-  tags?: string[];
+  @StringField({
+    isOptional: true,
+    prefix: 'project',
+  })
+  tags?: string;
 
   @EnumField(() => PROJECT_STATUS, {
     isOptional: true,

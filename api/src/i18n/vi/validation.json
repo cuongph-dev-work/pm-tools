@@ -7,6 +7,11 @@
       "tags": "Tags dự án",
       "start_date": "Ngày bắt đầu",
       "end_date": "Ngày kết thúc"
+    },
+    "projectInvite": {
+      "invited_email": "Email người được mời",
+      "role": "Vai trò",
+      "message": "Lời mời"
     }
   },
   "IsString": "{property} phải là chuỗi",

@@ -1,5 +1,5 @@
 import { PROJECT_STATUS } from '@configs/enum/db';
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose, Transform, Type } from 'class-transformer';
 
 @Exclude()
 class OwnerResponseDto {
@@ -30,6 +30,10 @@ export class ProjectResponseDto {
   description?: string;
 
   @Expose()
+  @Transform(({ value }) => {
+    if (!value) return;
+    return value.split(',').map(tag => tag.trim());
+  })
   tags?: string[];
 
   @Expose()
@@ -58,10 +62,37 @@ export class ProjectResponseDto {
   invite_count?: number;
 }
 
-export class ProjectListResponseDto {
+@Exclude()
+export class ProjectStatsResponseDto {
+  @Expose()
+  id: string;
+
+  @Expose()
+  name: string;
+
+  @Expose()
+  @Transform(({ value }) => {
+    if (!value) return;
+    return value.split(',').map(tag => tag.trim());
+  })
+  tags: string[];
+
+  @Expose()
+  member_count: number;
+
+  @Expose()
+  invite_count: number;
+
+  @Expose()
+  start_date: Date;
+
+  @Expose()
+  end_date: Date;
+}
+
+@Exclude()
+export class ProjectMemberOfResponseDto {
+  @Expose()
+  @Type(() => ProjectResponseDto)
   data: ProjectResponseDto[];
-  total: number;
-  page: number;
-  limit: number;
-  total_pages: number;
 }

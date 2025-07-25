@@ -1,5 +1,14 @@
 import { PROJECT_STATUS } from '@configs/enum/db';
-import { Entity, Enum, Filter, ManyToOne, OneToMany, Opt, Property } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  Enum,
+  Filter,
+  ManyToOne,
+  OneToMany,
+  Opt,
+  Property,
+} from '@mikro-orm/core';
 import { WrapperType } from 'src/types/request.type';
 import { BaseEntity } from './base.abstract';
 import { ProjectInviteMember } from './project-invite-member.entity';
@@ -42,7 +51,7 @@ export class Project extends BaseEntity {
    * Project tags - comma separated list of tags
    */
   @Property({ nullable: true, length: 255 })
-  tags?: Opt<string[]>;
+  tags?: Opt<string>;
 
   /**
    * Project start date
@@ -60,11 +69,11 @@ export class Project extends BaseEntity {
    * Project members relationship
    */
   @OneToMany(() => ProjectMember, member => member.project)
-  members?: WrapperType<ProjectMember>[];
+  members?: Collection<ProjectMember>;
 
   /**
    * Project invite members relationship
    */
   @OneToMany(() => ProjectInviteMember, invite => invite.project)
-  invites?: WrapperType<ProjectInviteMember>[];
+  invites?: Collection<ProjectInviteMember>;
 }

@@ -40,22 +40,16 @@ export class ProjectController {
   }
 
   @Roles([])
-  @Get('/active')
-  getActiveProjects() {
-    return this.projectService.findActiveProjects();
-  }
-
-  @Roles([])
   @Get('/:id')
   getProjectById(@Param('id') id: string) {
     return this.projectService.findProjectById(id);
   }
 
-  // @Roles([])
-  // @Get('/:id/stats')
-  // getProjectStats(@Param('id') id: string, @CurrentUser() currentUser: User) {
-  //   return this.projectService.getProjectStats(id, currentUser);
-  // }
+  @Roles([])
+  @Get('/:id/stats')
+  getProjectStats(@Param('id') id: string, @CurrentUser() currentUser: User) {
+    return this.projectService.getProjectStats(id, currentUser);
+  }
 
   @Roles([])
   @Patch('/:id')

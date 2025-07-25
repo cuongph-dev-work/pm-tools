@@ -157,6 +157,7 @@ export const StringField = (
     validationDecorators.push(
       IsEmail(emailOptions, {
         message: transformValidationErrors('IsEmail', {}, prefix),
+        each,
       }),
     );
   }
