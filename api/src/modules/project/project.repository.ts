@@ -1,5 +1,5 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { MEMBER_STATUS, PROJECT_ROLE, PROJECT_STATUS, USER_ROLE } from '@configs/enum/db';
 import { ProjectMember } from '@entities/project-member.entity';
@@ -10,6 +10,7 @@ import { ProjectResponseDto, SearchProjectDto } from './dtos';
 
 @Injectable()
 export class ProjectRepository extends EntityRepository<Project> {
+  private readonly logger = new Logger(ProjectRepository.name);
   constructor(em: EntityManager) {
     super(em, Project);
   }
@@ -23,7 +24,6 @@ export class ProjectRepository extends EntityRepository<Project> {
       .leftJoinAndSelect('p.owner', 'owner')
       .leftJoinAndSelect('p.members', 'members')
       .leftJoinAndSelect('p.invites', 'invites');
-
     // Apply filters
     if (filters.name) {
       qb.andWhere({ name: { $ilike: `%${filters.name}%` } });
@@ -49,17 +49,17 @@ export class ProjectRepository extends EntityRepository<Project> {
       qb.andWhere({ owner: currentUser.id });
     }
 
-    // Get total count
-    const total = await qb.getCount();
+    // filter active projects
+    await qb.applyFilters(['isActive']);
 
-    // Apply pagination
+    const clonedQb = qb.clone();
+
+    // Prepare pagination and ordering
     const offset = (page - 1) * limit;
     qb.offset(offset).limit(limit);
-
-    // Order by created_at desc
     qb.orderBy({ created_at: 'DESC' });
 
-    const projects = await qb.getResult();
+    const [total, projects] = await Promise.all([clonedQb.getCount(), qb.getResult()]);
 
     return {
       data: projects.map(project => plainToInstance(ProjectResponseDto, project)),

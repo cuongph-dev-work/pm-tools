@@ -9,20 +9,20 @@ export class CreateInviteDto {
       isEmail: true,
       max: 255,
       each: true,
-      prefix: 'projectInvite',
+      prefix: 'project_invite',
     }),
   )
   invited_email: string[];
 
   @EnumField(() => PROJECT_ROLE, {
-    prefix: 'projectInvite',
+    prefix: 'project_invite',
   })
   role: PROJECT_ROLE;
 
   @StringField({
     max: 1000,
     isOptional: true,
-    prefix: 'projectInvite',
+    prefix: 'project_invite',
   })
   message?: string;
 }

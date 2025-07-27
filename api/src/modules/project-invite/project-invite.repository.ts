@@ -85,4 +85,12 @@ export class ProjectInviteRepository extends EntityRepository<ProjectInviteMembe
       expired_at: { $gt: new Date() },
     });
   }
+
+  async findPendingInviteByProject(projectId: string) {
+    return this.find({
+      project: projectId,
+      status: INVITE_STATUS.PENDING,
+      expired_at: { $gt: new Date() },
+    });
+  }
 }

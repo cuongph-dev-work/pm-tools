@@ -13,5 +13,16 @@
   "project_not_found": "Không tìm thấy dự án.",
   "project_invite_permission_denied": "Bạn không có quyền mời người dùng vào dự án.",
   "user_already_member": "Người dùng đã là thành viên của dự án.",
-  "invitation_already_sent": "Người dùng đã được mời vào dự án."
+  "invitation_already_sent": "Người dùng đã được mời vào dự án.",
+  "invitation_not_found": "Lời mời không hợp lệ.",
+  "invitation_expired": "Lời mời đã hết hạn.",
+  "invitation_already_responded": "Lời mời đã được chấp nhận hoặc từ chối.",
+  "respond_invite_permission_denied": "Bạn không có quyền chấp nhận hoặc từ chối lời mời.",
+  "invitation_accepted": "Mã mời đã được chấp nhận.",
+  "invitation_rejected": "Mã mời đã được từ chối.",
+  "can_only_resend_sent_invitations": "Bạn chỉ có thể gửi lại lời mời đã được gửi.",
+  "can_only_resend_pending_invitations": "Bạn chỉ có thể gửi lại lời mời đang chờ phản hồi.",
+  "invitation_resend_success": "Lời mời đã được gửi lại.",
+  "sprint_not_found": "Sprint không tồn tại.",
+  "sprint_not_in_planning_status": "Sprint không đang ở trạng thái planning."
 }

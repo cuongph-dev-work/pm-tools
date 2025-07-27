@@ -34,6 +34,17 @@ export type I18nTranslations = {
         "project_invite_permission_denied": string;
         "user_already_member": string;
         "invitation_already_sent": string;
+        "invitation_not_found": string;
+        "invitation_expired": string;
+        "invitation_already_responded": string;
+        "respond_invite_permission_denied": string;
+        "invitation_accepted": string;
+        "invitation_rejected": string;
+        "can_only_resend_sent_invitations": string;
+        "can_only_resend_pending_invitations": string;
+        "invitation_resend_success": string;
+        "sprint_not_found": string;
+        "sprint_not_in_planning_status": string;
     };
     "validation": {
         "label": {
@@ -45,10 +56,11 @@ export type I18nTranslations = {
                 "start_date": string;
                 "end_date": string;
             };
-            "projectInvite": {
+            "project_invite": {
                 "invited_email": string;
                 "role": string;
                 "message": string;
+                "action": string;
             };
         };
         "IsString": string;

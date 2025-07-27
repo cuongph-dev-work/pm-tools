@@ -1,17 +1,18 @@
 {
   "label": {
-    "email": "Email",
+    "email": "email",
     "project": {
-      "name": "Tên dự án",
-      "description": "Mô tả dự án",
-      "tags": "Tags dự án",
-      "start_date": "Ngày bắt đầu",
-      "end_date": "Ngày kết thúc"
+      "name": "tên dự án",
+      "description": "mô tả dự án",
+      "tags": "tags dự án",
+      "start_date": "ngày bắt đầu",
+      "end_date": "ngày kết thúc"
     },
-    "projectInvite": {
-      "invited_email": "Email người được mời",
-      "role": "Vai trò",
-      "message": "Lời mời"
+    "project_invite": {
+      "invited_email": "email người được mời",
+      "role": "vai trò",
+      "message": "tin nhắn",
+      "action": "action"
     }
   },
   "IsString": "{property} phải là chuỗi",

@@ -14,4 +14,8 @@ export class ProjectMemberRepository extends EntityRepository<ProjectMember> {
       user: { email },
     });
   }
+
+  async findMembersByProject(projectId: string) {
+    return this.find({ project: projectId }, { filters: ['isActive'], populate: ['user'] });
+  }
 }

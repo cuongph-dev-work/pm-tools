@@ -10,7 +10,7 @@ import { User } from './user.entity';
  * Stores project member information and their roles
  */
 @Entity({ tableName: 'project_member' })
-@Filter({ name: 'isActive', cond: { deleted_at: null } })
+@Filter({ name: 'isActive', cond: { deleted_at: null, status: MEMBER_STATUS.ACTIVE } })
 @Filter({ name: 'isDeleted', cond: { deleted_at: { $ne: null } } })
 @Unique({ properties: ['project', 'user'] })
 export class ProjectMember extends BaseEntity {

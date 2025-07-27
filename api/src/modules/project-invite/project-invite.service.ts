@@ -1,3 +1,5 @@
+import { INVITE_STATUS, MEMBER_STATUS } from '@configs/enum/db';
+import { ProjectMember } from '@entities/project-member.entity';
 import { User } from '@entities/user.entity';
 import { ProjectRepository } from '@modules/project/project.repository';
 import {
@@ -9,10 +11,12 @@ import {
   NotFoundException,
   forwardRef,
 } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { generateToken } from '@utils/helper';
+import { plainToInstance } from 'class-transformer';
 import { I18nService } from 'nestjs-i18n';
 import { WrapperType } from 'src/types/request.type';
-import { CreateInviteDto } from './dtos';
+import { CreateInviteDto, InviteResponseDto, RespondInviteDto } from './dtos';
 import { ProjectInviteRepository } from './project-invite.repository';
 import { ProjectMemberRepository } from './project-member.repository';
 
@@ -85,163 +89,149 @@ export class ProjectInviteService {
     };
   }
 
-  // async findInviteById(id: string) {
-  //   const invite = await this.projectInviteRepository.findOne(
-  //     { id },
-  //     {
-  //       populate: ['project', 'invited_by'],
-  //     },
-  //   );
+  async findMembersByProject(projectId: string) {
+    const project = await this.projectRepository.findOne({ id: projectId });
+    if (!project) {
+      throw new NotFoundException(this.i18n.t('project_not_found'));
+    }
 
-  //   if (!invite) {
-  //     throw new NotFoundException(this.i18n.t('projectInvite.invitationNotFound'));
-  //   }
+    const officalMembers = await this.projectMemberRepository.findMembersByProject(projectId);
 
-  //   return plainToInstance(InviteResponseDto, invite);
-  // }
+    const memberIsInvited =
+      await this.projectInviteRepository.findPendingInviteByProject(projectId);
 
-  // async findInviteByToken(token: string) {
-  //   const invite = await this.projectInviteRepository.findInviteByToken(token);
+    const members = [
+      ...officalMembers.map(member => ({
+        email: member.user.email,
+        role: member.role,
+        accepted: true,
+      })),
+      ...memberIsInvited.map(invite => ({ email: invite.invited_email, accepted: false })),
+    ];
 
-  //   if (!invite) {
-  //     throw new NotFoundException(this.i18n.t('projectInvite.invalidInvitationToken'));
-  //   }
+    return { members };
+  }
 
-  //   // Check if invite is expired
-  //   if (invite.expired_at < new Date()) {
-  //     throw new BadRequestException(this.i18n.t('projectInvite.invitationExpired'));
-  //   }
+  async findMyInvites(currentUser: User) {
+    const invites = await this.projectInviteRepository.findInvitesByEmail(currentUser.email);
+    return { invites };
+  }
 
-  //   return plainToInstance(InviteResponseDto, invite);
-  // }
+  async findInviteByToken(token: string) {
+    const invite = await this.projectInviteRepository.findInviteByToken(token);
 
-  // async findInvitesByProject(projectId: string, currentUser: User) {
-  //   // Check if user has access to project
-  //   const project = await this.em.findOne(Project, { id: projectId });
-  //   if (!project) {
-  //     throw new NotFoundException(this.i18n.t('project_not_found'));
-  //   }
+    if (!invite) {
+      throw new NotFoundException(this.i18n.t('message.invitation_not_found'));
+    }
 
-  //   const isOwner = project.owner.id === currentUser.id;
-  //   const isMember = await this.em.findOne(ProjectMember, {
-  //     project: projectId,
-  //     user: currentUser.id,
-  //     status: MEMBER_STATUS.ACTIVE,
-  //   });
+    // Check if invite is expired
+    if (invite.expired_at < new Date()) {
+      throw new BadRequestException(this.i18n.t('message.invitation_expired'));
+    }
 
-  //   if (!isOwner && !isMember) {
-  //     throw new ForbiddenException(this.i18n.t('projectInvite.accessDenied'));
-  //   }
+    return plainToInstance(InviteResponseDto, invite);
+  }
 
-  //   return this.projectInviteRepository.findInvitesByProject(projectId);
-  // }
+  async respondToInvite(token: string, respondInviteDto: RespondInviteDto, currentUser: User) {
+    const invite = await this.projectInviteRepository.findInviteByToken(token);
 
-  // async findMyInvites(currentUser: User) {
-  //   return this.projectInviteRepository.findInvitesByEmail(currentUser.email);
-  // }
+    // Check if invite exists
+    if (!invite) {
+      throw new NotFoundException(this.i18n.t('message.invitation_not_found'));
+    }
 
-  // async findPendingInvites(currentUser: User) {
-  //   return this.projectInviteRepository.findPendingInvitesByEmail(currentUser.email);
-  // }
+    // Check if invite is expired
+    if (invite.expired_at < new Date()) {
+      throw new BadRequestException(this.i18n.t('message.invitation_expired'));
+    }
 
-  // async respondToInvite(token: string, respondInviteDto: RespondInviteDto, currentUser: User) {
-  //   const invite = await this.findInviteByToken(token);
+    // Check if invite is for current user
+    if (invite.invited_email !== currentUser.email) {
+      throw new ForbiddenException(this.i18n.t('message.respond_invite_permission_denied'));
+    }
 
-  //   // Check if invite is for current user
-  //   if (invite.invited_email !== currentUser.email) {
-  //     throw new ForbiddenException(this.i18n.t('projectInvite.invitationNotForYou'));
-  //   }
+    // Check if invite is still pending
+    if (invite.status !== INVITE_STATUS.PENDING) {
+      throw new BadRequestException(this.i18n.t('message.invitation_already_responded'));
+    }
 
-  //   // Check if invite is still pending
-  //   if (invite.status !== INVITE_STATUS.PENDING) {
-  //     throw new BadRequestException(this.i18n.t('projectInvite.invitationAlreadyResponded'));
-  //   }
+    if (respondInviteDto.action === INVITE_STATUS.ACCEPTED) {
+      // Add user to project members
+      const member = new ProjectMember();
+      member.project = invite.project;
+      member.user = currentUser;
+      member.role = invite.role;
+      member.status = MEMBER_STATUS.ACTIVE;
+      member.joined_at = new Date();
 
-  //   if (respondInviteDto.action === INVITE_STATUS.ACCEPTED) {
-  //     // Add user to project members
-  //     const member = new ProjectMember();
-  //     member.project = invite.project;
-  //     member.user = currentUser;
-  //     member.role = invite.role;
-  //     member.status = MEMBER_STATUS.ACTIVE;
+      await this.projectMemberRepository.getEntityManager().persistAndFlush(member);
 
-  //     await this.em.persistAndFlush(member);
+      // Update invite status
+      invite.status = INVITE_STATUS.ACCEPTED;
+      invite.accepted_at = new Date();
 
-  //     // Update invite status
-  //     invite.status = INVITE_STATUS.ACCEPTED;
-  //     invite.accepted_at = new Date();
-  //   } else {
-  //     // Update invite status to rejected
-  //     invite.status = INVITE_STATUS.REJECTED;
-  //     invite.rejected_at = new Date();
-  //   }
+      await this.projectInviteRepository.getEntityManager().persistAndFlush(invite);
 
-  //   await this.em.persistAndFlush(invite);
+      return {
+        message: this.i18n.t('message.invitation_accepted'),
+      };
+    }
 
-  //   return {
-  //     message: this.i18n.t(`projectInvite.invitation${respondInviteDto.action.toLowerCase()}ed`),
-  //   };
-  // }
+    // Update invite status to rejected
+    invite.status = INVITE_STATUS.REJECTED;
+    invite.rejected_at = new Date();
 
-  // async cancelInvite(inviteId: string, currentUser: User) {
-  //   const invite = await this.findInviteById(inviteId);
+    await this.projectInviteRepository.getEntityManager().persistAndFlush(invite);
 
-  //   // Check if user has permission to cancel invite
-  //   const isOwner = invite.project.owner.id === currentUser.id;
-  //   const isInviter = invite.invited_by.id === currentUser.id;
+    return {
+      message: this.i18n.t('message.invitation_rejected'),
+    };
+  }
 
-  //   if (!isOwner && !isInviter) {
-  //     throw new ForbiddenException(this.i18n.t('projectInvite.canOnlyCancelSentInvitations'));
-  //   }
+  async resendInvite(inviteId: string, currentUser: User) {
+    const invite = await this.projectInviteRepository.findOne({ id: inviteId });
 
-  //   // Check if invite is still pending
-  //   if (invite.status !== INVITE_STATUS.PENDING) {
-  //     throw new BadRequestException(this.i18n.t('projectInvite.canOnlyCancelPendingInvitations'));
-  //   }
+    if (!invite) {
+      throw new NotFoundException(this.i18n.t('message.invitation_not_found'));
+    }
 
-  //   await this.em.removeAndFlush(invite);
+    // Check if user has permission to resend invite
+    const isOwner = invite.project.owner.id === currentUser.id;
+    const isInviter = invite.invited_by.id === currentUser.id;
 
-  //   return { message: this.i18n.t('projectInvite.invitationCancelled') };
-  // }
+    if (!isOwner && !isInviter) {
+      throw new ForbiddenException(this.i18n.t('message.can_only_resend_sent_invitations'));
+    }
 
-  // async resendInvite(inviteId: string, currentUser: User) {
-  //   const invite = await this.findInviteById(inviteId);
+    // Check if invite is still pending
+    if ([INVITE_STATUS.ACCEPTED, INVITE_STATUS.REJECTED].includes(invite.status)) {
+      throw new BadRequestException(this.i18n.t('message.invitation_already_responded'));
+    }
 
-  //   // Check if user has permission to resend invite
-  //   const isOwner = invite.project.owner.id === currentUser.id;
-  //   const isInviter = invite.invited_by.id === currentUser.id;
+    // Generate new token and extend expiration
+    invite.token = generateToken(64);
+    invite.expired_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-  //   if (!isOwner && !isInviter) {
-  //     throw new ForbiddenException(this.i18n.t('projectInvite.canOnlyResendSentInvitations'));
-  //   }
+    // Update invite status to pending
+    invite.status = INVITE_STATUS.PENDING;
+    invite.rejected_at = undefined;
+    invite.accepted_at = undefined;
 
-  //   // Check if invite is still pending
-  //   if (invite.status !== INVITE_STATUS.PENDING) {
-  //     throw new BadRequestException(this.i18n.t('projectInvite.canOnlyResendPendingInvitations'));
-  //   }
+    await this.projectInviteRepository.getEntityManager().persistAndFlush(invite);
 
-  //   // Generate new token and extend expiration
-  //   invite.token = this.generateInviteToken();
-  //   invite.expired_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    return {
+      message: this.i18n.t('message.invitation_resend_success'),
+    };
+  }
 
-  //   await this.em.persistAndFlush(invite);
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async cleanupExpiredInvites() {
+    const expiredInvites = await this.projectInviteRepository.findExpiredInvites();
 
-  //   return this.findInviteById(invite.id);
-  // }
+    for (const invite of expiredInvites) {
+      invite.status = INVITE_STATUS.EXPIRED;
+    }
 
-  // async cleanupExpiredInvites() {
-  //   const expiredInvites = await this.projectInviteRepository.findExpiredInvites();
-
-  //   for (const invite of expiredInvites) {
-  //     invite.status = INVITE_STATUS.EXPIRED;
-  //   }
-
-  //   await this.em.persistAndFlush(expiredInvites);
-
-  //   return {
-  //     message: this.i18n.t('projectInvite.expiredInvitationsUpdated', {
-  //       count: expiredInvites.length,
-  //     }),
-  //   };
-  // }
+    await this.projectInviteRepository.getEntityManager().persistAndFlush(expiredInvites);
+  }
 }

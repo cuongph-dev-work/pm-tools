@@ -1,9 +1,9 @@
 import { USER_ROLE } from '@configs/enum/db';
 import { CurrentUser } from '@decorators/current-user.decorator';
 import { Roles } from '@decorators/role.decorator';
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { User } from '../../database/entities/user.entity';
-import { CreateInviteDto } from './dtos';
+import { CreateInviteDto, RespondInviteDto } from './dtos';
 import { ProjectInviteService } from './project-invite.service';
 
 @Controller('project-invites')
@@ -20,73 +20,33 @@ export class ProjectInviteController {
     return this.projectInviteService.createInvite(projectId, body, currentUser);
   }
 
-  // @Roles([
-  //   USER_ROLE.ADMIN,
-  //   USER_ROLE.PM,
-  //   USER_ROLE.DEVELOPER,
-  //   USER_ROLE.QA,
-  //   USER_ROLE.QC,
-  //   USER_ROLE.BR_COMT,
-  // ])
-  // @Get('/projects/:projectId/invites')
-  // getInvitesByProject(@Param('projectId') projectId: string, @CurrentUser() currentUser: User) {
-  //   return this.projectInviteService.findInvitesByProject(projectId, currentUser);
-  // }
+  @Roles([USER_ROLE.ADMIN, USER_ROLE.PM])
+  @Get('/projects/:projectId/members')
+  getMembersByProject(@Param('projectId') projectId: string) {
+    return this.projectInviteService.findMembersByProject(projectId);
+  }
 
-  // @Roles([
-  //   USER_ROLE.ADMIN,
-  //   USER_ROLE.PM,
-  //   USER_ROLE.DEVELOPER,
-  //   USER_ROLE.QA,
-  //   USER_ROLE.QC,
-  //   USER_ROLE.BR_COMT,
-  // ])
-  // @Get('/my-invites')
-  // getMyInvites(@CurrentUser() currentUser: User) {
-  //   return this.projectInviteService.findMyInvites(currentUser);
-  // }
+  @Roles([])
+  @Get('/my-invites')
+  getMyInvites(@CurrentUser() currentUser: User) {
+    return this.projectInviteService.findMyInvites(currentUser);
+  }
 
-  // @Roles([
-  //   USER_ROLE.ADMIN,
-  //   USER_ROLE.PM,
-  //   USER_ROLE.DEVELOPER,
-  //   USER_ROLE.QA,
-  //   USER_ROLE.QC,
-  //   USER_ROLE.BR_COMT,
-  // ])
-  // @Get('/pending-invites')
-  // getPendingInvites(@CurrentUser() currentUser: User) {
-  //   return this.projectInviteService.findPendingInvites(currentUser);
-  // }
+  @Roles([])
+  @Get('/invites/token/:token')
+  getInviteByToken(@Param('token') token: string) {
+    return this.projectInviteService.findInviteByToken(token);
+  }
 
-  // @Roles([
-  //   USER_ROLE.ADMIN,
-  //   USER_ROLE.PM,
-  //   USER_ROLE.DEVELOPER,
-  //   USER_ROLE.QA,
-  //   USER_ROLE.QC,
-  //   USER_ROLE.BR_COMT,
-  // ])
-  // @Get('/invites/:id')
-  // getInviteById(@Param('id') id: string) {
-  //   return this.projectInviteService.findInviteById(id);
-  // }
-
-  // @Roles([])
-  // @Get('/invites/token/:token')
-  // getInviteByToken(@Param('token') token: string) {
-  //   return this.projectInviteService.findInviteByToken(token);
-  // }
-
-  // @Roles([])
-  // @Post('/invites/:token/respond')
-  // respondToInvite(
-  //   @Param('token') token: string,
-  //   @Body() body: RespondInviteDto,
-  //   @CurrentUser() currentUser: User,
-  // ) {
-  //   return this.projectInviteService.respondToInvite(token, body, currentUser);
-  // }
+  @Roles([])
+  @Post('/invites/:token/respond')
+  respondToInvite(
+    @Param('token') token: string,
+    @Body() body: RespondInviteDto,
+    @CurrentUser() currentUser: User,
+  ) {
+    return this.projectInviteService.respondToInvite(token, body, currentUser);
+  }
 
   // @Roles([USER_ROLE.ADMIN, USER_ROLE.PM])
   // @Put('/invites/:id/resend')

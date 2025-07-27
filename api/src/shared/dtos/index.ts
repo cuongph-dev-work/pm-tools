@@ -1,11 +1,9 @@
-import { IsNumber, IsOptional } from 'class-validator';
+import { NumberField } from '@decorators/validation/number.decorator';
 
 export class PaginationDto {
-  @IsOptional()
-  @IsNumber()
+  @NumberField({ isOptional: true })
   page?: number;
 
-  @IsOptional()
-  @IsNumber()
+  @NumberField({ isOptional: true })
   limit?: number;
 }

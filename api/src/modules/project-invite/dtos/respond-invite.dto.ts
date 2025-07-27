@@ -1,7 +1,9 @@
 import { INVITE_STATUS } from '@configs/enum/db';
-import { IsEnum } from 'class-validator';
+import { EnumField } from '@decorators/validation/enum.decorator';
 
 export class RespondInviteDto {
-  @IsEnum(INVITE_STATUS)
+  @EnumField(() => INVITE_STATUS, {
+    prefix: 'project_invite',
+  })
   action: INVITE_STATUS;
 }
