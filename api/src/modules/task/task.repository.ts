@@ -305,21 +305,22 @@ export class TaskRepository extends EntityRepository<Task> {
 
   async deleteTask(id: string): Promise<Task | null> {
     return this.em.transactional(async em => {
-      const task = await em.findOne(Task, { id });
+      const task = await em.findOne(
+        Task,
+        { id },
+        {
+          populate: ['sub_tasks', 'tags'],
+        },
+      );
       if (!task) {
         return null;
       }
 
-      // Find and delete all sub-tasks first
-      const subTasks = await em.find(Task, { parent_task: id });
-      for (const subTask of subTasks) {
-        subTask.deleted_at = new Date();
-        await em.persistAndFlush(subTask);
-      }
+      // Clear relationships for main task
+      task.tags.removeAll();
+      task.sub_tasks.removeAll();
 
-      // Soft delete the main task
-      task.deleted_at = new Date();
-      await em.persistAndFlush(task);
+      await em.removeAndFlush(task);
 
       return task;
     });

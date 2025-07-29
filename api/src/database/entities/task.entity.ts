@@ -86,6 +86,6 @@ export class Task extends AuditableEntity {
   /**
    * Sub-tasks (self-referencing)
    */
-  @ManyToMany(() => Task)
+  @ManyToMany(() => Task, undefined)
   sub_tasks = new Collection<Task>(this);
 }
