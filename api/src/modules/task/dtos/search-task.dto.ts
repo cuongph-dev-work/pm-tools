@@ -1,4 +1,6 @@
 import { TASK_PRIORITY, TASK_STATUS, TASK_TYPE } from '@configs/enum/db';
+import { EnumField } from '@decorators/validation/enum.decorator';
+import { StringField } from '@decorators/validation/string.decorator';
 import { PaginationDto } from '@shared/dtos';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
@@ -38,4 +40,26 @@ export class SearchTaskDto extends PaginationDto {
   @IsOptional()
   @IsString()
   parent_task_id?: string;
+}
+
+export class SearchTaskInSprintDto {
+  @StringField({
+    isOptional: true,
+  })
+  keyword?: string;
+
+  @EnumField(() => TASK_TYPE, {
+    isOptional: true,
+  })
+  type?: TASK_TYPE;
+
+  @EnumField(() => TASK_STATUS, {
+    isOptional: true,
+  })
+  status?: TASK_STATUS;
+
+  @EnumField(() => TASK_PRIORITY, {
+    isOptional: true,
+  })
+  priority?: TASK_PRIORITY;
 }

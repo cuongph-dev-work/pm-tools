@@ -1,7 +1,7 @@
 import { CurrentUser } from '@decorators/current-user.decorator';
 import { User } from '@entities/user.entity';
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { CreateTaskDto, UpdateTaskDto } from './dtos';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { CreateTaskDto, SearchTaskInSprintDto, UpdateTaskDto } from './dtos';
 import { TaskService } from './task.service';
 
 @Controller('projects/:projectId/tasks')
@@ -27,6 +27,14 @@ export class TaskController {
     return this.taskService.updateTask(projectId, taskId, updateTaskDto, currentUser);
   }
 
+  @Get('backlog')
+  async getTaskFromBacklog(
+    @Param('projectId') projectId: string,
+    @Query() searchDto: SearchTaskInSprintDto,
+  ) {
+    return this.taskService.getTaskFromBacklog(projectId, searchDto);
+  }
+
   @Get(':id')
   async findTaskById(@Param('projectId') projectId: string, @Param('id') id: string) {
     return this.taskService.findTaskById(projectId, id);
@@ -37,38 +45,31 @@ export class TaskController {
     return this.taskService.deleteTask(projectId, id);
   }
 
-  // @Get()
-  // async findAllTasks(@Query() searchDto: SearchTaskDto) {
-  //   return this.taskService.findAllTasks(searchDto);
-  // }
+  @Get('sprint/:sprintId')
+  async getTaskFromSprint(
+    @Param('projectId') projectId: string,
+    @Param('sprintId') sprintId: string,
+    @Query() searchDto: SearchTaskInSprintDto,
+  ) {
+    return this.taskService.getTaskFromSprint(projectId, sprintId, searchDto);
+  }
 
-  // @Put(':id')
-  // async updateTask(
-  //   @Param('id') id: string,
-  //   @Body() updateTaskDto: UpdateTaskDto,
-  //   @CurrentUser() currentUser: User,
-  // ): Promise<TaskResponseDto> {
-  //   return this.taskService.updateTask(id, updateTaskDto, currentUser);
-  // }
+  @Patch(':id/sprint/:sprintId')
+  async addTaskToSprint(
+    @Param('projectId') projectId: string,
+    @Param('id') id: string,
+    @Param('sprintId') sprintId: string,
+    @CurrentUser() currentUser: User,
+  ) {
+    return this.taskService.addTaskToSprint(projectId, id, sprintId, currentUser);
+  }
 
-  // @Delete(':id')
-  // @HttpCode(HttpStatus.NO_CONTENT)
-  // async deleteTask(@Param('id') id: string): Promise<void> {
-  //   return this.taskService.deleteTask(id);
-  // }
-
-  // @Get('project/:projectId')
-  // async findTasksByProject(@Param('projectId') projectId: string): Promise<TaskResponseDto[]> {
-  //   return this.taskService.findTasksByProject(projectId);
-  // }
-
-  // @Get('sprint/:sprintId')
-  // async findTasksBySprint(@Param('sprintId') sprintId: string): Promise<TaskResponseDto[]> {
-  //   return this.taskService.findTasksBySprint(sprintId);
-  // }
-
-  // @Get('assignee/:assigneeId')
-  // async findTasksByAssignee(@Param('assigneeId') assigneeId: string): Promise<TaskResponseDto[]> {
-  //   return this.taskService.findTasksByAssignee(assigneeId);
-  // }
+  @Patch(':id/move-to-backlog')
+  async moveTaskToBacklog(
+    @Param('projectId') projectId: string,
+    @Param('id') id: string,
+    @CurrentUser() currentUser: User,
+  ) {
+    return this.taskService.moveTaskToBacklog(projectId, id, currentUser);
+  }
 }

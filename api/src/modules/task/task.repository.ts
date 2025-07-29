@@ -6,7 +6,13 @@ import { Task } from '@entities/task.entity';
 import { User } from '@entities/user.entity';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateTaskDto, SearchTaskDto, UpdateTaskDto } from './dtos';
+import { CreateTaskDto, SearchTaskDto, SearchTaskInSprintDto, UpdateTaskDto } from './dtos';
+
+export interface UpdateSprintDto {
+  task_id: string;
+  sprint_id?: string;
+  clear_sprints?: boolean;
+}
 
 @Injectable()
 export class TaskRepository extends EntityRepository<Task> {
@@ -95,11 +101,27 @@ export class TaskRepository extends EntityRepository<Task> {
     );
   }
 
-  async findTasksBySprint(sprintId: string): Promise<Task[]> {
+  async findTasksBySprint(sprintId?: string, searchDto?: SearchTaskInSprintDto): Promise<Task[]> {
+    const { keyword, type, status, priority } = searchDto || {};
+
+    const where: any = {};
+
+    if (keyword) {
+      where.$or = [
+        { title: { $ilike: `%${keyword}%` } },
+        { description: { $ilike: `%${keyword}%` } },
+        { assignee: { $ilike: `%${keyword}%` } },
+      ];
+    }
+
+    if (type) where.type = type;
+    if (status) where.status = status;
+    if (priority) where.priority = priority;
+
     return this.find(
-      { sprints: sprintId },
+      { sprints: sprintId, ...where },
       {
-        populate: ['assignee', 'tags'],
+        populate: ['assignee', 'tags', 'sprints', 'sub_tasks'],
         orderBy: { created_at: 'DESC' },
       },
     );
@@ -109,7 +131,7 @@ export class TaskRepository extends EntityRepository<Task> {
     return this.find(
       { assignee: assigneeId },
       {
-        populate: ['sprints', 'tags', 'project'],
+        populate: ['sprints', 'tags', 'project', 'sub_tasks'],
         orderBy: { created_at: 'DESC' },
       },
     );
@@ -312,6 +334,7 @@ export class TaskRepository extends EntityRepository<Task> {
           populate: ['sub_tasks', 'tags'],
         },
       );
+
       if (!task) {
         return null;
       }
@@ -322,6 +345,29 @@ export class TaskRepository extends EntityRepository<Task> {
 
       await em.removeAndFlush(task);
 
+      return task;
+    });
+  }
+
+  async updateSprint(data: UpdateSprintDto, currentUser: User): Promise<Task | null> {
+    return this.em.transactional(async em => {
+      const task = await em.findOne(Task, { id: data.task_id });
+      if (!task) {
+        return null;
+      }
+
+      if (data.clear_sprints || !data.sprint_id) {
+        task.sprints.removeAll();
+      } else if (data.sprint_id) {
+        const sprint = await em.findOne(Sprint, { id: data.sprint_id });
+
+        if (sprint && !task.sprints.contains(sprint)) {
+          task.sprints.add(sprint);
+        }
+      }
+
+      task.updated_by = currentUser;
+      await em.persistAndFlush(task);
       return task;
     });
   }

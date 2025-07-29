@@ -11,6 +11,7 @@ import {
 } from '@mikro-orm/core';
 import { WrapperType } from 'src/types/request.type';
 import { BaseEntity } from './base.abstract';
+import { GitRepository } from './git-repository.entity';
 import { ProjectInviteMember } from './project-invite-member.entity';
 import { ProjectMember } from './project-member.entity';
 import { User } from './user.entity';
@@ -76,4 +77,10 @@ export class Project extends BaseEntity {
    */
   @OneToMany(() => ProjectInviteMember, invite => invite.project)
   invites?: Collection<ProjectInviteMember>;
+
+  /**
+   * Git repositories relationship
+   */
+  @OneToMany(() => GitRepository, repo => repo.project)
+  git_repositories?: Collection<GitRepository>;
 }

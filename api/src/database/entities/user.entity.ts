@@ -14,6 +14,7 @@ import * as bcrypt from 'bcryptjs';
 import { WrapperType } from 'src/types/request.type';
 import { BaseEntity } from './base.abstract';
 import { FileStorage } from './file-storage.entity';
+import { GitAlert } from './git-alert.entity';
 import { ProjectInviteMember } from './project-invite-member.entity';
 import { ProjectMember } from './project-member.entity';
 import { Project } from './project.entity';
@@ -117,6 +118,18 @@ export class User extends BaseEntity {
   role!: USER_ROLE;
 
   /**
+   * Github username
+   */
+  @Property({ nullable: true, length: 255 })
+  github_username?: Opt<string>;
+
+  /**
+   * Gitlab username
+   */
+  @Property({ nullable: true, length: 255 })
+  gitlab_username?: Opt<string>;
+
+  /**
    * Projects owned by this user
    */
   @OneToMany(() => Project, project => project.owner)
@@ -133,6 +146,18 @@ export class User extends BaseEntity {
    */
   @OneToMany(() => ProjectInviteMember, invite => invite.invited_by)
   sent_invitations?: WrapperType<ProjectInviteMember>[];
+
+  /**
+   * Git alerts read by this user
+   */
+  @OneToMany(() => GitAlert, alert => alert.read_by)
+  read_git_alerts?: WrapperType<GitAlert>[];
+
+  /**
+   * Git alerts triggered by this user
+   */
+  @OneToMany(() => GitAlert, alert => alert.triggered_by)
+  triggered_git_alerts?: WrapperType<GitAlert>[];
 
   /**
    * Hash a password using bcrypt

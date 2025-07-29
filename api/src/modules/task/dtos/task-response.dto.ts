@@ -1,5 +1,5 @@
 import { TASK_PRIORITY, TASK_STATUS, TASK_TYPE } from '@configs/enum/db';
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose, Transform, Type } from 'class-transformer';
 
 @Exclude()
 export class TagResponseDto {
@@ -108,4 +108,8 @@ export class TaskResponseDto {
 
   @Expose()
   updated_at: string;
+
+  @Expose()
+  @Transform(({ obj }) => obj.due_date && new Date(obj.due_date) < new Date())
+  is_overdue: boolean;
 }
