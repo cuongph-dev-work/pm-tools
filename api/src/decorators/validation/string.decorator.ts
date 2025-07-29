@@ -100,7 +100,7 @@ export const StringField = (
         ]
       : []),
     IsString({
-      message: validationOptions?.message || transformValidationErrors('IsString', {}, prefix),
+      message: transformValidationErrors('IsString', {}, prefix),
       ...validationOptions,
       each,
     }),

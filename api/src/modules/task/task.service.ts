@@ -1,8 +1,10 @@
+import { User } from '@entities/user.entity';
 import { ProjectRepository } from '@modules/project/project.repository';
 import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { I18nService } from 'nestjs-i18n';
 import { WrapperType } from 'src/types/request.type';
-import { CreateTaskDto } from './dtos';
+import { CreateTaskDto, TaskResponseDto, UpdateTaskDto } from './dtos';
 import { TaskRepository } from './task.repository';
 
 @Injectable()
@@ -27,12 +29,50 @@ export class TaskService {
 
   async createTask(projectId: string, createTaskDto: CreateTaskDto, currentUser: User) {
     const project = await this.findProjectById(projectId);
+    const task = await this.taskRepository.createTask(createTaskDto, project, currentUser);
+    return { id: task?.id };
+  }
 
-    // const task = new Task();
-    // task.title = createTaskDto.title;
-    // task.description = createTaskDto.description;
-    // task.type = createTaskDto.type;
-    // return this.taskRepository.createTask(projectId, createTaskDto);
+  async updateTask(
+    projectId: string,
+    taskId: string,
+    updateTaskDto: UpdateTaskDto,
+    currentUser: User,
+  ) {
+    await this.findProjectById(projectId);
+    const task = await this.taskRepository.updateTask(taskId, updateTaskDto, currentUser);
+    if (!task) {
+      throw new NotFoundException(this.i18n.t('message.task_not_found'));
+    }
+    return { id: task.id };
+  }
+
+  async findTaskById(projectId: string, id: string) {
+    await this.findProjectById(projectId);
+    const task = await this.taskRepository.findWithRelations(id);
+    if (!task) {
+      throw new NotFoundException(this.i18n.t('message.task_not_found'));
+    }
+
+    const sprints = task.sprints.getItems();
+    const tags = task.tags.getItems();
+    const sub_tasks = task.sub_tasks.getItems();
+
+    return plainToInstance(TaskResponseDto, {
+      ...task,
+      sprints,
+      tags,
+      sub_tasks,
+    });
+  }
+
+  async deleteTask(projectId: string, id: string) {
+    await this.findProjectById(projectId);
+    const task = await this.taskRepository.deleteTask(id);
+    if (!task) {
+      throw new NotFoundException(this.i18n.t('message.task_not_found'));
+    }
+    return { id };
   }
 
   // async createTask(createTaskDto: CreateTaskDto, currentUser: User): Promise<TaskResponseDto> {

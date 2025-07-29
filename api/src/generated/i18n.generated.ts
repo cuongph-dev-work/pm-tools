@@ -45,6 +45,7 @@ export type I18nTranslations = {
         "invitation_resend_success": string;
         "sprint_not_found": string;
         "sprint_not_in_planning_status": string;
+        "task_not_found": string;
     };
     "validation": {
         "label": {
@@ -61,6 +62,9 @@ export type I18nTranslations = {
                 "role": string;
                 "message": string;
                 "action": string;
+            };
+            "tag": {
+                "name": string;
             };
         };
         "IsString": string;

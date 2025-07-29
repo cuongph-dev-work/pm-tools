@@ -13,6 +13,9 @@
       "role": "vai trò",
       "message": "tin nhắn",
       "action": "action"
+    },
+    "tag": {
+      "name": "tên tag"
     }
   },
   "IsString": "{property} phải là chuỗi",

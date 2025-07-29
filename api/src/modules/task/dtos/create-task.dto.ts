@@ -4,6 +4,19 @@ import { EnumField } from '@decorators/validation/enum.decorator';
 import { NumberField } from '@decorators/validation/number.decorator';
 import { StringField } from '@decorators/validation/string.decorator';
 
+class TagDto {
+  @StringField({
+    prefix: 'tag',
+  })
+  name: string;
+
+  @StringField({
+    prefix: 'tag',
+    isOptional: true,
+  })
+  id?: string;
+}
+
 export class CreateTaskDto {
   @StringField({
     max: 255,
@@ -43,22 +56,16 @@ export class CreateTaskDto {
   estimate?: number;
 
   @StringField({
-    isOptional: true,
     prefix: 'task',
     isDateString: true,
   })
-  due_date?: string;
+  due_date: string;
 
   @StringField({
     isOptional: true,
     prefix: 'task',
   })
   assignee_id?: string;
-
-  @StringField({
-    prefix: 'task',
-  })
-  project_id: string;
 
   @StringField({
     isOptional: true,
@@ -78,4 +85,7 @@ export class CreateTaskDto {
     },
   )
   sprint_ids?: string[];
+
+  @ArrayField(TagDto, {})
+  tags: TagDto[];
 }

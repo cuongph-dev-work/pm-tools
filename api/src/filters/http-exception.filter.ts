@@ -119,7 +119,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
           const parsedObj = JSON.parse(childMessage.constraints);
           const key = parsedObj.key;
           const params = parsedObj.params;
-          const property = this.i18n.t(`validation.label.${childMessage.property}`, { lang });
+          const prefix = parsedObj.prefix;
+          const property = this.i18n.t(
+            prefix
+              ? `validation.label.${prefix}.${childMessage.property}`
+              : `validation.label.${childMessage.property}`,
+            {
+              lang,
+            },
+          );
           const constraintValues = Object.values(params);
           allMessages.push({
             path: childMessage.property,
@@ -137,6 +145,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       } else {
         const stringifiedObj = Object.values(error.constraints ?? {})?.[0];
         const parsedObj = JSON.parse(stringifiedObj);
+
         const params = parsedObj.params;
         const key = parsedObj.key;
         const prefix = parsedObj.prefix;

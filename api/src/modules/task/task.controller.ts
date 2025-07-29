@@ -1,7 +1,7 @@
 import { CurrentUser } from '@decorators/current-user.decorator';
 import { User } from '@entities/user.entity';
-import { Body, Controller, Param, Post } from '@nestjs/common';
-import { CreateTaskDto } from './dtos';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { CreateTaskDto, UpdateTaskDto } from './dtos';
 import { TaskService } from './task.service';
 
 @Controller('projects/:projectId/tasks')
@@ -17,14 +17,29 @@ export class TaskController {
     return this.taskService.createTask(projectId, createTaskDto, currentUser);
   }
 
+  @Put(':taskId')
+  async updateTask(
+    @Param('projectId') projectId: string,
+    @Param('taskId') taskId: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+    @CurrentUser() currentUser: User,
+  ) {
+    return this.taskService.updateTask(projectId, taskId, updateTaskDto, currentUser);
+  }
+
+  @Get(':id')
+  async findTaskById(@Param('projectId') projectId: string, @Param('id') id: string) {
+    return this.taskService.findTaskById(projectId, id);
+  }
+
+  @Delete(':id')
+  async deleteTask(@Param('projectId') projectId: string, @Param('id') id: string) {
+    return this.taskService.deleteTask(projectId, id);
+  }
+
   // @Get()
   // async findAllTasks(@Query() searchDto: SearchTaskDto) {
   //   return this.taskService.findAllTasks(searchDto);
-  // }
-
-  // @Get(':id')
-  // async findTaskById(@Param('id') id: string): Promise<TaskResponseDto> {
-  //   return this.taskService.findTaskById(id);
   // }
 
   // @Put(':id')

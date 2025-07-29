@@ -23,8 +23,8 @@ type Constructor<T = any> = new (...args: any[]) => T;
 
 type DecoratorFactory = (options?: ValidationOptions) => PropertyDecorator;
 
-function isDecoratorFactory(input: any): input is DecoratorFactory {
-  return typeof input === 'function' && input.length <= 1;
+function isClass(input: any): input is Constructor {
+  return typeof input === 'function' && input.prototype instanceof Object;
 }
 
 export const ArrayField = <T = any>(
@@ -68,14 +68,11 @@ export const ArrayField = <T = any>(
     );
   }
 
-  // Handle element validation
-  if (isDecoratorFactory(typeOrDecorator)) {
-    // If a decorator factory is passed, apply it with { each: true }
-    decorators.push(typeOrDecorator({ each: true }));
-  } else if (typeof typeOrDecorator === 'function') {
-    // If a class is passed, use ValidateNested and Type
+  if (isClass(typeOrDecorator)) {
     decorators.push(ValidateNested({ each: true }));
     decorators.push(Type(() => typeOrDecorator));
+  } else {
+    decorators.push(typeOrDecorator({ each: true }));
   }
 
   return applyDecorators(...decorators);

@@ -24,5 +24,6 @@
   "can_only_resend_pending_invitations": "Bạn chỉ có thể gửi lại lời mời đang chờ phản hồi.",
   "invitation_resend_success": "Lời mời đã được gửi lại.",
   "sprint_not_found": "Sprint không tồn tại.",
-  "sprint_not_in_planning_status": "Sprint không đang ở trạng thái planning."
+  "sprint_not_in_planning_status": "Sprint không đang ở trạng thái planning.",
+  "task_not_found": "Task không tồn tại."
 }
