@@ -1,4 +1,3 @@
-import { GIT_ALERT_PRIORITY, GIT_ALERT_STATUS, GIT_ALERT_TYPE } from '@configs/enum/db';
 import { GitAlert } from '@entities/git-alert.entity';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { SearchGitAlertDto } from './dtos';
@@ -82,93 +81,93 @@ export class GitAlertRepository extends EntityRepository<GitAlert> {
         deleted_at: null,
       },
       {
-        populate: ['repository', 'project', 'triggered_by', 'read_by', 'created_by', 'updated_by'],
+        populate: ['repository', 'project', 'triggered_by', 'read_by'],
       },
     );
   }
 
-  async getGitAlertSummary(projectId: string): Promise<{
-    total: number;
-    unread: number;
-    actionable: number;
-    by_type: Record<GIT_ALERT_TYPE, number>;
-    by_status: Record<GIT_ALERT_STATUS, number>;
-    by_priority: Record<GIT_ALERT_PRIORITY, number>;
-  }> {
-    const qb = this.createQueryBuilder('alert')
-      .where('alert.project.id = ?', [projectId])
-      .andWhere('alert.deleted_at IS NULL');
+  // async getGitAlertSummary(projectId: string): Promise<{
+  //   total: number;
+  //   unread: number;
+  //   actionable: number;
+  //   by_type: Record<GIT_ALERT_TYPE, number>;
+  //   by_status: Record<GIT_ALERT_STATUS, number>;
+  //   by_priority: Record<GIT_ALERT_PRIORITY, number>;
+  // }> {
+  //   const qb = this.createQueryBuilder('alert')
+  //     .where('alert.project.id = ?', [projectId])
+  //     .andWhere('alert.deleted_at IS NULL');
 
-    const [total, unread, actionable] = await Promise.all([
-      qb.count().execute(),
-      qb.clone().andWhere('alert.status = ?', [GIT_ALERT_STATUS.UNREAD]).count().execute(),
-      qb.clone().andWhere('alert.is_actionable = ?', [true]).count().execute(),
-    ]);
+  //   const [total, unread, actionable] = await Promise.all([
+  //     qb.count().execute(),
+  //     qb.clone().andWhere('alert.status = ?', [GIT_ALERT_STATUS.UNREAD]).count().execute(),
+  //     qb.clone().andWhere('alert.is_actionable = ?', [true]).count().execute(),
+  //   ]);
 
-    // Get counts by type
-    const byType = await this.getCountsByField('type', projectId);
-    const byStatus = await this.getCountsByField('status', projectId);
-    const byPriority = await this.getCountsByField('priority', projectId);
+  //   // Get counts by type
+  //   const byType = await this.getCountsByField('type', projectId);
+  //   const byStatus = await this.getCountsByField('status', projectId);
+  //   const byPriority = await this.getCountsByField('priority', projectId);
 
-    return {
-      total,
-      unread,
-      actionable,
-      by_type: byType as Record<GIT_ALERT_TYPE, number>,
-      by_status: byStatus as Record<GIT_ALERT_STATUS, number>,
-      by_priority: byPriority as Record<GIT_ALERT_PRIORITY, number>,
-    };
-  }
+  //   return {
+  //     total,
+  //     unread,
+  //     actionable,
+  //     by_type: byType as Record<GIT_ALERT_TYPE, number>,
+  //     by_status: byStatus as Record<GIT_ALERT_STATUS, number>,
+  //     by_priority: byPriority as Record<GIT_ALERT_PRIORITY, number>,
+  //   };
+  // }
 
-  private async getCountsByField(
-    field: string,
-    projectId: string,
-  ): Promise<Record<string, number>> {
-    const result = await this.createQueryBuilder('alert')
-      .select(`alert.${field} as ${field}`)
-      .addSelect('COUNT(*) as count')
-      .where('alert.project.id = ?', [projectId])
-      .andWhere('alert.deleted_at IS NULL')
-      .groupBy(`alert.${field}`)
-      .execute();
+  // private async getCountsByField(
+  //   field: string,
+  //   projectId: string,
+  // ): Promise<Record<string, number>> {
+  //   const result = await this.createQueryBuilder('alert')
+  //     .select(`alert.${field} as ${field}`)
+  //     .addSelect('COUNT(*) as count')
+  //     .where('alert.project.id = ?', [projectId])
+  //     .andWhere('alert.deleted_at IS NULL')
+  //     .groupBy(`alert.${field}`)
+  //     .execute();
 
-    const counts: Record<string, number> = {};
-    result.forEach((row: any) => {
-      counts[row[field]] = parseInt(row.count);
-    });
+  //   const counts: Record<string, number> = {};
+  //   result.forEach((row: any) => {
+  //     counts[row[field]] = parseInt(row.count);
+  //   });
 
-    return counts;
-  }
+  //   return counts;
+  // }
 
-  async markAsRead(alertId: string, userId: string): Promise<void> {
-    await this.nativeUpdate(
-      { id: alertId },
-      {
-        status: GIT_ALERT_STATUS.READ,
-        read_at: new Date(),
-        read_by: userId,
-        updated_at: new Date(),
-      },
-    );
-  }
+  // async markAsRead(alertId: string, userId: string): Promise<void> {
+  //   await this.nativeUpdate(
+  //     { id: alertId },
+  //     {
+  //       status: GIT_ALERT_STATUS.READ,
+  //       read_at: new Date(),
+  //       read_by: userId,
+  //       updated_at: new Date(),
+  //     },
+  //   );
+  // }
 
-  async markAllAsRead(projectId: string, userId: string): Promise<number> {
-    const result = await this.nativeUpdate(
-      {
-        project: { id: projectId },
-        status: GIT_ALERT_STATUS.UNREAD,
-        deleted_at: null,
-      },
-      {
-        status: GIT_ALERT_STATUS.READ,
-        read_at: new Date(),
-        read_by: userId,
-        updated_at: new Date(),
-      },
-    );
+  // async markAllAsRead(projectId: string, userId: string): Promise<number> {
+  //   const result = await this.nativeUpdate(
+  //     {
+  //       project: { id: projectId },
+  //       status: GIT_ALERT_STATUS.UNREAD,
+  //       deleted_at: null,
+  //     },
+  //     {
+  //       status: GIT_ALERT_STATUS.READ,
+  //       read_at: new Date(),
+  //       read_by: userId,
+  //       updated_at: new Date(),
+  //     },
+  //   );
 
-    return result.affectedRows || 0;
-  }
+  //   return result.affectedRows || 0;
+  // }
 
   async deleteGitAlert(projectId: string, alertId: string): Promise<void> {
     await this.nativeUpdate(
@@ -177,17 +176,17 @@ export class GitAlertRepository extends EntityRepository<GitAlert> {
     );
   }
 
-  async findGitAlertsByRepository(repositoryId: string, limit: number = 50): Promise<GitAlert[]> {
-    return this.find(
-      {
-        repository: { id: repositoryId },
-        deleted_at: null,
-      },
-      {
-        orderBy: { created_at: 'DESC' },
-        limit,
-        populate: ['repository', 'project', 'triggered_by'],
-      },
-    );
-  }
+  // async findGitAlertsByRepository(repositoryId: string, limit: number = 50): Promise<GitAlert[]> {
+  //   return this.find(
+  //     {
+  //       repository: { id: repositoryId },
+  //       deleted_at: null,
+  //     },
+  //     {
+  //       orderBy: { created_at: 'DESC' },
+  //       limit,
+  //       populate: ['repository', 'project', 'triggered_by'],
+  //     },
+  //   );
+  // }
 }
