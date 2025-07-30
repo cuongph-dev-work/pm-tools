@@ -32,10 +32,6 @@ export class GitAlertRepository extends EntityRepository<GitAlert> {
       qb.andWhere('alert.type = ?', [filters.type]);
     }
 
-    if (filters.status) {
-      qb.andWhere('alert.status = ?', [filters.status]);
-    }
-
     if (filters.priority) {
       qb.andWhere('alert.priority = ?', [filters.priority]);
     }
@@ -81,7 +77,7 @@ export class GitAlertRepository extends EntityRepository<GitAlert> {
         deleted_at: null,
       },
       {
-        populate: ['repository', 'project', 'triggered_by', 'read_by'],
+        populate: ['repository', 'project'],
       },
     );
   }

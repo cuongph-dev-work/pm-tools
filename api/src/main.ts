@@ -1,7 +1,8 @@
 import { configSwagger } from '@configs/api-docs.config';
-import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { Logger, RequestMethod, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { pinggy } from '@pinggy/pinggy';
 import { ValidationErrorFactory } from '@shared/validation.factory';
 import { useContainer } from 'class-validator';
 import compression from 'compression';
@@ -18,7 +19,9 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'log'],
   });
   configSwagger(app);
-  app.setGlobalPrefix('/api');
+  app.setGlobalPrefix('/api', {
+    exclude: [{ path: 'webhook/*', method: RequestMethod.ALL, version: '1' }],
+  });
   app.enableCors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -35,7 +38,7 @@ async function bootstrap() {
   });
 
   const configService = app.get(ConfigService);
-
+  const port = configService.get('app.port') || 3000;
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: ValidationErrorFactory,
@@ -50,9 +53,20 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  await app.listen(configService.get('app.port') || 3000, () => {
-    logger.log(`Application running on port ${configService.get('app.port')}`);
+  await app.listen(port, () => {
+    logger.log(`Application running on port ${port}`);
   });
+
+  if (process.env.ENABLE_PINGGY == 'true') {
+    const tunnel = pinggy.createTunnel({
+      fullRequestUrl: true,
+      forwardTo: `http://localhost:${port}`,
+      ssl: true,
+      token: process.env.PINGGY_TOKEN,
+    });
+    await tunnel.start();
+    logger.log('Tunnel URLs:', tunnel.urls());
+  }
 }
 
 void bootstrap();

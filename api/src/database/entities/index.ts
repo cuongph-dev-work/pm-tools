@@ -13,6 +13,7 @@ export * from './task.entity';
 export * from './user.entity';
 
 // Git integration entities
+export * from './git-alert-recipient.entity';
 export * from './git-alert.entity';
 export * from './git-repository.entity';
 

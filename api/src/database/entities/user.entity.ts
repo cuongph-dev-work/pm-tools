@@ -14,7 +14,7 @@ import * as bcrypt from 'bcryptjs';
 import { WrapperType } from 'src/types/request.type';
 import { BaseEntity } from './base.abstract';
 import { FileStorage } from './file-storage.entity';
-import { GitAlert } from './git-alert.entity';
+import { GitAlertRecipient } from './git-alert-recipient.entity';
 import { ProjectInviteMember } from './project-invite-member.entity';
 import { ProjectMember } from './project-member.entity';
 import { Project } from './project.entity';
@@ -150,14 +150,8 @@ export class User extends BaseEntity {
   /**
    * Git alerts read by this user
    */
-  @OneToMany(() => GitAlert, alert => alert.read_by)
-  read_git_alerts?: WrapperType<GitAlert>[];
-
-  /**
-   * Git alerts triggered by this user
-   */
-  @OneToMany(() => GitAlert, alert => alert.triggered_by)
-  triggered_git_alerts?: WrapperType<GitAlert>[];
+  @OneToMany(() => GitAlertRecipient, recipient => recipient.recipient)
+  read_git_alerts?: WrapperType<GitAlertRecipient>[];
 
   /**
    * Hash a password using bcrypt

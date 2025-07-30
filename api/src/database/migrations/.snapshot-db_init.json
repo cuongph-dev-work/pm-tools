@@ -1565,14 +1565,15 @@
           ],
           "mappedType": "enum"
         },
-        "alert_types": {
-          "name": "alert_types",
-          "type": "text[]",
+        "personal_access_token": {
+          "name": "personal_access_token",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "array"
+          "length": 255,
+          "mappedType": "string"
         },
         "cron_time": {
           "name": "cron_time",
@@ -1738,21 +1739,6 @@
           ],
           "mappedType": "enum"
         },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'UNREAD'",
-          "enumItems": [
-            "UNREAD",
-            "READ",
-            "ARCHIVED"
-          ],
-          "mappedType": "enum"
-        },
         "priority": {
           "name": "priority",
           "type": "text",
@@ -1778,26 +1764,6 @@
           "nullable": true,
           "mappedType": "json"
         },
-        "read_at": {
-          "name": "read_at",
-          "type": "timestamp with time zone",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "read_by_id": {
-          "name": "read_by_id",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
         "repository_id": {
           "name": "repository_id",
           "type": "varchar",
@@ -1818,16 +1784,6 @@
           "length": 20,
           "mappedType": "string"
         },
-        "triggered_by_id": {
-          "name": "triggered_by_id",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
         "external_url": {
           "name": "external_url",
           "type": "varchar(500)",
@@ -1838,25 +1794,15 @@
           "length": 500,
           "mappedType": "string"
         },
-        "is_actionable": {
-          "name": "is_actionable",
-          "type": "boolean",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "false",
-          "mappedType": "boolean"
-        },
-        "action_required": {
-          "name": "action_required",
-          "type": "varchar(255)",
+        "tags": {
+          "name": "tags",
+          "type": "text[]",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 255,
-          "mappedType": "string"
+          "default": "'{}'",
+          "mappedType": "array"
         }
       },
       "name": "git_alert",
@@ -1875,19 +1821,6 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "git_alert_read_by_id_foreign": {
-          "constraintName": "git_alert_read_by_id_foreign",
-          "columnNames": [
-            "read_by_id"
-          ],
-          "localTableName": "public.git_alert",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.user",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        },
         "git_alert_repository_id_foreign": {
           "constraintName": "git_alert_repository_id_foreign",
           "columnNames": [
@@ -1911,18 +1844,121 @@
           ],
           "referencedTableName": "public.project",
           "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 20,
+          "mappedType": "string"
         },
-        "git_alert_triggered_by_id_foreign": {
-          "constraintName": "git_alert_triggered_by_id_foreign",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "alert_id": {
+          "name": "alert_id",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 20,
+          "mappedType": "string"
+        },
+        "recipient_id": {
+          "name": "recipient_id",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 20,
+          "mappedType": "string"
+        },
+        "read_at": {
+          "name": "read_at",
+          "type": "timestamp with time zone",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "git_alert_recipient",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "git_alert_recipient_pkey",
           "columnNames": [
-            "triggered_by_id"
+            "id"
           ],
-          "localTableName": "public.git_alert",
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "git_alert_recipient_alert_id_foreign": {
+          "constraintName": "git_alert_recipient_alert_id_foreign",
+          "columnNames": [
+            "alert_id"
+          ],
+          "localTableName": "public.git_alert_recipient",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.git_alert",
+          "updateRule": "cascade"
+        },
+        "git_alert_recipient_recipient_id_foreign": {
+          "constraintName": "git_alert_recipient_recipient_id_foreign",
+          "columnNames": [
+            "recipient_id"
+          ],
+          "localTableName": "public.git_alert_recipient",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "public.user",
-          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       },

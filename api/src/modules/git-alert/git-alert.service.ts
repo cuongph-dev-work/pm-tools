@@ -1,26 +1,50 @@
-import { Project } from '@entities/project.entity';
+import { GIT_ALERT_PRIORITY } from '@configs/enum/db';
+import { GitAlert } from '@entities/git-alert.entity';
+import { GitRepository } from '@entities/git-repository.entity';
 import { ProjectRepository } from '@modules/project/project.repository';
-import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
+import { WrapperType } from 'src/types/request.type';
+import { CreateGitAlertDto } from './dtos';
 import { GitAlertRepository } from './git-alert.repository';
 
 @Injectable()
 export class GitAlertService {
   constructor(
     @Inject(forwardRef(() => GitAlertRepository))
-    private readonly gitAlertRepository: GitAlertRepository,
+    private readonly gitAlertRepository: WrapperType<GitAlertRepository>,
     @Inject(forwardRef(() => ProjectRepository))
-    private readonly projectRepository: ProjectRepository,
+    private readonly projectRepository: WrapperType<ProjectRepository>,
+    @Inject(forwardRef(() => GitRepository))
+    private readonly gitRepository: WrapperType<GitRepository>,
     private readonly i18n: I18nService,
   ) {}
 
-  async findProjectByGitUrl(gitUrl: string): Promise<Project> {
-    const project = await this.projectRepository.findOne({ git_url: gitUrl });
-    if (!project) {
-      throw new NotFoundException('Project not found');
-    }
-    return project;
+  async createGitAlert(data: CreateGitAlertDto, repository: GitRepository) {
+    const gitAlert = new GitAlert();
+    gitAlert.title = data.title;
+    gitAlert.description = data.description;
+    gitAlert.type = data.type;
+    gitAlert.priority = data.priority || GIT_ALERT_PRIORITY.LOW;
+    gitAlert.tags = data.tags || [];
+    gitAlert.metadata = data.metadata;
+    gitAlert.repository = repository;
+    gitAlert.project = repository.project;
+
+    await this.gitAlertRepository.getEntityManager().persistAndFlush(gitAlert);
+
+    return gitAlert;
   }
+
+  // async findProjectByGitUrl(gitUrl: string): Promise<Project | null> {
+  // const project = await this.projectRepository.findOne({ git_url: gitUrl });
+  // if (!project) {
+  //   throw new NotFoundException('Project not found');
+  // }
+  // return project;
+  // }
+
+  // async
 
   // async createGitAlert(
   //   projectId: string,

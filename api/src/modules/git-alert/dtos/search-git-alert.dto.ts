@@ -1,4 +1,4 @@
-import { GIT_ALERT_PRIORITY, GIT_ALERT_STATUS, GIT_ALERT_TYPE } from '@configs/enum/db';
+import { GIT_ALERT_PRIORITY, GIT_ALERT_TYPE } from '@configs/enum/db';
 import { BooleanField } from '@decorators/validation/boolean.decorator';
 import { EnumField } from '@decorators/validation/enum.decorator';
 import { NumberField } from '@decorators/validation/number.decorator';
@@ -16,12 +16,6 @@ export class SearchGitAlertDto {
     prefix: 'search',
   })
   type?: GIT_ALERT_TYPE;
-
-  @EnumField(() => GIT_ALERT_STATUS, {
-    isOptional: true,
-    prefix: 'search',
-  })
-  status?: GIT_ALERT_STATUS;
 
   @EnumField(() => GIT_ALERT_PRIORITY, {
     isOptional: true,

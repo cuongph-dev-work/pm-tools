@@ -1,10 +1,9 @@
-import { GIT_ALERT_PRIORITY, GIT_ALERT_STATUS, GIT_ALERT_TYPE } from '@configs/enum/db';
-import { Entity, Enum, ManyToOne, Opt, Property } from '@mikro-orm/core';
+import { GIT_ALERT_PRIORITY, GIT_ALERT_TAG, GIT_ALERT_TYPE } from '@configs/enum/db';
+import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
 import { WrapperType } from 'src/types/request.type';
 import { BaseEntity } from './base.abstract';
 import { GitRepository } from './git-repository.entity';
 import { Project } from './project.entity';
-import { User } from './user.entity';
 
 interface GitAlertMetadata {
   // commit
@@ -47,12 +46,6 @@ export class GitAlert extends BaseEntity {
   type!: GIT_ALERT_TYPE;
 
   /**
-   * Alert status
-   */
-  @Enum({ items: () => GIT_ALERT_STATUS, default: GIT_ALERT_STATUS.UNREAD })
-  status: GIT_ALERT_STATUS = GIT_ALERT_STATUS.UNREAD;
-
-  /**
    * Alert priority
    */
   @Enum({ items: () => GIT_ALERT_PRIORITY, default: GIT_ALERT_PRIORITY.MEDIUM })
@@ -63,18 +56,6 @@ export class GitAlert extends BaseEntity {
    */
   @Property({ nullable: true, type: 'json' })
   metadata?: GitAlertMetadata;
-
-  /**
-   * Read timestamp (when user marked as read)
-   */
-  @Property({ nullable: true, columnType: 'timestamp with time zone' })
-  read_at?: Date;
-
-  /**
-   * User who read the alert
-   */
-  @ManyToOne(() => User, { nullable: true })
-  read_by?: Opt<WrapperType<User>>;
 
   /**
    * Associated Git repository
@@ -89,26 +70,14 @@ export class GitAlert extends BaseEntity {
   project!: WrapperType<Project>;
 
   /**
-   * User who triggered the alert (if applicable)
-   */
-  @ManyToOne(() => User, { nullable: true })
-  triggered_by?: Opt<WrapperType<User>>;
-
-  /**
    * External URL to view the alert details
    */
   @Property({ nullable: true, length: 500 })
   external_url?: string;
 
   /**
-   * Is the alert actionable (requires user action)
+   * Alert tags
    */
-  @Property({ default: false })
-  is_actionable: boolean = false;
-
-  /**
-   * Action required (if actionable)
-   */
-  @Property({ nullable: true, length: 255 })
-  action_required?: string;
+  @Property({ nullable: true, type: 'array', default: [] })
+  tags?: GIT_ALERT_TAG[] = [];
 }

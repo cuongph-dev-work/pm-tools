@@ -1,4 +1,4 @@
-import { GIT_ALERT_TYPE, GIT_REPOSITORY_PROVIDER } from '@configs/enum/db';
+import { GIT_REPOSITORY_PROVIDER } from '@configs/enum/db';
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
 import { BaseEntity } from './base.abstract';
 import { Project } from './project.entity';
@@ -27,11 +27,14 @@ export class GitRepository extends BaseEntity {
   provider!: GIT_REPOSITORY_PROVIDER;
 
   /**
-   * Alert types that can trigger alerts for this repository
+   * Personal access token for the repository
    */
-  @Property({ type: 'array', nullable: true })
-  alert_types?: GIT_ALERT_TYPE[];
+  @Property({ length: 255, nullable: true })
+  personal_access_token?: string;
 
+  /**
+   * Personal access token for the repository
+   */
   /**
    * Cron time to sync repository
    */

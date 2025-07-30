@@ -81,12 +81,6 @@ export enum GIT_ALERT_TYPE {
   DEPLOYMENT = 'DEPLOYMENT',
 }
 
-export enum GIT_ALERT_STATUS {
-  UNREAD = 'UNREAD',
-  READ = 'READ',
-  ARCHIVED = 'ARCHIVED',
-}
-
 export enum GIT_ALERT_PRIORITY {
   LOW = 'LOW',
   MEDIUM = 'MEDIUM',
@@ -97,4 +91,9 @@ export enum GIT_ALERT_PRIORITY {
 export enum GIT_REPOSITORY_PROVIDER {
   GITHUB = 'GITHUB',
   GITLAB = 'GITLAB',
+}
+
+export enum GIT_ALERT_TAG {
+  NEW = 'NEW',
+  NEED_HANDLING = 'NEED_HANDLING',
 }

@@ -1,11 +1,10 @@
-import { GIT_ALERT_PRIORITY, GIT_ALERT_STATUS, GIT_ALERT_TYPE } from '@configs/enum/db';
+import { GIT_ALERT_PRIORITY, GIT_ALERT_TYPE } from '@configs/enum/db';
 
 export class GitAlertResponseDto {
   id: string;
   title: string;
   description?: string;
   type: GIT_ALERT_TYPE;
-  status: GIT_ALERT_STATUS;
   priority: GIT_ALERT_PRIORITY;
   branch?: string;
   commit_hash?: string;
@@ -66,7 +65,6 @@ export class GitAlertSummaryDto {
   unread: number;
   actionable: number;
   by_type: Record<GIT_ALERT_TYPE, number>;
-  by_status: Record<GIT_ALERT_STATUS, number>;
   by_priority: Record<GIT_ALERT_PRIORITY, number>;
 }
 

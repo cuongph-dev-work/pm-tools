@@ -11,7 +11,7 @@ import { GitAlertService } from './git-alert.service';
 @Module({
   imports: [MikroOrmModule.forFeature([GitAlert, GitRepository, Project])],
   controllers: [GitAlertController],
-  providers: [GitAlertService, GitAlertRepository, ProjectRepository],
-  exports: [GitAlertService],
+  providers: [GitAlertService, GitAlertRepository, ProjectRepository, GitRepository],
+  exports: [GitAlertService, GitAlertRepository],
 })
 export class GitAlertModule {}

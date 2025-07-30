@@ -1,5 +1,6 @@
 onlyBuiltDependencies:
   - '@nestjs/core'
+  - '@pinggy/pinggy'
   - '@scarf/scarf'
   - '@swc/core'
   - aws-sdk
