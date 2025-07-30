@@ -5,6 +5,7 @@ import { ProjectInviteModule } from './project-invite/project-invite.module';
 import { ProjectModule } from './project/project.module';
 import { SprintModule } from './sprint/sprint.module';
 import { TaskModule } from './task/task.module';
+import { WebhookModule } from './webhook/webhook.module';
 
 export default [
   AuthModule,
@@ -13,4 +14,5 @@ export default [
   SprintModule,
   TaskModule,
   GitAlertModule,
+  WebhookModule,
 ];
