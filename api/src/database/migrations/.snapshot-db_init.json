@@ -1735,8 +1735,7 @@
             "COMMENT",
             "PULL_REQUEST",
             "PUSH",
-            "CHECK_RUN",
-            "WORKFLOW_RUN"
+            "PIPELINE"
           ],
           "mappedType": "enum"
         },

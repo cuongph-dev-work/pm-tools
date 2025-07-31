@@ -1,7 +1,8 @@
 import { Public } from '@decorators/auth.decorator';
-import { GitService, WebhookGitHubHeaders, WebhookGitLabHeaders } from '@modules/integration/git/git.service';
+import { GitService, WebhookGitHubHeaders } from '@modules/integration/git/git.service';
 import { Body, Controller, Headers, HttpCode, HttpStatus, Post, RawBody, VERSION_NEUTRAL } from '@nestjs/common';
 import { SystemLoggerService } from '@shared/modules/logger/logger.service';
+import { WebhookGitLabHeaders } from '@utils/lib/gitlab-webhook/type';
 
 @Controller({
   path: 'webhook',
