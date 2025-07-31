@@ -4,7 +4,7 @@ import { GitAlertService } from '@modules/git-alert/git-alert.service';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { Webhooks } from '@octokit/webhooks';
-import { WinstonLogger } from '@shared/modules/logger/logger.service';
+import { WebhookLoggerService } from '@shared/modules/logger/webhook-logger.service';
 import { WebhooksGitLab } from '@utils/lib/gitlab-webhook';
 import { GitLabWebhookData } from '@utils/lib/gitlab-webhook/type';
 import { WrapperType } from 'src/types/request.type';
@@ -31,14 +31,16 @@ export class GitService {
     @Inject(forwardRef(() => GitRepoRepository))
     private readonly gitRepoRepository: WrapperType<GitRepoRepository>,
     private readonly gitAlertService: GitAlertService,
+    private readonly webhookLogger: WebhookLoggerService,
   ) {}
 
   async findRepositoryByUrl(url: string): Promise<GitRepository | null> {
     return this.gitRepoRepository.findOne({ url }, { populate: ['project'] });
   }
 
-  async webhookGithub(data: GitHubWebhookData, _logger: WinstonLogger) {
-    // _logger.info('Webhook received', { data });
+  async webhookGithub(data: GitHubWebhookData) {
+    // this.loggerService.initInstance('github', 'webhooks');
+    // loggerService.info('Webhook received', { data });
     const { body, headers, rawBody } = data;
     const contentType = headers['content-type'];
     const payload = contentType === 'application/json' ? body : JSON.parse(body.payload);
@@ -343,8 +345,8 @@ export class GitService {
   }
 
   // ref: https://devops.runsystem.info/help/user/project/integrations/webhook_events.md
-  async webhookGitlab(data: GitLabWebhookData, _logger: WinstonLogger) {
-    _logger.info('Webhook received', { data });
+  async webhookGitlab(data: GitLabWebhookData) {
+    this.webhookLogger.info('Webhook GitLab received', data);
     const { body } = data;
 
     const repository = await this.findRepositoryByUrl(body.project.web_url);

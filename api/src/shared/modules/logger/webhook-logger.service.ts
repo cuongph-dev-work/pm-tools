@@ -3,13 +3,14 @@ import chalk from 'chalk';
 import { BaseLoggerService } from './base-logger.service';
 
 @Injectable()
-export class SystemLoggerService extends BaseLoggerService {
+export class WebhookLoggerService extends BaseLoggerService {
   constructor() {
     super();
     this.initInstance({
-      name: 'system',
-      color: chalk.green,
-      label: 'SYSTEM',
+      name: 'webhook',
+      path: 'webhooks',
+      color: chalk.magenta,
+      label: 'WEBHOOK',
     });
   }
 }

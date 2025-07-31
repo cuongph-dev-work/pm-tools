@@ -2,22 +2,15 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { ConfigService } from '@nestjs/config';
 import { AsyncLocalStorage } from 'async_hooks';
 import { Observable, tap } from 'rxjs';
-import { SystemLoggerService, WinstonLogger } from '../logger/logger.service';
+import { PerformanceLoggerService } from './performance-logger.service';
 
 @Injectable()
 export class PerformanceInterceptor implements NestInterceptor {
-  private logger: WinstonLogger;
-
   constructor(
     private readonly configService: ConfigService,
     private readonly als: AsyncLocalStorage<Request>,
-    private readonly loggerService: SystemLoggerService,
-  ) {
-    if (this.isDevelopment) {
-      this.loggerService.initInstance('performance', 'performances');
-      this.logger = this.loggerService.getInstance();
-    }
-  }
+    private readonly performanceLogger: PerformanceLoggerService,
+  ) {}
 
   get isDevelopment(): boolean {
     return this.configService.get('NODE_ENV') === 'development';
@@ -40,18 +33,18 @@ export class PerformanceInterceptor implements NestInterceptor {
 
         const totalSQL = queryStats.reduce((s, q) => s + q.time, 0);
 
-        this.logger.info(`--- [Performance] ${req.method} ${req.url} ---`);
-        this.logger.info(`⏱  Duration: ${duration}ms`);
-        this.logger.info(`🧠 Memory Used: ${memoryUsed} MB`);
+        this.performanceLogger.info(`--- [Performance] ${req.method} ${req.url} ---`);
+        this.performanceLogger.info(`⏱  Duration: ${duration}ms`);
+        this.performanceLogger.info(`🧠 Memory Used: ${memoryUsed} MB`);
         if (queryStats.length) {
           const msg = `🐢 Slow SQLs (${queryStats.length}): Total ${totalSQL}ms`;
-          this.logger.warn(msg);
+          this.performanceLogger.warn(msg);
           for (const q of queryStats) {
             const msgQ = ` - ${q.time}ms: ${q.query.slice(0, 100)}...`;
-            this.logger.warn(msgQ);
+            this.performanceLogger.warn(msgQ);
           }
         }
-        this.logger.info('--------------------------');
+        this.performanceLogger.info('--------------------------');
       }),
     );
   }
