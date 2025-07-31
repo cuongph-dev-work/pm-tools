@@ -1,12 +1,16 @@
 import { GitAlert } from '@entities/git-alert.entity';
-import { EntityRepository } from '@mikro-orm/postgresql';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { Injectable, Logger } from '@nestjs/common';
 import { SearchGitAlertDto } from './dtos';
 
+@Injectable()
 export class GitAlertRepository extends EntityRepository<GitAlert> {
-  async findGitAlertsByProject(
-    projectId: string,
-    searchDto: SearchGitAlertDto,
-  ): Promise<[GitAlert[], number]> {
+  private readonly logger = new Logger(GitAlertRepository.name);
+  constructor(em: EntityManager) {
+    super(em, GitAlert);
+  }
+
+  async findGitAlertsByProject(projectId: string, searchDto: SearchGitAlertDto): Promise<[GitAlert[], number]> {
     const { page = 1, limit = 10, ...filters } = searchDto;
     const offset = (page - 1) * limit;
 
@@ -22,10 +26,7 @@ export class GitAlertRepository extends EntityRepository<GitAlert> {
 
     // Apply filters
     if (filters.search) {
-      qb.andWhere('(alert.title ILIKE ? OR alert.description ILIKE ?)', [
-        `%${filters.search}%`,
-        `%${filters.search}%`,
-      ]);
+      qb.andWhere('(alert.title ILIKE ? OR alert.description ILIKE ?)', [`%${filters.search}%`, `%${filters.search}%`]);
     }
 
     if (filters.type) {
@@ -60,11 +61,7 @@ export class GitAlertRepository extends EntityRepository<GitAlert> {
       qb.andWhere('alert.alert_timestamp <= ?', [new Date(filters.to_date)]);
     }
 
-    const [alerts, total] = await qb
-      .orderBy({ 'alert.created_at': 'DESC' })
-      .limit(limit)
-      .offset(offset)
-      .getResultAndCount();
+    const [alerts, total] = await qb.orderBy({ 'alert.created_at': 'DESC' }).limit(limit).offset(offset).getResultAndCount();
 
     return [alerts, total];
   }
@@ -166,10 +163,7 @@ export class GitAlertRepository extends EntityRepository<GitAlert> {
   // }
 
   async deleteGitAlert(projectId: string, alertId: string): Promise<void> {
-    await this.nativeUpdate(
-      { id: alertId, project: { id: projectId } },
-      { deleted_at: new Date() },
-    );
+    await this.nativeUpdate({ id: alertId, project: { id: projectId } }, { deleted_at: new Date() });
   }
 
   // async findGitAlertsByRepository(repositoryId: string, limit: number = 50): Promise<GitAlert[]> {

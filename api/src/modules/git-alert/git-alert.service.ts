@@ -1,4 +1,5 @@
 import { GIT_ALERT_PRIORITY } from '@configs/enum/db';
+import { GitAlertRecipient } from '@entities/git-alert-recipient.entity';
 import { GitAlert } from '@entities/git-alert.entity';
 import { GitRepository } from '@entities/git-repository.entity';
 import { ProjectRepository } from '@modules/project/project.repository';
@@ -6,6 +7,7 @@ import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { WrapperType } from 'src/types/request.type';
 import { CreateGitAlertDto } from './dtos';
+import { GitAlertRecipientRepository } from './git-alert-recipient.repository';
 import { GitAlertRepository } from './git-alert.repository';
 
 @Injectable()
@@ -17,6 +19,8 @@ export class GitAlertService {
     private readonly projectRepository: WrapperType<ProjectRepository>,
     @Inject(forwardRef(() => GitRepository))
     private readonly gitRepository: WrapperType<GitRepository>,
+    @Inject(forwardRef(() => GitAlertRecipientRepository))
+    private readonly gitAlertRecipientRepository: WrapperType<GitAlertRecipientRepository>,
     private readonly i18n: I18nService,
   ) {}
 
@@ -32,6 +36,19 @@ export class GitAlertService {
     gitAlert.project = repository.project;
 
     await this.gitAlertRepository.getEntityManager().persistAndFlush(gitAlert);
+
+    // add alert to project members
+    const projectMembers = await this.projectRepository.findMembersInProject(repository.project.id);
+    if (!projectMembers) return gitAlert;
+
+    const gitAlertRecipients = projectMembers.map(member => {
+      const gitAlertRecipient = new GitAlertRecipient();
+      gitAlertRecipient.alert = gitAlert;
+      gitAlertRecipient.recipient = member.user;
+      return gitAlertRecipient;
+    });
+
+    await this.gitAlertRecipientRepository.getEntityManager().persistAndFlush(gitAlertRecipients);
 
     return gitAlert;
   }

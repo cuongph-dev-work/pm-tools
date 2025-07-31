@@ -17,6 +17,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
     logger: ['error', 'warn', 'debug', 'log'],
+    rawBody: true,
   });
   configSwagger(app);
   app.setGlobalPrefix('/api', {

@@ -42,12 +42,7 @@ export class TaskService {
     return { id: task?.id };
   }
 
-  async updateTask(
-    projectId: string,
-    taskId: string,
-    updateTaskDto: UpdateTaskDto,
-    currentUser: User,
-  ) {
+  async updateTask(projectId: string, taskId: string, updateTaskDto: UpdateTaskDto, currentUser: User) {
     await this.findProjectById(projectId);
     const task = await this.taskRepository.updateTask(taskId, updateTaskDto, currentUser);
     if (!task) {
@@ -88,10 +83,7 @@ export class TaskService {
     await this.findProjectById(projectId);
     await this.findTask(taskId);
 
-    const task = await this.taskRepository.updateSprint(
-      { task_id: taskId, sprint_id: sprintId, clear_sprints: false },
-      currentUser,
-    );
+    const task = await this.taskRepository.updateSprint({ task_id: taskId, sprint_id: sprintId, clear_sprints: false }, currentUser);
     return { id: task?.id };
   }
 
@@ -99,18 +91,11 @@ export class TaskService {
     await this.findProjectById(projectId);
     await this.findTask(id);
 
-    const task = await this.taskRepository.updateSprint(
-      { task_id: id, clear_sprints: true },
-      currentUser,
-    );
+    const task = await this.taskRepository.updateSprint({ task_id: id, clear_sprints: true }, currentUser);
     return { id: task?.id };
   }
 
-  async getTaskFromSprint(
-    projectId: string,
-    sprintId: string,
-    searchDto: SearchTaskInSprintDto,
-  ): Promise<{ data: TaskResponseDto[] }> {
+  async getTaskFromSprint(projectId: string, sprintId: string, searchDto: SearchTaskInSprintDto): Promise<{ data: TaskResponseDto[] }> {
     await this.findProjectById(projectId);
     const tasks = await this.taskRepository.findTasksBySprint(sprintId, searchDto);
     return {
@@ -128,10 +113,7 @@ export class TaskService {
     };
   }
 
-  async getTaskFromBacklog(
-    projectId: string,
-    searchDto: SearchTaskInSprintDto,
-  ): Promise<{ data: TaskResponseDto[] }> {
+  async getTaskFromBacklog(projectId: string, searchDto: SearchTaskInSprintDto): Promise<{ data: TaskResponseDto[] }> {
     await this.findProjectById(projectId);
     const tasks = await this.taskRepository.findTasksBySprint(undefined, searchDto);
     return {

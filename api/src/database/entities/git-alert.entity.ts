@@ -1,7 +1,8 @@
 import { GIT_ALERT_PRIORITY, GIT_ALERT_TAG, GIT_ALERT_TYPE } from '@configs/enum/db';
-import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
+import { Entity, Enum, ManyToOne, OneToMany, Property } from '@mikro-orm/core';
 import { WrapperType } from 'src/types/request.type';
 import { BaseEntity } from './base.abstract';
+import { GitAlertRecipient } from './git-alert-recipient.entity';
 import { GitRepository } from './git-repository.entity';
 import { Project } from './project.entity';
 
@@ -80,4 +81,16 @@ export class GitAlert extends BaseEntity {
    */
   @Property({ nullable: true, type: 'array', default: [] })
   tags?: GIT_ALERT_TAG[] = [];
+
+  /**
+   * Alert recipients
+   */
+  @OneToMany(() => GitAlertRecipient, gitAlertRecipient => gitAlertRecipient.alert)
+  recipients?: WrapperType<GitAlertRecipient>[];
+
+  /**
+   * Bug review created
+   */
+  @Property({ nullable: true, type: 'boolean', default: false })
+  bug_review_created?: boolean;
 }

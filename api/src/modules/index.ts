@@ -7,12 +7,4 @@ import { SprintModule } from './sprint/sprint.module';
 import { TaskModule } from './task/task.module';
 import { WebhookModule } from './webhook/webhook.module';
 
-export default [
-  AuthModule,
-  ProjectModule,
-  ProjectInviteModule,
-  SprintModule,
-  TaskModule,
-  GitAlertModule,
-  WebhookModule,
-];
+export default [AuthModule, ProjectModule, ProjectInviteModule, SprintModule, TaskModule, GitAlertModule, WebhookModule];

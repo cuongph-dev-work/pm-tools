@@ -7,9 +7,9 @@ import { GitRepoRepository } from './git.repository';
 import { GitService } from './git.service';
 
 @Module({
-  imports: [GitAlertModule, ProjectModule, MikroOrmModule.forFeature([GitRepository])],
+  imports: [ProjectModule, MikroOrmModule.forFeature([GitRepository]), GitAlertModule],
   controllers: [],
-  providers: [GitService, GitRepository, GitRepoRepository],
+  providers: [GitService, GitRepoRepository],
   exports: [GitService],
 })
 export class GitModule {}

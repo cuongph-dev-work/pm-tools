@@ -1732,10 +1732,11 @@
             "BUILD",
             "TEST",
             "CONFLICT",
-            "COMMENTS",
+            "COMMENT",
             "PULL_REQUEST",
             "PUSH",
-            "DEPLOYMENT"
+            "CHECK_RUN",
+            "WORKFLOW_RUN"
           ],
           "mappedType": "enum"
         },
@@ -1803,6 +1804,16 @@
           "nullable": true,
           "default": "'{}'",
           "mappedType": "array"
+        },
+        "bug_review_created": {
+          "name": "bug_review_created",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "default": "false",
+          "mappedType": "boolean"
         }
       },
       "name": "git_alert",

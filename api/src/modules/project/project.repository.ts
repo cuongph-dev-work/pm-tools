@@ -14,16 +14,8 @@ export class ProjectRepository extends EntityRepository<Project> {
   constructor(em: EntityManager) {
     super(em, Project);
   }
-  async findProjectsWithFilters(
-    filters: SearchProjectDto,
-    page: number = 1,
-    limit: number = 10,
-    currentUser: User,
-  ) {
-    const qb = this.createQueryBuilder('p')
-      .leftJoinAndSelect('p.owner', 'owner')
-      .leftJoinAndSelect('p.members', 'members')
-      .leftJoinAndSelect('p.invites', 'invites');
+  async findProjectsWithFilters(filters: SearchProjectDto, page: number = 1, limit: number = 10, currentUser: User) {
+    const qb = this.createQueryBuilder('p').leftJoinAndSelect('p.owner', 'owner').leftJoinAndSelect('p.members', 'members').leftJoinAndSelect('p.invites', 'invites');
     // Apply filters
     if (filters.name) {
       qb.andWhere({ name: { $ilike: `%${filters.name}%` } });
@@ -131,5 +123,10 @@ export class ProjectRepository extends EntityRepository<Project> {
 
       return { id: project.id };
     });
+  }
+
+  async findMembersInProject(projectId: string): Promise<ProjectMember[] | null> {
+    const project = await this.findOne({ id: projectId }, { populate: ['members.user'] });
+    return project?.members?.getItems() || null;
   }
 }

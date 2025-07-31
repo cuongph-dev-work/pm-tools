@@ -9,11 +9,7 @@ export interface MikroLoggerOptions {
 export class MikroLogger extends DefaultLogger {
   private readonly mikroLoggerOptions: MikroLoggerOptions;
   private readonly als: AsyncLocalStorage<Request>;
-  constructor(
-    options: LoggerOptions,
-    mikroLoggerOptions: MikroLoggerOptions,
-    als: AsyncLocalStorage<Request>,
-  ) {
+  constructor(options: LoggerOptions, mikroLoggerOptions: MikroLoggerOptions, als: AsyncLocalStorage<Request>) {
     super(options);
     this.mikroLoggerOptions = mikroLoggerOptions;
     this.als = als;

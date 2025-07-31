@@ -26,42 +26,18 @@ export class TaskRepository extends EntityRepository<Task> {
     return this.findOne(
       { id },
       {
-        populate: [
-          'assignee',
-          'sprints',
-          'tags',
-          'parent_task',
-          'sub_tasks',
-          'created_by',
-          'updated_by',
-          'project',
-        ],
+        populate: ['assignee', 'sprints', 'tags', 'parent_task', 'sub_tasks', 'created_by', 'updated_by', 'project'],
       },
     );
   }
 
   async searchTasks(searchDto: SearchTaskDto): Promise<[Task[], number]> {
-    const {
-      search,
-      type,
-      status,
-      priority,
-      assignee_id,
-      sprint_id,
-      project_id,
-      tag_id,
-      parent_task_id,
-      page,
-      limit,
-    } = searchDto;
+    const { search, type, status, priority, assignee_id, sprint_id, project_id, tag_id, parent_task_id, page, limit } = searchDto;
 
     const where: any = {};
 
     if (search) {
-      where.$or = [
-        { title: { $ilike: `%${search}%` } },
-        { description: { $ilike: `%${search}%` } },
-      ];
+      where.$or = [{ title: { $ilike: `%${search}%` } }, { description: { $ilike: `%${search}%` } }];
     }
 
     if (type) where.type = type;
@@ -107,11 +83,7 @@ export class TaskRepository extends EntityRepository<Task> {
     const where: any = {};
 
     if (keyword) {
-      where.$or = [
-        { title: { $ilike: `%${keyword}%` } },
-        { description: { $ilike: `%${keyword}%` } },
-        { assignee: { $ilike: `%${keyword}%` } },
-      ];
+      where.$or = [{ title: { $ilike: `%${keyword}%` } }, { description: { $ilike: `%${keyword}%` } }, { assignee: { $ilike: `%${keyword}%` } }];
     }
 
     if (type) where.type = type;
