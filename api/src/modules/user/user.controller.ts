@@ -1,16 +1,5 @@
 import { Roles } from '@decorators/role.decorator';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { CreateUserDto, SearchUserDto, UpdateUserDto } from './dtos';
 import { UserService } from './user.service';
 

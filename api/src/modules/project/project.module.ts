@@ -5,12 +5,13 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ProjectInviteRepository } from '@modules/project-invite/project-invite.repository';
 import { UserModule } from '@modules/user/user.module';
 import { Module } from '@nestjs/common';
+import { SharedModule } from '@shared/modules/shared.module';
 import { ProjectController } from './project.controller';
 import { ProjectRepository } from './project.repository';
 import { ProjectService } from './project.service';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([ProjectInviteMember, Project, ProjectMember]), UserModule],
+  imports: [MikroOrmModule.forFeature([ProjectInviteMember, Project, ProjectMember]), UserModule, SharedModule],
   controllers: [ProjectController],
   providers: [ProjectService, ProjectRepository, ProjectInviteRepository],
   exports: [ProjectService],
