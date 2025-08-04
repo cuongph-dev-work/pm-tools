@@ -4,6 +4,7 @@ import { MikroOrmConfigService } from '@configs/service/mikro-orm.service';
 import { RolesGuard } from '@guards/roles.guard';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { JwtAccessTokenGuard } from '@modules/auth/guards/jwt-access-token.guard';
+import { HttpModule } from '@nestjs/axios';
 import { BullModule } from '@nestjs/bullmq';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -15,13 +16,7 @@ import { AlsModule } from '@shared/modules/async-local-storage/als.module';
 import { PerformanceMiddleware } from '@shared/modules/performance/performance.middleware';
 import { PerformanceModule } from '@shared/modules/performance/performance.module';
 import * as Joi from 'joi';
-import {
-  AcceptLanguageResolver,
-  CookieResolver,
-  HeaderResolver,
-  I18nModule,
-  QueryResolver,
-} from 'nestjs-i18n';
+import { AcceptLanguageResolver, CookieResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { join } from 'path';
 import modules from './modules';
 
@@ -65,12 +60,7 @@ import modules from './modules';
         typesOutputPath: join(process.cwd(), 'src/generated/i18n.generated.ts'),
         viewEngine: 'hbs',
       }),
-      resolvers: [
-        new QueryResolver(['lang', 'locale', 'l']),
-        new CookieResolver(),
-        new HeaderResolver(['x-lang']),
-        new AcceptLanguageResolver(),
-      ],
+      resolvers: [new QueryResolver(['lang', 'locale', 'l']), new CookieResolver(), new HeaderResolver(['x-lang']), new AcceptLanguageResolver()],
       inject: [ConfigService],
     }),
     BullModule.forRootAsync({
@@ -84,6 +74,7 @@ import modules from './modules';
         index: false,
       },
     }),
+    HttpModule,
     PerformanceModule,
     ...modules,
   ],

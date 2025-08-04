@@ -5,3 +5,4 @@ onlyBuiltDependencies:
   - '@swc/core'
   - aws-sdk
   - msgpackr-extract
+  - sharp

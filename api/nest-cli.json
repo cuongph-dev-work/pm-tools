@@ -13,7 +13,8 @@
     "typeCheck": true,
     "assets": [
       { "include": "i18n/**/*", "watchAssets": true },
-      { "include": "templates/**/*", "watchAssets": true }
+      { "include": "templates/**/*", "watchAssets": true },
+      { "include": "modules/layout-checker/prompt.md", "watchAssets": true }
     ]
   }
 }

@@ -1,0 +1,148 @@
+import { HttpService } from '@nestjs/axios';
+import { Injectable, Logger } from '@nestjs/common';
+import { PlaywrightService } from '@shared/modules/playwright/playwright.service';
+import * as fs from 'fs';
+import OpenAI from 'openai';
+import * as path from 'path';
+import pixelmatch from 'pixelmatch';
+import { Page } from 'playwright';
+import { PNG } from 'pngjs';
+import { firstValueFrom } from 'rxjs';
+import sharp from 'sharp';
+import { ssim } from 'ssim.js';
+
+@Injectable()
+export class LayoutCheckerService {
+  private openai: OpenAI;
+  private promptTemplate: string;
+  private figmaToken = 'figd_hsY3tU-sTndnQF6NXyrh5v3MRj2ohN-Bjs2iziK6';
+  private readonly logger = new Logger(LayoutCheckerService.name);
+  constructor(
+    private readonly playwrightService: PlaywrightService,
+    private readonly httpService: HttpService,
+  ) {
+    this.openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+    const promptPath = path.join(__dirname, 'prompt.md');
+    this.promptTemplate = fs.readFileSync(promptPath, 'utf-8');
+  }
+
+  private async getFrameViewport() {
+    const fileKey = 'QBASesRSrzWiLSXbLS9r29';
+    const frameNodeId = '824-3';
+    const url = `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${frameNodeId}`;
+
+    const response = await firstValueFrom(
+      this.httpService.get(url, {
+        headers: {
+          'X-Figma-Token': this.figmaToken,
+        },
+      }),
+    );
+
+    const nodeId = frameNodeId.replace('-', ':');
+    const document = response.data?.nodes?.[nodeId]?.document?.absoluteBoundingBox;
+    if (!document) {
+      throw new Error('Frame not found');
+    }
+
+    return {
+      width: document.width,
+      height: document.height,
+    };
+  }
+
+  private async exportFrameImage(fileKey: string, frameNodeId: string) {
+    const url = `https://api.figma.com/v1/images/${fileKey}` + `?ids=${frameNodeId}&format=png&scale=1`;
+    const response = await firstValueFrom(
+      this.httpService.get(url, {
+        headers: {
+          'X-Figma-Token': this.figmaToken,
+        },
+      }),
+    );
+    const imgUrl = response.data.images[frameNodeId.replace('-', ':')];
+
+    const res2 = await firstValueFrom(this.httpService.get(imgUrl, { responseType: 'arraybuffer' }));
+    return res2.data;
+  }
+
+  async getWebsiteImage(url: string, viewport: { width: number; height: number }) {
+    const page: Page = await this.playwrightService.newPage();
+    await page.goto(url);
+    await page.setViewportSize(viewport);
+    const screenshot = await page.screenshot();
+    await page.close();
+    return screenshot;
+  }
+
+  // compare two images
+  async compareImages(bufA: Buffer, bufB: Buffer, threshold = 0.1) {
+    const imgA = PNG.sync.read(bufA);
+    const imgB = PNG.sync.read(bufB);
+
+    if (imgA.width !== imgB.width || imgA.height !== imgB.height) {
+      throw new Error('Kích thước hai ảnh không khớp');
+    }
+    const { width, height } = imgA;
+
+    const diffImg = new PNG({ width, height });
+    const diffCount = pixelmatch(imgA.data, imgB.data, diffImg.data, imgA.width, imgA.height, { threshold });
+    const totalPixel = width * height;
+
+    // Tính tỉ lệ phần trăm khác biệt
+    const diffRatio = diffCount / totalPixel;
+
+    // 8. Encode lại PNG
+    const markedBuffer = PNG.sync.write(diffImg);
+
+    const analysisFromAI = await this.compareImagesWithPrompt(bufA, bufB, diffRatio, width, height);
+    // 4. Xuất diff thành buffer PNG
+    return { diffCount, diffBuffer: markedBuffer, diffRatio, analysisFromAI };
+  }
+
+  compareImagesWithPrompt = async (bufA: Buffer, bufB: Buffer, diffRatio: number, width: number, height: number) => {
+    // SSIM (grayscale) requires Uint8ClampedArray
+    const grayBufA = await sharp(bufA).resize(width, height).grayscale().raw().toBuffer();
+    const grayBufB = await sharp(bufB).resize(width, height).grayscale().raw().toBuffer();
+    const gray1 = new Uint8ClampedArray(grayBufA);
+    const gray2 = new Uint8ClampedArray(grayBufB);
+    const { mssim } = ssim({ data: gray1, width, height }, { data: gray2, width, height });
+
+    // Fallback: dùng SSIM làm giá trị semantic similarity
+    const semanticSim = mssim;
+    // Build prompt: có thể loại bỏ placeholder CLIP nếu prompt.md đã cập nhật
+    const prompt = this.promptTemplate.replace(/\$\{SEMANTIC_SIM\}/g, semanticSim.toFixed(3));
+
+    const chatRes = await this.openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [{ role: 'user', content: prompt }],
+    });
+    const analysis = chatRes.choices[0].message.content || '';
+    // Chuyển sang đối tượng JSON
+    let result: { diff: string; matchRate: number };
+    try {
+      result = JSON.parse(analysis);
+    } catch (error) {
+      result = {
+        diff: analysis.trim() || 'Không có dữ liệu.',
+        matchRate: diffRatio,
+      };
+    }
+    return result;
+  };
+
+  async checkLayout() {
+    const bufA = await this.exportFrameImage('QBASesRSrzWiLSXbLS9r29', '824-3');
+    const bufB = await this.exportFrameImage('QBASesRSrzWiLSXbLS9r29', '1139-2');
+    // const bufB = await this.getWebsiteImage(url, viewport);
+    fs.writeFileSync('bufA.png', bufA);
+    fs.writeFileSync('bufB.png', bufB);
+    // 2. Compare
+    const result = await this.compareImages(bufA, bufB);
+    // save diff image to file
+    fs.writeFileSync('diff.png', result.diffBuffer);
+    return result;
+  }
+}
