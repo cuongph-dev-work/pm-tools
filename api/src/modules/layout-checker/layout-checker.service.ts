@@ -10,6 +10,7 @@ import { PNG } from 'pngjs';
 import { firstValueFrom } from 'rxjs';
 import sharp from 'sharp';
 import { ssim } from 'ssim.js';
+import { CreateLayoutCheckerDto } from './dtos/create.dto';
 
 @Injectable()
 export class LayoutCheckerService {
@@ -97,9 +98,8 @@ export class LayoutCheckerService {
     // 8. Encode lại PNG
     const markedBuffer = PNG.sync.write(diffImg);
 
-    const analysisFromAI = await this.compareImagesWithPrompt(bufA, bufB, diffRatio, width, height);
     // 4. Xuất diff thành buffer PNG
-    return { diffCount, diffBuffer: markedBuffer, diffRatio, analysisFromAI };
+    return { diffCount, diffBuffer: markedBuffer, diffRatio };
   }
 
   compareImagesWithPrompt = async (bufA: Buffer, bufB: Buffer, diffRatio: number, width: number, height: number) => {
@@ -117,7 +117,29 @@ export class LayoutCheckerService {
 
     const chatRes = await this.openai.chat.completions.create({
       model: 'gpt-4o',
-      messages: [{ role: 'user', content: prompt }],
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: prompt,
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: `data:image/jpeg;base64,${bufA.toString('base64')}`,
+              },
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: `data:image/jpeg;base64,${bufB.toString('base64')}`,
+              },
+            },
+          ],
+        },
+      ],
     });
     const analysis = chatRes.choices[0].message.content || '';
     // Chuyển sang đối tượng JSON
@@ -133,7 +155,7 @@ export class LayoutCheckerService {
     return result;
   };
 
-  async checkLayout() {
+  async checkLayout(body: CreateLayoutCheckerDto) {
     const bufA = await this.exportFrameImage('QBASesRSrzWiLSXbLS9r29', '824-3');
     const bufB = await this.exportFrameImage('QBASesRSrzWiLSXbLS9r29', '1139-2');
     // const bufB = await this.getWebsiteImage(url, viewport);

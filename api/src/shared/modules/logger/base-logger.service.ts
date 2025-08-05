@@ -32,12 +32,12 @@ export class BaseLoggerService {
     const consoleTransport = new winston.transports.Console({
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.printf(({ timestamp, _level, message, ...args }: any) => {
+        winston.format.printf(({ timestamp, _level, message, moreInfo }: any) => {
           const levelColor = config.color;
           const levelLabel = levelColor(config.label.padEnd(7));
           const time = chalk.white(`[${formatDate(new Date(timestamp), 'yyyy-MM-dd HH:mm:ss')}]`);
 
-          return `${time} ${levelLabel} ${message} ${args ? JSON.stringify(args).slice(0, 100) + '...' : ''}`;
+          return `${time} ${levelLabel} ${message} ${moreInfo ? JSON.stringify(moreInfo).slice(0, 100) + '...' : ''}`;
         }),
       ),
     });
@@ -46,8 +46,8 @@ export class BaseLoggerService {
       level: 'info',
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.printf(({ level, message, timestamp, ...args }: any) => {
-          return `${timestamp as string} [${level.toUpperCase()}] ${message as string} ${args ? JSON.stringify(args) : ''}`;
+        winston.format.printf(({ level, message, timestamp, moreInfo }: any) => {
+          return `${timestamp as string} [${level.toUpperCase()}] ${message as string} ${moreInfo ? JSON.stringify(moreInfo) : ''}`;
         }),
       ),
       transports: [consoleTransport, dailyRotateTransport],
