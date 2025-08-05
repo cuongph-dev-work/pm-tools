@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import OpenAI from 'openai';
 import * as path from 'path';
 import pixelmatch from 'pixelmatch';
-import { Page } from 'playwright';
+import { BrowserContext, Page } from 'playwright';
 import { PNG } from 'pngjs';
 import { firstValueFrom } from 'rxjs';
 import sharp from 'sharp';
@@ -29,59 +29,120 @@ export class LayoutCheckerService {
   }
 
   private async getFrameViewport(fileKey: string, frameNodeId: string, figmaToken: string) {
-    const url = `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${frameNodeId}`;
+    try {
+      const url = `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${frameNodeId}`;
 
-    const response = await firstValueFrom(
-      this.httpService.get(url, {
-        headers: {
-          'X-Figma-Token': figmaToken,
-        },
-      }),
-    );
+      const response = await firstValueFrom(
+        this.httpService.get(url, {
+          headers: {
+            'X-Figma-Token': figmaToken,
+          },
+        }),
+      );
 
-    const nodeId = frameNodeId.replace('-', ':');
-    const document = response.data?.nodes?.[nodeId]?.document?.absoluteBoundingBox;
-    if (!document) {
-      throw new Error('Frame not found');
+      const nodeId = frameNodeId.replace('-', ':');
+      const document = response.data?.nodes?.[nodeId]?.document?.absoluteBoundingBox;
+      if (!document) {
+        throw new Error('Frame not found');
+      }
+
+      return {
+        width: document.width,
+        height: document.height,
+      };
+    } catch (error) {
+      this.logger.error(error, 'Failed to get frame viewport');
+      throw new Error('Failed to get frame viewport');
     }
-
-    return {
-      width: document.width,
-      height: document.height,
-    };
   }
 
   // from figma url, extract file key and frame node id
   // https://www.figma.com/design/TFXcgvmT6q9KEY4vWYg8XE/Sample-Project---Localhost--Copy-?node-id=1-921&t=ZN1glN7MuguetGcm-4
   // return fileKey (TFXcgvmT6q9KEY4vWYg8XE) and frameNodeId (1-921)
   private async extractFigmaInfo(figmaUrl: string) {
-    const fileKey = figmaUrl.split('/').pop()?.split('?')[0];
-    const frameNodeId = figmaUrl.split('?')[0].split('/').pop()?.split('?')[0];
-    return { fileKey, frameNodeId };
+    const match = figmaUrl.match(/\/design\/([^/]+).*?[?&]node-id=([^&]+)/);
+
+    if (match) {
+      const fileId = match[1];
+      const nodeId = match[2];
+      return { fileKey: fileId, frameNodeId: nodeId };
+    } else {
+      throw new Error('Không tìm thấy fileId hoặc nodeId');
+    }
   }
 
   private async exportFrameImage(fileKey: string, frameNodeId: string, figmaToken: string) {
-    const url = `https://api.figma.com/v1/images/${fileKey}` + `?ids=${frameNodeId}&format=png&scale=1`;
-    const response = await firstValueFrom(
-      this.httpService.get(url, {
-        headers: {
-          'X-Figma-Token': figmaToken,
-        },
-      }),
-    );
-    const imgUrl = response.data.images[frameNodeId.replace('-', ':')];
+    try {
+      const url = `https://api.figma.com/v1/images/${fileKey}` + `?ids=${frameNodeId}&format=png&scale=1`;
+      const response = await firstValueFrom(
+        this.httpService.get(url, {
+          headers: {
+            'X-Figma-Token': figmaToken,
+          },
+        }),
+      );
+      const imgUrl = response.data.images[frameNodeId.replace('-', ':')];
 
-    const res2 = await firstValueFrom(this.httpService.get(imgUrl, { responseType: 'arraybuffer' }));
-    return res2.data;
+      const res2 = await firstValueFrom(this.httpService.get(imgUrl, { responseType: 'arraybuffer' }));
+      return res2.data;
+    } catch (error) {
+      this.logger.error(error, 'Failed to export frame image');
+      throw new Error('Failed to export frame image');
+    }
   }
 
   async getWebsiteImage(url: string, viewport: { width: number; height: number }) {
-    const page: Page = await this.playwrightService.newPage();
-    await page.goto(url);
-    await page.setViewportSize(viewport);
-    const screenshot = await page.screenshot();
-    await page.close();
-    return screenshot;
+    let page: Page | null = null;
+    let context: BrowserContext | null = null;
+
+    try {
+      this.logger.log(`Getting website image from ${url} with viewport ${viewport.width}x${viewport.height}`);
+
+      // Tạo page mới
+      page = await this.playwrightService.newPage();
+      context = page.context();
+
+      // Set timeout cho navigation (30 giây)
+      await page.goto(url, {
+        waitUntil: 'networkidle',
+        timeout: 30000,
+      });
+
+      this.logger.log(`Setting viewport size to ${JSON.stringify({ width: Math.ceil(viewport.width), height: Math.ceil(viewport.height) })}`);
+      // Set viewport size
+      await page.setViewportSize({ width: Math.ceil(viewport.width), height: Math.ceil(viewport.height) });
+
+      // Chụp screenshot
+      const screenshot = await page.screenshot({
+        fullPage: true,
+        type: 'png',
+      });
+
+      this.logger.log(`Successfully captured screenshot for ${url}`);
+      return screenshot;
+    } catch (error) {
+      this.logger.error(`Failed to get website image from ${url}:`, error);
+
+      // Log chi tiết lỗi
+      if (error instanceof Error) {
+        this.logger.error(`Error message: ${error.message}`);
+        this.logger.error(`Error stack: ${error.stack}`);
+      }
+
+      throw new Error(`Failed to get website image from ${url}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      // Đảm bảo đóng page và context
+      try {
+        if (page) {
+          await page.close();
+        }
+        if (context) {
+          await context.close();
+        }
+      } catch (closeError) {
+        this.logger.error('Error closing page/context:', closeError);
+      }
+    }
   }
 
   // compare two images
@@ -164,6 +225,8 @@ export class LayoutCheckerService {
   async checkLayout(body: CreateLayoutCheckerDto) {
     const { figmaUrl, figmaToken, websiteUrl } = body;
     const { fileKey, frameNodeId } = await this.extractFigmaInfo(figmaUrl);
+    this.logger.log(`fileKey: ${fileKey}, frameNodeId: ${frameNodeId}`);
+    // validate figma url
     if (!fileKey || !frameNodeId) {
       throw new Error('Invalid figma url');
     }
@@ -174,6 +237,7 @@ export class LayoutCheckerService {
 
     // 2. Compare
     const result = await this.compareImages(bufA, bufB);
+    // fs.writeFileSync('diff.png', result.diffBuffer);
     // save diff image to file
     return result;
   }

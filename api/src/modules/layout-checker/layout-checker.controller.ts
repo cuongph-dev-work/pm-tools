@@ -1,5 +1,5 @@
 import { Public } from '@decorators/auth.decorator';
-import { Body, Controller, Get } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CreateLayoutCheckerDto } from './dtos/create.dto';
 import { LayoutCheckerService } from './layout-checker.service';
 
@@ -8,7 +8,7 @@ export class LayoutCheckerController {
   constructor(private readonly layoutCheckerService: LayoutCheckerService) {}
 
   @Public()
-  @Get('check')
+  @Post('check')
   async checkLayout(@Body() body: CreateLayoutCheckerDto) {
     const { diffBuffer, diffRatio } = await this.layoutCheckerService.checkLayout(body);
     return {

@@ -7,7 +7,7 @@ export class PlaywrightService implements OnModuleInit, OnModuleDestroy {
   private browser: Browser;
 
   async onModuleInit() {
-    this.browser = await chromium.launch({ headless: true });
+    this.browser = await chromium.launch({ headless: false });
     this.logger.log('▶️ Playwright browser launched');
   }
 
