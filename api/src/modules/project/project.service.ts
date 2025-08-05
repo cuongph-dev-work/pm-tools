@@ -1,8 +1,6 @@
 import { Project } from '@entities/project.entity';
 import { User } from '@entities/user.entity';
 import { ForbiddenException, Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
-import { Cache, CacheInvalidate } from '@shared/modules/cache/cache.decorator';
-import { CacheService } from '@shared/modules/cache/cache.service';
 import { plainToInstance } from 'class-transformer';
 import { isEmpty, isUndefined } from 'lodash';
 import { I18nService } from 'nestjs-i18n';
@@ -18,7 +16,6 @@ export class ProjectService {
     @Inject(forwardRef(() => ProjectRepository))
     private readonly projectRepository: WrapperType<ProjectRepository>,
     private readonly i18n: I18nService,
-    private readonly cacheService: CacheService,
   ) {}
 
   async createProject(createProjectDto: CreateProjectDto, currentUser: User) {
@@ -39,7 +36,6 @@ export class ProjectService {
     return this.projectRepository.createPrjAndAddMember(project, currentUser);
   }
 
-  @CacheInvalidate('project:{0}') // Invalidate project cache when updated
   async updateProject(id: string, updateProjectDto: UpdateProjectDto, currentUser: User) {
     const project = await this.projectRepository.findProjectById(id);
     if (!project) {
@@ -80,7 +76,6 @@ export class ProjectService {
     return this.projectRepository.findProjectsWithFilters(filters, page, limit, currentUser);
   }
 
-  @Cache('project:{0}', { ttl: 1800 }) // Cache for 30 minutes
   async findProjectById(id: string): Promise<ProjectResponseDto> {
     const project = await this.projectRepository.findProjectById(id);
     if (!project) {
@@ -89,7 +84,6 @@ export class ProjectService {
     return plainToInstance(ProjectResponseDto, project);
   }
 
-  @CacheInvalidate('project:{0}') // Invalidate project cache when deleted
   async deleteProject(id: string, currentUser: User) {
     const project = await this.projectRepository.findProjectById(id);
 
@@ -113,7 +107,6 @@ export class ProjectService {
     return memberOfProjects;
   }
 
-  @Cache('project-stats:{0}:{1}', { ttl: 900 }) // Cache for 15 minutes
   async getProjectStats(id: string, currentUser: User): Promise<ProjectStatsResponseDto> {
     const project = await this.projectRepository.findProjectById(id);
 

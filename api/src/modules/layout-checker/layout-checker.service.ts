@@ -1,3 +1,4 @@
+import { ProjectService } from '@modules/project/project.service';
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { PlaywrightService } from '@shared/modules/playwright/playwright.service';
@@ -20,6 +21,7 @@ export class LayoutCheckerService {
   constructor(
     private readonly playwrightService: PlaywrightService,
     private readonly httpService: HttpService,
+    private readonly projectService: ProjectService,
   ) {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
@@ -222,7 +224,9 @@ export class LayoutCheckerService {
     return result;
   };
 
-  async checkLayout(body: CreateLayoutCheckerDto) {
+  async checkLayout(projectId: string, body: CreateLayoutCheckerDto) {
+    const project = await this.projectService.findProjectById(projectId);
+
     const { figmaUrl, figmaToken, websiteUrl } = body;
     const { fileKey, frameNodeId } = await this.extractFigmaInfo(figmaUrl);
     this.logger.log(`fileKey: ${fileKey}, frameNodeId: ${frameNodeId}`);
