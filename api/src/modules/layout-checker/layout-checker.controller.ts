@@ -1,6 +1,5 @@
 import { Public } from '@decorators/auth.decorator';
-import { Body, Controller, Get, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Body, Controller, Get } from '@nestjs/common';
 import { CreateLayoutCheckerDto } from './dtos/create.dto';
 import { LayoutCheckerService } from './layout-checker.service';
 
@@ -10,11 +9,11 @@ export class LayoutCheckerController {
 
   @Public()
   @Get('check')
-  async checkLayout(@Res() res: Response, @Body() body: CreateLayoutCheckerDto) {
+  async checkLayout(@Body() body: CreateLayoutCheckerDto) {
     const { diffBuffer, diffRatio } = await this.layoutCheckerService.checkLayout(body);
-    res.type('application/json').send({
+    return {
       matchRatio: (1 - diffRatio).toFixed(2),
       diffImage: diffBuffer.toString('base64'),
-    });
+    };
   }
 }

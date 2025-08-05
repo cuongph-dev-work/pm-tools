@@ -16,7 +16,6 @@ import { CreateLayoutCheckerDto } from './dtos/create.dto';
 export class LayoutCheckerService {
   private openai: OpenAI;
   private promptTemplate: string;
-  private figmaToken = 'figd_hsY3tU-sTndnQF6NXyrh5v3MRj2ohN-Bjs2iziK6';
   private readonly logger = new Logger(LayoutCheckerService.name);
   constructor(
     private readonly playwrightService: PlaywrightService,
@@ -29,15 +28,13 @@ export class LayoutCheckerService {
     this.promptTemplate = fs.readFileSync(promptPath, 'utf-8');
   }
 
-  private async getFrameViewport() {
-    const fileKey = 'QBASesRSrzWiLSXbLS9r29';
-    const frameNodeId = '824-3';
+  private async getFrameViewport(fileKey: string, frameNodeId: string, figmaToken: string) {
     const url = `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${frameNodeId}`;
 
     const response = await firstValueFrom(
       this.httpService.get(url, {
         headers: {
-          'X-Figma-Token': this.figmaToken,
+          'X-Figma-Token': figmaToken,
         },
       }),
     );
@@ -54,12 +51,21 @@ export class LayoutCheckerService {
     };
   }
 
-  private async exportFrameImage(fileKey: string, frameNodeId: string) {
+  // from figma url, extract file key and frame node id
+  // https://www.figma.com/design/TFXcgvmT6q9KEY4vWYg8XE/Sample-Project---Localhost--Copy-?node-id=1-921&t=ZN1glN7MuguetGcm-4
+  // return fileKey (TFXcgvmT6q9KEY4vWYg8XE) and frameNodeId (1-921)
+  private async extractFigmaInfo(figmaUrl: string) {
+    const fileKey = figmaUrl.split('/').pop()?.split('?')[0];
+    const frameNodeId = figmaUrl.split('?')[0].split('/').pop()?.split('?')[0];
+    return { fileKey, frameNodeId };
+  }
+
+  private async exportFrameImage(fileKey: string, frameNodeId: string, figmaToken: string) {
     const url = `https://api.figma.com/v1/images/${fileKey}` + `?ids=${frameNodeId}&format=png&scale=1`;
     const response = await firstValueFrom(
       this.httpService.get(url, {
         headers: {
-          'X-Figma-Token': this.figmaToken,
+          'X-Figma-Token': figmaToken,
         },
       }),
     );
@@ -156,15 +162,19 @@ export class LayoutCheckerService {
   };
 
   async checkLayout(body: CreateLayoutCheckerDto) {
-    const bufA = await this.exportFrameImage('QBASesRSrzWiLSXbLS9r29', '824-3');
-    const bufB = await this.exportFrameImage('QBASesRSrzWiLSXbLS9r29', '1139-2');
-    // const bufB = await this.getWebsiteImage(url, viewport);
-    fs.writeFileSync('bufA.png', bufA);
-    fs.writeFileSync('bufB.png', bufB);
+    const { figmaUrl, figmaToken, websiteUrl } = body;
+    const { fileKey, frameNodeId } = await this.extractFigmaInfo(figmaUrl);
+    if (!fileKey || !frameNodeId) {
+      throw new Error('Invalid figma url');
+    }
+
+    const viewport = await this.getFrameViewport(fileKey, frameNodeId, figmaToken);
+    const bufA = await this.exportFrameImage(fileKey, frameNodeId, figmaToken);
+    const bufB = await this.getWebsiteImage(websiteUrl, viewport);
+
     // 2. Compare
     const result = await this.compareImages(bufA, bufB);
     // save diff image to file
-    fs.writeFileSync('diff.png', result.diffBuffer);
     return result;
   }
 }

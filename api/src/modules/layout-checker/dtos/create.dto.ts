@@ -9,7 +9,7 @@ export class CreateLayoutCheckerDto {
   @StringField({
     max: 2000,
   })
-  figmaFileKey: string;
+  figmaToken: string;
 
   @StringField({
     max: 2000,
