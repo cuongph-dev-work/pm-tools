@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "posts": "Bài viết",
+    "about": "Giới thiệu",
+    "contact": "Liên hệ"
+  },
+  "layout": {
+    "title": "React Boilerplate"
+  },
+  "home": {
+    "title": "Chào mừng đến với React Boilerplate",
+    "subtitle": "Ứng dụng React hiện đại, có thể mở rộng với TypeScript, React Router và hỗ trợ i18n",
+    "description": "Boilerplate này bao gồm các phương pháp hay nhất để xây dựng các ứng dụng React có thể bảo trì với hỗ trợ quốc tế hóa phù hợp.",
+    "features": {
+      "title": "Tính năng",
+      "typescript": "Hỗ trợ TypeScript",
+      "router": "React Router v7",
+      "forms": "Tanstack Form",
+      "validation": "Xác thực Valibot",
+      "i18n": "Quốc tế hóa",
+      "styling": "Tailwind CSS"
+    },
+    "getStarted": "Bắt đầu",
+    "learnMore": "Tìm hiểu thêm"
+  },
+  "form": {
+    "submit": "Gửi",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "loading": "Đang tải...",
+    "success": "Thành công!",
+    "error": "Đã xảy ra lỗi",
+    "reset": "Đặt lại"
+  },
+  "post": {
+    "title": "Tiêu đề",
+    "description": "Mô tả",
+    "visibility": "Hiển thị",
+    "publicId": "ID công khai",
+    "private": "Riêng tư",
+    "public": "Công khai",
+    "create": "Tạo bài viết",
+    "update": "Cập nhật bài viết",
+    "createSuccess": "Bài viết đã được tạo thành công!",
+    "updateSuccess": "Bài viết đã được cập nhật thành công!",
+    "list": "Bài viết",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "view": "Xem"
+  },
+  "common": {
+    "language": "Ngôn ngữ",
+    "english": "English",
+    "vietnamese": "Tiếng Việt",
+    "japanese": "日本語",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "success": "Thành công",
+    "confirm": "Xác nhận",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước đó",
+    "logout": "Đăng xuất"
+  },
+  "sidebar": {
+    "appName": "PM Tools",
+    "appDescription": "Quản lý dự án hiệu quả",
+    "currentProject": "Dự án hiện tại",
+    "noProjectSelected": "Chưa chọn dự án",
+    "members": "{{count}} thành viên",
+    "members_one": "{{count}} thành viên",
+    "main": "Chính",
+    "navigation": {
+      "backlog": "Backlog",
+      "kanban": "Kanban",
+      "sprint": "Lập kế hoạch Sprint"
+    }
+  },
+  "header": {
+    "appName": "PM Tools",
+    "appDescription": "Quản lý dự án hiệu quả",
+    "myProjects": "Dự án của tôi",
+    "current": "Hiện tại",
+    "manageProjects": "Quản lý dự án"
+  },
+  "errors": {
+    "notFound": "Không tìm thấy trang",
+    "notFoundDescription": "Trang bạn đang tìm kiếm không tồn tại.",
+    "serverError": "Lỗi máy chủ",
+    "serverErrorDescription": "Đã xảy ra lỗi máy chủ không mong muốn.",
+    "networkError": "Lỗi mạng",
+    "validationError": "Lỗi xác thực"
+  },
+  "validation": {
+    "required": "{{field}} là bắt buộc",
+    "emailInvalid": "Địa chỉ email không hợp lệ",
+    "passwordMinLength": "Mật khẩu phải có ít nhất {{min}} ký tự",
+    "passwordRequiredCharacters": "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một số",
+    "confirmPasswordMismatch": "Mật khẩu không khớp",
+    "stringMinLength": "{{field}} phải có ít nhất {{min}} ký tự",
+    "stringMaxLength": "{{field}} phải có tối đa {{max}} ký tự",
+    "phoneInvalid": "Số điện thoại không hợp lệ",
+    "urlInvalid": "URL không hợp lệ",
+    "numberMin": "{{field}} phải tối thiểu là {{min}}",
+    "numberMax": "{{field}} phải tối đa là {{max}}",
+    "apiError": "Đã xảy ra lỗi khi xử lý yêu cầu của bạn",
+    "networkError": "Đã xảy ra lỗi mạng khi xử lý yêu cầu của bạn"
+  }
+}

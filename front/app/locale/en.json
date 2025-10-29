@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "home": "Home",
+    "posts": "Posts",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "layout": {
+    "title": "React Boilerplate"
+  },
+  "home": {
+    "title": "Welcome to React Boilerplate",
+    "subtitle": "A modern, scalable React application with TypeScript, React Router, and i18n support",
+    "description": "This boilerplate includes best practices for building maintainable React applications with proper internationalization support.",
+    "features": {
+      "title": "Features",
+      "typescript": "TypeScript Support",
+      "router": "React Router v7",
+      "forms": "Tanstack Form",
+      "validation": "Valibot Validation",
+      "i18n": "Internationalization",
+      "styling": "Tailwind CSS"
+    },
+    "getStarted": "Get Started",
+    "learnMore": "Learn More"
+  },
+  "form": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "loading": "Loading...",
+    "success": "Success!",
+    "error": "Error occurred",
+    "reset": "Reset"
+  },
+  "post": {
+    "title": "Title",
+    "description": "Description",
+    "visibility": "Visibility",
+    "publicId": "Public ID",
+    "private": "Private",
+    "public": "Public",
+    "create": "Create Post",
+    "update": "Update Post",
+    "createSuccess": "Post created successfully!",
+    "updateSuccess": "Post updated successfully!",
+    "list": "Posts",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View"
+  },
+  "common": {
+    "language": "Language",
+    "english": "English",
+    "vietnamese": "Vietnamese",
+    "japanese": "Japanese",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "logout": "Logout"
+  },
+  "sidebar": {
+    "appName": "PM Tools",
+    "appDescription": "Project Management",
+    "currentProject": "Current Project",
+    "noProjectSelected": "No project selected",
+    "members": "{{count}} members",
+    "members_one": "{{count}} member",
+    "main": "Main",
+    "navigation": {
+      "backlog": "Backlog",
+      "kanban": "Kanban",
+      "sprint": "Sprint Planning"
+    }
+  },
+  "header": {
+    "appName": "PM Tools",
+    "appDescription": "Effective project management",
+    "myProjects": "My Projects",
+    "current": "Current",
+    "manageProjects": "Manage Projects"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "notFoundDescription": "The page you are looking for does not exist.",
+    "serverError": "Server error",
+    "serverErrorDescription": "An unexpected server error occurred.",
+    "networkError": "Network error",
+    "validationError": "Validation error"
+  },
+  "validation": {
+    "required": "{{field}} is required",
+    "emailInvalid": "Invalid email address",
+    "passwordMinLength": "Password must be at least {{min}} characters long",
+    "passwordRequiredCharacters": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+    "confirmPasswordMismatch": "Passwords do not match",
+    "stringMinLength": "{{field}} must be at least {{min}} characters long",
+    "stringMaxLength": "{{field}} must be at most {{max}} characters long",
+    "phoneInvalid": "Invalid phone number",
+    "urlInvalid": "Invalid URL",
+    "numberMin": "{{field}} must be at least {{min}}",
+    "numberMax": "{{field}} must be at most {{max}}",
+    "apiError": "An error occurred while processing your request",
+    "networkError": "A network error occurred while processing your request"
+  }
+}

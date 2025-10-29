@@ -1,0 +1,14 @@
+node_modules/
+build/
+dist/
+.react-router/
+*.min.js
+*.min.css
+public/
+coverage/
+.next/
+.vercel/
+*.log
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
