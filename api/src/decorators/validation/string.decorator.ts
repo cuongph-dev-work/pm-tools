@@ -61,10 +61,7 @@ export interface IStringValidationOption {
  * @param validationOptions - Additional class-validator options
  * @returns PropertyDecorator with all validation rules applied
  */
-export const StringField = (
-  options: Partial<IStringValidationOption> = {},
-  validationOptions?: ValidationOptions,
-): PropertyDecorator => {
+export const StringField = (options: Partial<IStringValidationOption> = {}, validationOptions?: ValidationOptions): PropertyDecorator => {
   const {
     prefix,
     min,
@@ -278,10 +275,7 @@ const IsPassword = (validationOptions?: ValidationOptions): PropertyDecorator =>
  * @param validationOptions - Additional validation options
  * @returns PropertyDecorator for phone number validation
  */
-const IsPhoneNumber = (
-  validationOptions?: ValidationOptions,
-  prefix?: string,
-): PropertyDecorator => {
+const IsPhoneNumber = (validationOptions?: ValidationOptions, prefix?: string): PropertyDecorator => {
   return ValidateBy(
     {
       name: 'IsPhoneNumber',
@@ -334,11 +328,7 @@ const IsSameAs = (property: string, validationOptions?: ValidationOptions): Prop
  * @param dateStringOptions - Additional validation options
  * @returns PropertyDecorator for date string validation
  */
-const IsDateString = (
-  dateStringOptions?: IsDateStringOptions,
-  validationOptions?: ValidationOptions,
-  prefix?: string,
-): PropertyDecorator => {
+const IsDateString = (dateStringOptions?: IsDateStringOptions, validationOptions?: ValidationOptions, prefix?: string): PropertyDecorator => {
   return ValidateBy(
     {
       name: 'IsDateString',
@@ -372,10 +362,7 @@ const IsDateString = (
  * @param validationOptions - Additional validation options
  * @returns PropertyDecorator for phone number validation
  */
-const IsOnlyString = (
-  validationOptions?: ValidationOptions,
-  prefix?: string,
-): PropertyDecorator => {
+const IsOnlyString = (validationOptions?: ValidationOptions, prefix?: string): PropertyDecorator => {
   return ValidateBy(
     {
       name: 'IsOnlyString',

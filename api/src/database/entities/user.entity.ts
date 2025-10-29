@@ -1,15 +1,5 @@
 import { USER_ROLE } from '@configs/enum/db';
-import {
-  BeforeCreate,
-  BeforeUpdate,
-  Entity,
-  Enum,
-  Filter,
-  ManyToOne,
-  OneToMany,
-  Opt,
-  Property,
-} from '@mikro-orm/core';
+import { BeforeCreate, BeforeUpdate, Entity, Enum, Filter, ManyToOne, OneToMany, Opt, Property } from '@mikro-orm/core';
 import * as bcrypt from 'bcryptjs';
 import { WrapperType } from 'src/types/request.type';
 import { BaseEntity } from './base.abstract';

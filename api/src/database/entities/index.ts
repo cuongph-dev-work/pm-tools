@@ -16,4 +16,3 @@ export * from './user.entity';
 export * from './git-alert-recipient.entity';
 export * from './git-alert.entity';
 export * from './git-repository.entity';
-

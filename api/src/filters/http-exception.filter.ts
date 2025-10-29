@@ -1,11 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  HttpStatus,
-  Logger,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ValidationError } from 'class-validator';
 import { Request, Response } from 'express';
@@ -28,10 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const lang = host.switchToHttp().getRequest().i18nLang;
     // Determine the status code and message
-    const status =
-      exception instanceof HttpException
-        ? (exception.getStatus() as HttpStatus)
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = exception instanceof HttpException ? (exception.getStatus() as HttpStatus) : HttpStatus.INTERNAL_SERVER_ERROR;
     let message: string = exception.message;
     let errors: Partial<Record<string, any>>[] = [];
 
@@ -64,13 +54,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     // Log the error with relevant details
-    this.logger.error(
-      `lang: ${lang}`,
-      `status: ${status}`,
-      `${request.method} ${request.url}`,
-      exception instanceof Error ? exception.stack : '',
-      HttpExceptionFilter.name,
-    );
+    this.logger.error(`lang: ${lang}`, `status: ${status}`, `${request.method} ${request.url}`, exception instanceof Error ? exception.stack : '', HttpExceptionFilter.name);
 
     // Create a consistent error response structure
     const errorResponse = {
@@ -120,14 +104,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
           const key = parsedObj.key;
           const params = parsedObj.params;
           const prefix = parsedObj.prefix;
-          const property = this.i18n.t(
-            prefix
-              ? `validation.label.${prefix}.${childMessage.property}`
-              : `validation.label.${childMessage.property}`,
-            {
-              lang,
-            },
-          );
+          const property = this.i18n.t(prefix ? `validation.label.${prefix}.${childMessage.property}` : `validation.label.${childMessage.property}`, {
+            lang,
+          });
           const constraintValues = Object.values(params);
           allMessages.push({
             path: childMessage.property,
@@ -149,14 +128,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const params = parsedObj.params;
         const key = parsedObj.key;
         const prefix = parsedObj.prefix;
-        const property = this.i18n.t(
-          prefix
-            ? `validation.label.${prefix}.${error.property}`
-            : `validation.label.${error.property}`,
-          {
-            lang,
-          },
-        );
+        const property = this.i18n.t(prefix ? `validation.label.${prefix}.${error.property}` : `validation.label.${error.property}`, {
+          lang,
+        });
 
         if (params.properties) {
           let i = 1;

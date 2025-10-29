@@ -1,14 +1,5 @@
 import { PROJECT_STATUS } from '@configs/enum/db';
-import {
-  Collection,
-  Entity,
-  Enum,
-  Filter,
-  ManyToOne,
-  OneToMany,
-  Opt,
-  Property,
-} from '@mikro-orm/core';
+import { Collection, Entity, Enum, Filter, ManyToOne, OneToMany, Opt, Property } from '@mikro-orm/core';
 import { WrapperType } from 'src/types/request.type';
 import { BaseEntity } from './base.abstract';
 import { GitRepository } from './git-repository.entity';

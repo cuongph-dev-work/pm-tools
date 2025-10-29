@@ -9,29 +9,17 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  async createTask(
-    @Param('projectId') projectId: string,
-    @Body() createTaskDto: CreateTaskDto,
-    @CurrentUser() currentUser: User,
-  ) {
+  async createTask(@Param('projectId') projectId: string, @Body() createTaskDto: CreateTaskDto, @CurrentUser() currentUser: User) {
     return this.taskService.createTask(projectId, createTaskDto, currentUser);
   }
 
   @Put(':taskId')
-  async updateTask(
-    @Param('projectId') projectId: string,
-    @Param('taskId') taskId: string,
-    @Body() updateTaskDto: UpdateTaskDto,
-    @CurrentUser() currentUser: User,
-  ) {
+  async updateTask(@Param('projectId') projectId: string, @Param('taskId') taskId: string, @Body() updateTaskDto: UpdateTaskDto, @CurrentUser() currentUser: User) {
     return this.taskService.updateTask(projectId, taskId, updateTaskDto, currentUser);
   }
 
   @Get('backlog')
-  async getTaskFromBacklog(
-    @Param('projectId') projectId: string,
-    @Query() searchDto: SearchTaskInSprintDto,
-  ) {
+  async getTaskFromBacklog(@Param('projectId') projectId: string, @Query() searchDto: SearchTaskInSprintDto) {
     return this.taskService.getTaskFromBacklog(projectId, searchDto);
   }
 
@@ -46,30 +34,17 @@ export class TaskController {
   }
 
   @Get('sprint/:sprintId')
-  async getTaskFromSprint(
-    @Param('projectId') projectId: string,
-    @Param('sprintId') sprintId: string,
-    @Query() searchDto: SearchTaskInSprintDto,
-  ) {
+  async getTaskFromSprint(@Param('projectId') projectId: string, @Param('sprintId') sprintId: string, @Query() searchDto: SearchTaskInSprintDto) {
     return this.taskService.getTaskFromSprint(projectId, sprintId, searchDto);
   }
 
   @Patch(':id/sprint/:sprintId')
-  async addTaskToSprint(
-    @Param('projectId') projectId: string,
-    @Param('id') id: string,
-    @Param('sprintId') sprintId: string,
-    @CurrentUser() currentUser: User,
-  ) {
+  async addTaskToSprint(@Param('projectId') projectId: string, @Param('id') id: string, @Param('sprintId') sprintId: string, @CurrentUser() currentUser: User) {
     return this.taskService.addTaskToSprint(projectId, id, sprintId, currentUser);
   }
 
   @Patch(':id/move-to-backlog')
-  async moveTaskToBacklog(
-    @Param('projectId') projectId: string,
-    @Param('id') id: string,
-    @CurrentUser() currentUser: User,
-  ) {
+  async moveTaskToBacklog(@Param('projectId') projectId: string, @Param('id') id: string, @CurrentUser() currentUser: User) {
     return this.taskService.moveTaskToBacklog(projectId, id, currentUser);
   }
 }

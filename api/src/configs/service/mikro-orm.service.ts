@@ -39,10 +39,7 @@ export class MikroOrmConfigService implements MikroOrmOptionsFactory {
    */
   createMikroOrmOptions(): MikroOrmModuleSyncOptions {
     // Override with NestJS config service values
-    const enableQueryLog = this.configService.get<boolean | LoggerNamespace[]>(
-      'app.enableQueryLog',
-      false,
-    );
+    const enableQueryLog = this.configService.get<boolean | LoggerNamespace[]>('app.enableQueryLog', false);
     const enableSlowQueryLog = this.configService.get<boolean>('app.enableSlowQueryLog', false);
     const thresholdMs = this.configService.get<number>('app.slowQueryThresholdMs', 500);
     const loggerOptions: MikroLoggerOptions = {

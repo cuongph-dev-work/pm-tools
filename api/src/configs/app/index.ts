@@ -52,9 +52,7 @@ const configs = (): Config => {
     },
     storage: {
       driver: (toUpper(process.env.STORAGE_DRIVER) as STORAGE_DRIVER) || STORAGE_DRIVER.CLOUDINARY,
-      deleteMode:
-        (toUpper(process.env.STORAGE_DELETE_MODE) as STORAGE_DELETE_MODE) ||
-        STORAGE_DELETE_MODE.SOFT,
+      deleteMode: (toUpper(process.env.STORAGE_DELETE_MODE) as STORAGE_DELETE_MODE) || STORAGE_DELETE_MODE.SOFT,
       cloudinary: {
         cloudName: process.env.STORAGE_CLOUDINARY_CLOUD_NAME || '',
         apiKey: process.env.STORAGE_CLOUDINARY_API_KEY || '',

@@ -30,12 +30,7 @@ export const getPaginationParams = (params: PaginationParams) => {
   };
 };
 
-export const createPaginationResponse = <T>(
-  data: T[],
-  total: number,
-  page: number,
-  limit: number,
-): PaginationResponse<T> => {
+export const createPaginationResponse = <T>(data: T[], total: number, page: number, limit: number): PaginationResponse<T> => {
   return {
     data,
     meta: {

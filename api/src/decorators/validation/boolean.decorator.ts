@@ -7,9 +7,7 @@ interface IBooleanValidationOption {
   prefix?: string;
 }
 
-export const BooleanField = (
-  options: Partial<IBooleanValidationOption> = {},
-): PropertyDecorator => {
+export const BooleanField = (options: Partial<IBooleanValidationOption> = {}): PropertyDecorator => {
   const { prefix } = options;
   const decorators = [
     ...(options.isOptional ? [IsOptional()] : []),

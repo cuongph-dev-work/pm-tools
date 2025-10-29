@@ -1,14 +1,7 @@
 import { SPRINT_STATUS } from '@configs/enum/db';
 import { Sprint } from '@entities/sprint.entity';
 import { ProjectRepository } from '@modules/project/project.repository';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  Logger,
-  NotFoundException,
-  forwardRef,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { I18nService } from 'nestjs-i18n';
 import { WrapperType } from 'src/types/request.type';

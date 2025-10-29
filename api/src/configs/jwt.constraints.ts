@@ -11,10 +11,7 @@ function checkExistFolder(name: string) {
 
 function getAccessTokenKeyPair() {
   checkExistFolder('secure');
-  const access_token_private_key_path = path.join(
-    __dirname,
-    '../../secure/access_token_private.key',
-  );
+  const access_token_private_key_path = path.join(__dirname, '../../secure/access_token_private.key');
   const access_token_public_key_path = path.join(__dirname, '../../secure/access_token_public.key');
   // Kiểm tra xem file khóa đã tồn tại chưa
   const access_token_private_key_exists = fs.existsSync(access_token_private_key_path);
@@ -49,14 +46,8 @@ function getAccessTokenKeyPair() {
 
 function getRefreshTokenKeyPair() {
   checkExistFolder('secure');
-  const refresh_token_private_key_path = path.join(
-    __dirname,
-    '../../secure/refresh_token_private.key',
-  );
-  const refresh_token_public_key_path = path.join(
-    __dirname,
-    '../../secure/refresh_token_public.key',
-  );
+  const refresh_token_private_key_path = path.join(__dirname, '../../secure/refresh_token_private.key');
+  const refresh_token_public_key_path = path.join(__dirname, '../../secure/refresh_token_public.key');
   // Kiểm tra xem file khóa đã tồn tại chưa
   const refresh_token_private_key_exists = fs.existsSync(refresh_token_private_key_path);
   const refresh_token_public_key_exists = fs.existsSync(refresh_token_public_key_path);

@@ -12,11 +12,7 @@ export class ProjectInviteController {
 
   @Roles([USER_ROLE.ADMIN, USER_ROLE.PM])
   @Post('/projects/:projectId/invites')
-  createInvite(
-    @Param('projectId') projectId: string,
-    @Body() body: CreateInviteDto,
-    @CurrentUser() currentUser: User,
-  ) {
+  createInvite(@Param('projectId') projectId: string, @Body() body: CreateInviteDto, @CurrentUser() currentUser: User) {
     return this.projectInviteService.createInvite(projectId, body, currentUser);
   }
 
@@ -40,11 +36,7 @@ export class ProjectInviteController {
 
   @Roles([])
   @Post('/invites/:token/respond')
-  respondToInvite(
-    @Param('token') token: string,
-    @Body() body: RespondInviteDto,
-    @CurrentUser() currentUser: User,
-  ) {
+  respondToInvite(@Param('token') token: string, @Body() body: RespondInviteDto, @CurrentUser() currentUser: User) {
     return this.projectInviteService.respondToInvite(token, body, currentUser);
   }
 

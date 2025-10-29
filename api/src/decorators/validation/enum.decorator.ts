@@ -10,10 +10,7 @@ interface IEnumValidationOption {
   prefix?: string;
 }
 
-export const EnumField = <TEnum>(
-  getEnum: () => TEnum,
-  options: Partial<IEnumValidationOption> = {},
-): PropertyDecorator => {
+export const EnumField = <TEnum>(getEnum: () => TEnum, options: Partial<IEnumValidationOption> = {}): PropertyDecorator => {
   const enumValue = getEnum() as unknown;
   const decorators = [
     ...(options.isOptional

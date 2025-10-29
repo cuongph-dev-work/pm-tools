@@ -12,12 +12,7 @@ import { ProjectMemberRepository } from './project-member.repository';
 @Module({
   imports: [MikroOrmModule.forFeature([ProjectInviteMember, Project, ProjectMember])],
   controllers: [ProjectInviteController],
-  providers: [
-    ProjectInviteService,
-    ProjectInviteRepository,
-    ProjectRepository,
-    ProjectMemberRepository,
-  ],
+  providers: [ProjectInviteService, ProjectInviteRepository, ProjectRepository, ProjectMemberRepository],
   exports: [ProjectInviteService, ProjectInviteRepository],
 })
 export class ProjectInviteModule {}

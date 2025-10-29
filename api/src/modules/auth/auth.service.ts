@@ -7,12 +7,7 @@ import * as bcrypt from 'bcryptjs';
 import { plainToInstance } from 'class-transformer';
 import { I18nService } from 'nestjs-i18n';
 import { User } from 'src/database/entities/user.entity';
-import {
-  ChangePasswordDto,
-  ResetPasswordDto,
-  SetFirstPasswordDto,
-  UserInfoResponseDto,
-} from './dtos';
+import { ChangePasswordDto, ResetPasswordDto, SetFirstPasswordDto, UserInfoResponseDto } from './dtos';
 import { TokenPayload } from './interfaces/token.interface';
 @Injectable()
 export class AuthService {

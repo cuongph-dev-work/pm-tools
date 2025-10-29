@@ -1,11 +1,4 @@
-import {
-  BadRequestException,
-  forwardRef,
-  Inject,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { transformToValidationError } from '@utils/helper';
 
 import { STORAGE_DELETE_MODE, STORAGE_DRIVER } from '@configs/enum/file';
@@ -44,10 +37,7 @@ export class FileStorageService {
    */
   async uploadFile(file: Express.Multer.File, user: User) {
     if (!file) {
-      throw transformToValidationError(
-        [{ property: 'file', key: 'IsMustSelect', params: {} }],
-        this.i18n,
-      );
+      throw transformToValidationError([{ property: 'file', key: 'IsMustSelect', params: {} }], this.i18n);
     }
 
     return this.em.transactional(async em => {
@@ -62,11 +52,7 @@ export class FileStorageService {
       await em.persistAndFlush(fileStorage);
 
       // put file to cloudinary
-      const result = await this.uploadService.putFile(
-        file.path,
-        this.storageDriver,
-        fileStorage.id,
-      );
+      const result = await this.uploadService.putFile(file.path, this.storageDriver, fileStorage.id);
 
       if (!result) {
         throw new BadRequestException('Failed to upload file');

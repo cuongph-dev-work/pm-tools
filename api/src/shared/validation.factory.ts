@@ -16,8 +16,5 @@ function formatError(error: ValidationError, parent: string[] | string): ErrorMe
   const messages = Object.values(error.constraints ?? {});
   const newPath = path.join('.');
 
-  return [
-    ...(messages.length > 0 ? [{ path: newPath, messages }] : []),
-    ...(error.children ? error.children.flatMap(child => formatError(child, path)) : []),
-  ];
+  return [...(messages.length > 0 ? [{ path: newPath, messages }] : []), ...(error.children ? error.children.flatMap(child => formatError(child, path)) : [])];
 }

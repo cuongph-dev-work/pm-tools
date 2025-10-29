@@ -27,10 +27,7 @@ export class SprintRepository extends EntityRepository<Sprint> {
     const where: FilterQuery<Sprint> = { project: projectId };
 
     if (keywords) {
-      where.$or = [
-        { name: { $ilike: `%${keywords}%` } },
-        { description: { $ilike: `%${keywords}%` } },
-      ];
+      where.$or = [{ name: { $ilike: `%${keywords}%` } }, { description: { $ilike: `%${keywords}%` } }];
     }
 
     // Get sprints and sort them in memory to prioritize IN_PROGRESS

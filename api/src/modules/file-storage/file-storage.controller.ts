@@ -1,17 +1,6 @@
 import { CurrentUser } from '@decorators/current-user.decorator';
 import { User } from '@entities/user.entity';
-import {
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  Query,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GetFileDto } from './dtos/get-file.dto';
 import { FileStorageService } from './file-storage.service';

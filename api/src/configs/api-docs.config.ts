@@ -12,9 +12,7 @@ export function configSwagger(app: INestApplication) {
   const apiEndpoint = app.get(ConfigService).get('app.backendUrl');
   const config = new DocumentBuilder()
     .setTitle('APP project')
-    .setDescription(
-      '## The APP API description\n\n### API Versioning\nAPI version is controlled via the `version` header. Default version is `1`.',
-    )
+    .setDescription('## The APP API description\n\n### API Versioning\nAPI version is controlled via the `version` header. Default version is `1`.')
     .setVersion('1.0')
     .addServer(`${apiEndpoint}/api`)
     // .addSecurity('token', { type: 'http', scheme: 'bearer' })
@@ -73,10 +71,7 @@ export function configSwagger(app: INestApplication) {
 
     const credentials = parseAuthHeader(req.headers.authorization);
 
-    if (
-      credentials?.name !== api_documentation_credentials.name ||
-      credentials?.pass !== api_documentation_credentials.pass
-    ) {
+    if (credentials?.name !== api_documentation_credentials.name || credentials?.pass !== api_documentation_credentials.pass) {
       return unauthorizedResponse();
     }
 

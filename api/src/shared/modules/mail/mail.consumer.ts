@@ -21,14 +21,9 @@ export class MailConsumer extends WorkerHost {
         default:
           throw new Error(`Job name ${job.name} not found`);
       }
-      this.logger.log(
-        `Email ${job.data.template || ''} has been sent with context ${JSON.stringify(job.data.context) || ''}`,
-      );
+      this.logger.log(`Email ${job.data.template || ''} has been sent with context ${JSON.stringify(job.data.context) || ''}`);
     } catch (e) {
-      this.logger.error(
-        `An error occur while sending email ${job.data.template || ''} with context ${JSON.stringify(job.data.context) || ''}`,
-        e,
-      );
+      this.logger.error(`An error occur while sending email ${job.data.template || ''} with context ${JSON.stringify(job.data.context) || ''}`, e);
     }
   }
 }

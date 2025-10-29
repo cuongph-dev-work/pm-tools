@@ -1,11 +1,5 @@
 import { ChangePasswordDto, ResetPasswordDto, SetFirstPasswordDto } from '@modules/auth/dtos';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-  forwardRef,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { MailService } from '@shared/modules/mail/mail.service';
 import { addHours } from '@utils/date';
 import { generateToken, transformToValidationError } from '@utils/helper';
@@ -30,10 +24,7 @@ export class UserService {
   private async checkUniqueEmail(email: string) {
     const user = await this.userRepository.findByEmail(email, []);
     if (user) {
-      throw transformToValidationError(
-        [{ property: 'email', key: 'IsUnique', params: {} }],
-        this.i18n,
-      );
+      throw transformToValidationError([{ property: 'email', key: 'IsUnique', params: {} }], this.i18n);
     }
   }
 

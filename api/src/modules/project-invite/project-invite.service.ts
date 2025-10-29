@@ -2,15 +2,7 @@ import { INVITE_STATUS, MEMBER_STATUS } from '@configs/enum/db';
 import { ProjectMember } from '@entities/project-member.entity';
 import { User } from '@entities/user.entity';
 import { ProjectRepository } from '@modules/project/project.repository';
-import {
-  BadRequestException,
-  ForbiddenException,
-  Inject,
-  Injectable,
-  Logger,
-  NotFoundException,
-  forwardRef,
-} from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { generateToken } from '@utils/helper';
 import { plainToInstance } from 'class-transformer';
@@ -41,10 +33,7 @@ export class ProjectInviteService {
   }
 
   private async checkUserIsAlreadyInvited(projectId: string, email: string) {
-    const existingInvite = await this.projectInviteRepository.findPendingInviteByEmail(
-      projectId,
-      email,
-    );
+    const existingInvite = await this.projectInviteRepository.findPendingInviteByEmail(projectId, email);
 
     if (existingInvite) {
       throw new BadRequestException(this.i18n.t('message.invitation_already_sent'));
@@ -97,8 +86,7 @@ export class ProjectInviteService {
 
     const officalMembers = await this.projectMemberRepository.findMembersByProject(projectId);
 
-    const memberIsInvited =
-      await this.projectInviteRepository.findPendingInviteByProject(projectId);
+    const memberIsInvited = await this.projectInviteRepository.findPendingInviteByProject(projectId);
 
     const members = [
       ...officalMembers.map(member => ({

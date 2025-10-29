@@ -7,10 +7,7 @@ export class SprintController {
   constructor(private readonly sprintService: SprintService) {}
 
   @Post()
-  async createSprint(
-    @Param('projectId') projectId: string,
-    @Body() createSprintDto: CreateSprintDto,
-  ) {
+  async createSprint(@Param('projectId') projectId: string, @Body() createSprintDto: CreateSprintDto) {
     return this.sprintService.createSprint(projectId, createSprintDto);
   }
 
