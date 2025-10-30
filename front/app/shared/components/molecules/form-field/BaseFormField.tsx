@@ -37,13 +37,20 @@ export function BaseFormField({
   return (
     <div className={className}>
       {labelKey && (
-        <label htmlFor={fieldId} id={labelId} className={`block text-sm font-medium text-gray-700 mb-1 ${labelClassName}`}>
+        <label
+          htmlFor={fieldId}
+          id={labelId}
+          className={`block text-sm font-medium text-gray-700 mb-1 ${labelClassName}`}
+        >
           {t(labelKey)}
           {isRequired ? <span className="ml-0.5 text-red-600">*</span> : null}
         </label>
       )}
 
-      <div aria-labelledby={labelId} aria-describedby={`${descriptionKey ? descriptionId : ""}`.trim()}>
+      <div
+        aria-labelledby={labelId}
+        aria-describedby={`${descriptionKey ? descriptionId : ""}`.trim()}
+      >
         {React.isValidElement(children)
           ? React.cloneElement(children as React.ReactElement, {
               id: fieldId,
@@ -66,5 +73,3 @@ export function BaseFormField({
 }
 
 export default BaseFormField;
-
-
