@@ -85,6 +85,22 @@
     "current": "現在",
     "manageProjects": "プロジェクトを管理"
   },
+  "project": {
+    "manageDescription": "プロジェクトの作成、編集、管理を行います",
+    "tabs": {
+      "projects": "マイプロジェクト",
+      "members": "メンバー"
+    },
+    "allProjects": "すべてのプロジェクト",
+    "youHaveNProjects": "プロジェクトは{{count}}件あります",
+    "createProject": "プロジェクトを作成",
+    "projectMembersTitle": "プロジェクトのメンバー: {{name}}",
+    "memberCount": "{{count}}人のメンバー",
+    "inviteMember": "メンバーを招待",
+    "startLabel": "開始",
+    "endLabel": "終了",
+    "joinedLabel": "参加日"
+  },
   "errors": {
     "notFound": "ページが見つかりません",
     "notFoundDescription": "お探しのページは存在しません。",

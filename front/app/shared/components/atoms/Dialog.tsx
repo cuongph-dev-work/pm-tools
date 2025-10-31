@@ -1,6 +1,7 @@
-import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Dialog as RDialog } from "@radix-ui/themes";
 import { X } from "lucide-react";
 import React from "react";
+import { Z_INDEX } from "~/shared/styles/zIndex";
 
 interface DialogProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface DialogContentProps {
   description?: string;
   children: React.ReactNode;
   className?: string;
+  onInteractOutside?: (event: React.MouseEvent | React.PointerEvent) => void;
 }
 
 interface DialogHeaderProps {
@@ -29,54 +31,64 @@ interface DialogFooterProps {
 
 const Dialog = ({ children, open, onOpenChange, trigger }: DialogProps) => {
   return (
-    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
-      {trigger && (
-        <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
-      )}
+    <RDialog.Root open={open} onOpenChange={onOpenChange}>
+      {trigger && <RDialog.Trigger>{trigger}</RDialog.Trigger>}
       {children}
-    </DialogPrimitive.Root>
+    </RDialog.Root>
   );
 };
 
 const DialogContent = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Content>,
-  DialogContentProps &
-    React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ title, description, children, className = "", ...props }, ref) => {
-  return (
-    <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-      <DialogPrimitive.Content
+  React.ElementRef<typeof RDialog.Content>,
+  DialogContentProps & React.ComponentPropsWithoutRef<typeof RDialog.Content>
+>(
+  (
+    {
+      title,
+      description,
+      children,
+      className = "",
+      onInteractOutside,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <RDialog.Content
         ref={ref}
-        className={`fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-lg ${className}`}
+        className={className}
+        style={{ zIndex: Z_INDEX.modal }}
+        onInteractOutside={onInteractOutside}
         {...props}
       >
         {(title || description) && (
           <DialogHeader title={title} description={description} />
         )}
         {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-gray-100 data-[state=open]:text-gray-500">
+        <RDialog.Close
+          className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none"
+          aria-label="Close"
+        >
           <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
-      </DialogPrimitive.Content>
-    </DialogPrimitive.Portal>
-  );
-});
-DialogContent.displayName = DialogPrimitive.Content.displayName;
+        </RDialog.Close>
+      </RDialog.Content>
+    );
+  }
+);
+DialogContent.displayName = "DialogContent";
 
 const DialogHeader = ({ title, description }: DialogHeaderProps) => {
   return (
     <div className="flex flex-col space-y-1.5 text-center sm:text-left">
       {title && (
-        <DialogPrimitive.Title className="text-lg font-semibold leading-none tracking-tight">
+        <RDialog.Title className="text-lg font-semibold leading-none tracking-tight">
           {title}
-        </DialogPrimitive.Title>
+        </RDialog.Title>
       )}
       {description && (
-        <DialogPrimitive.Description className="text-sm text-gray-500">
+        <RDialog.Description className="text-sm text-gray-600">
           {description}
-        </DialogPrimitive.Description>
+        </RDialog.Description>
       )}
     </div>
   );
@@ -92,9 +104,9 @@ const DialogFooter = ({ children, className = "" }: DialogFooterProps) => {
   );
 };
 
-const DialogTitle = DialogPrimitive.Title;
-const DialogDescription = DialogPrimitive.Description;
-const DialogClose = DialogPrimitive.Close;
+const DialogTitle = RDialog.Title;
+const DialogDescription = RDialog.Description;
+const DialogClose = RDialog.Close;
 
 export {
   Dialog,

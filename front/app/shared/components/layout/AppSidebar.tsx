@@ -1,5 +1,6 @@
 // 1. React imports
 import React from "react";
+import { Z_INDEX } from "~/shared/styles/zIndex";
 
 // 2. Third-party libraries
 import {
@@ -87,14 +88,14 @@ export function AppSidebar() {
 
   return (
     <div
-      className={`${sidebarWidth} h-full bg-white border-r border-gray-200 flex flex-col relative z-10 transition-all duration-300`}
+      className={`${sidebarWidth} h-full bg-white border-r border-gray-200 flex flex-col relative transition-all duration-300`}
+      style={{ zIndex: Z_INDEX.sidebar }}
     >
       {/* Toggle Button - Float */}
       <div className="absolute -right-12 bottom-2 z-[100]">
         <Button
           onClick={toggleSidebar}
           variant="solid"
-          color="gray"
           size="sm"
           className="w-8 h-8 min-w-8 p-0 shadow-md"
           aria-label="Toggle sidebar"

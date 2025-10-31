@@ -85,6 +85,22 @@
     "current": "Hiện tại",
     "manageProjects": "Quản lý dự án"
   },
+  "project": {
+    "manageDescription": "Tạo, chỉnh sửa và quản lý các dự án của bạn",
+    "tabs": {
+      "projects": "Dự án của tôi",
+      "members": "Thành viên"
+    },
+    "allProjects": "Tất cả dự án",
+    "youHaveNProjects": "Bạn có {{count}} dự án",
+    "createProject": "Tạo dự án",
+    "projectMembersTitle": "Thành viên dự án: {{name}}",
+    "memberCount": "{{count}} thành viên",
+    "inviteMember": "Mời thành viên",
+    "startLabel": "Bắt đầu",
+    "endLabel": "Kết thúc",
+    "joinedLabel": "Tham gia"
+  },
   "errors": {
     "notFound": "Không tìm thấy trang",
     "notFoundDescription": "Trang bạn đang tìm kiếm không tồn tại.",

@@ -2,7 +2,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ChevronDown, Settings } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { ProjectManagementModal } from "~/domains/project/ui/screens/project-management-modal";
+import { ProjectManagementModal } from "~/domains/project/ui/screens/ProjectManagementModal";
 import { useProjects } from "~/shared/hooks/useProjects";
 
 export function ProjectSwitcher() {

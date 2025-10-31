@@ -85,6 +85,22 @@
     "current": "Current",
     "manageProjects": "Manage Projects"
   },
+  "project": {
+    "manageDescription": "Create, edit and manage your projects",
+    "tabs": {
+      "projects": "My Projects",
+      "members": "Members"
+    },
+    "allProjects": "All projects",
+    "youHaveNProjects": "You have {{count}} projects",
+    "createProject": "Create project",
+    "projectMembersTitle": "Project members: {{name}}",
+    "memberCount": "{{count}} members",
+    "inviteMember": "Invite member",
+    "startLabel": "Start",
+    "endLabel": "End",
+    "joinedLabel": "Joined"
+  },
   "errors": {
     "notFound": "Page not found",
     "notFoundDescription": "The page you are looking for does not exist.",
