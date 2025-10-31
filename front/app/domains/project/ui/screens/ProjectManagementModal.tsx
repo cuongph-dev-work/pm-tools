@@ -26,9 +26,10 @@ export function ProjectManagementModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-5xl p-0"
+        className="!max-w-5xl p-0"
         title={t("header.manageProjects")}
         description={t("project.manageDescription")}
+        closeOnOverlayClick={false}
       >
         <div className="px-6 pt-6">
           <Tabs

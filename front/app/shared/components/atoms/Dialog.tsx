@@ -15,7 +15,9 @@ interface DialogContentProps {
   description?: string;
   children: React.ReactNode;
   className?: string;
-  onInteractOutside?: (event: React.MouseEvent | React.PointerEvent) => void;
+  closeOnOverlayClick?: boolean;
+  size?: "1" | "2" | "3" | "4";
+  maxWidth?: string;
 }
 
 interface DialogHeaderProps {
@@ -48,7 +50,9 @@ const DialogContent = React.forwardRef<
       description,
       children,
       className = "",
-      onInteractOutside,
+      closeOnOverlayClick = true,
+      size = "3",
+      maxWidth,
       ...props
     },
     ref
@@ -56,9 +60,15 @@ const DialogContent = React.forwardRef<
     return (
       <RDialog.Content
         ref={ref}
+        size={size}
         className={className}
+        maxWidth={maxWidth}
         style={{ zIndex: Z_INDEX.modal }}
-        onInteractOutside={onInteractOutside}
+        onInteractOutside={
+          closeOnOverlayClick
+            ? props.onInteractOutside
+            : e => e.preventDefault()
+        }
         {...props}
       >
         {(title || description) && (
