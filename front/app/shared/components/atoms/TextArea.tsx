@@ -1,17 +1,15 @@
-import * as React from "react";
 import {
   TextArea as RadixTextArea,
   type TextAreaProps as RadixTextAreaProps,
 } from "@radix-ui/themes";
+import * as React from "react";
 
-export interface TextareaProps
-  extends Omit<RadixTextAreaProps, "size">,
-    Omit<React.ComponentPropsWithoutRef<"textarea">, "size"> {
+export type TextareaProps = Omit<RadixTextAreaProps, "className"> & {
   className?: string;
-}
+};
 
 export const Textarea = React.forwardRef<
-  React.ElementRef<"textarea">,
+  React.ElementRef<typeof RadixTextArea>,
   TextareaProps
 >(({ className = "", ...props }, ref) => {
   return (

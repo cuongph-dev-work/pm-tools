@@ -1,3 +1,4 @@
+import { RadioGroup as ThemesRadioGroup } from "@radix-ui/themes";
 import * as React from "react";
 
 export interface RadioOption {
@@ -8,7 +9,10 @@ export interface RadioOption {
 }
 
 export interface RadioGroupProps
-  extends Omit<React.ComponentPropsWithoutRef<"div">, "onChange"> {
+  extends Omit<
+    React.ComponentPropsWithoutRef<typeof ThemesRadioGroup.Root>,
+    "onChange" | "children" | "value" | "defaultValue" | "name"
+  > {
   name: string;
   value?: string;
   onChange?: (value: string) => void;
@@ -18,12 +22,11 @@ export interface RadioGroupProps
 }
 
 /**
- * RadioGroup atom sử dụng HTML native radio với Tailwind CSS.
- * Hỗ trợ className để tùy biến style theo guideline.
- * Không hardcode text: nhận labelKey trong options để i18n ở layer molecule.
+ * RadioGroup atom - sử dụng Radix UI RadioGroup
+ * Không hardcode text: label/labelKey do caller quản lý i18n
  */
 export const RadioGroup = React.forwardRef<
-  React.ElementRef<"div">,
+  React.ElementRef<typeof ThemesRadioGroup.Root>,
   RadioGroupProps
 >(
   (
@@ -38,43 +41,36 @@ export const RadioGroup = React.forwardRef<
     },
     ref
   ) => {
-    const handleChange = (e: React.ChangeEvent) => {
-      onChange?.((e.target as any).value);
-    };
-
     const groupClassName = ["space-y-2", className].filter(Boolean).join(" ");
-    const radioOptionClassName = [
-      "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2",
+    const radioItemClassName = [
+      "h-4 w-4 rounded-full border border-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+      "data-[state=checked]:border-blue-600 data-[state=checked]:bg-white",
       optionClassName,
     ]
       .filter(Boolean)
       .join(" ");
 
     return (
-      <div ref={ref} className={groupClassName} {...props}>
-        {options.map(option => (
-          <div key={option.value} className="flex items-center gap-2">
-            <input
-              type="radio"
-              id={`${name}-${option.value}`}
-              name={name}
-              value={option.value}
-              checked={value === option.value}
-              onChange={handleChange}
-              disabled={option.disabled}
-              className={radioOptionClassName}
-            />
-            <label
-              htmlFor={`${name}-${option.value}`}
-              className={`text-sm text-gray-700 cursor-pointer ${
-                option.disabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              {option.label || option.labelKey}
-            </label>
-          </div>
+      <ThemesRadioGroup.Root
+        ref={ref}
+        name={name}
+        value={value}
+        onValueChange={onChange}
+        className={groupClassName}
+        {...props}
+      >
+        {options.map((option: RadioOption) => (
+          <ThemesRadioGroup.Item
+            key={option.value}
+            value={option.value}
+            disabled={option.disabled}
+            className={radioItemClassName}
+            id={`${name}-${option.value}`}
+          >
+            {option.label || option.labelKey}
+          </ThemesRadioGroup.Item>
         ))}
-      </div>
+      </ThemesRadioGroup.Root>
     );
   }
 );
