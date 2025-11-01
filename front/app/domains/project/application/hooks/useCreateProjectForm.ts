@@ -1,5 +1,6 @@
-import { useForm } from "@tanstack/react-form";
-import { useState } from "react";
+import { useField, useForm } from "@tanstack/react-form";
+import dayjs from "dayjs";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { AnyFormApi } from "~/shared/components/molecules/form-field/types";
 import {
@@ -11,7 +12,7 @@ export interface UseCreateProjectFormOptions {
   onSubmit?: (data: {
     name: string;
     description?: string;
-    startDate?: string;
+    startDate: string;
     endDate?: string;
     tags?: string;
   }) => void | Promise<void>;
@@ -31,8 +32,8 @@ export function useCreateProjectForm({
       await onSubmit?.({
         name: value.name,
         description: value.description || undefined,
-        // startDate: value.startDate || undefined,
-        // endDate: value.endDate || undefined,
+        startDate: value.startDate,
+        endDate: value.endDate || undefined,
         tags: value.tags || undefined,
       });
       onSuccess?.();
@@ -45,8 +46,8 @@ export function useCreateProjectForm({
     defaultValues: {
       name: "",
       description: "",
-      // startDate: "",
-      // endDate: "",
+      startDate: "",
+      endDate: "",
       tags: "",
     } as ProjectFormData,
     validators: {
@@ -59,9 +60,40 @@ export function useCreateProjectForm({
     form.reset();
   };
 
+  // Cast form to AnyFormApi for useField
+  const formApi = form as unknown as AnyFormApi;
+
+  // Get startDate and endDate values from form for minDate/maxDate constraints
+  const startDateField = useField({
+    name: "startDate",
+    form: formApi,
+  });
+  const endDateField = useField({
+    name: "endDate",
+    form: formApi,
+  });
+
+  const startDateValue = startDateField.state.value as string | undefined;
+  const endDateValue = endDateField.state.value as string | undefined;
+
+  // Parse dates for minDate/maxDate props
+  const startDateParsed = useMemo(() => {
+    if (!startDateValue) return undefined;
+    const date = dayjs(startDateValue);
+    return date.isValid() ? date.toDate() : undefined;
+  }, [startDateValue]);
+
+  const endDateParsed = useMemo(() => {
+    if (!endDateValue) return undefined;
+    const date = dayjs(endDateValue);
+    return date.isValid() ? date.toDate() : undefined;
+  }, [endDateValue]);
+
   return {
     form: form as unknown as AnyFormApi,
     isSubmitting,
     handleCancel,
+    startDateParsed,
+    endDateParsed,
   };
 }

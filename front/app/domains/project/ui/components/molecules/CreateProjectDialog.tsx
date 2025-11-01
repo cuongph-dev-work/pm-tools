@@ -1,4 +1,4 @@
-import { Box, Flex, Grid } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
 import { TagIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useCreateProjectForm } from "~/domains/project/application/hooks/useCreateProjectForm";
@@ -20,7 +20,7 @@ interface CreateProjectDialogProps {
   onSubmit?: (data: {
     name: string;
     description?: string;
-    startDate?: string;
+    startDate: string;
     endDate?: string;
     tags?: string;
   }) => void;
@@ -33,12 +33,13 @@ export function CreateProjectDialog({
 }: CreateProjectDialogProps) {
   const { t } = useTranslation();
 
-  const { form, isSubmitting, handleCancel } = useCreateProjectForm({
-    onSubmit,
-    onSuccess: () => {
-      onOpenChange(false);
-    },
-  });
+  const { form, isSubmitting, handleCancel, startDateParsed, endDateParsed } =
+    useCreateProjectForm({
+      onSubmit,
+      onSuccess: () => {
+        onOpenChange(false);
+      },
+    });
 
   const handleCancelClick = () => {
     handleCancel();
@@ -77,19 +78,21 @@ export function CreateProjectDialog({
               rows={3}
             />
 
-            <Grid columns="2" gap="4">
+            <Flex gap="2">
               <FormFieldDatePicker
                 name="startDate"
                 form={form}
                 label={t("project.createForm.startDateLabel")}
+                maxDate={endDateParsed}
+                isRequired
               />
-
-              {/* <FormFieldDatePicker
+              <FormFieldDatePicker
                 name="endDate"
                 form={form}
                 label={t("project.createForm.endDateLabel")}
-              /> */}
-            </Grid>
+                minDate={startDateParsed}
+              />
+            </Flex>
 
             <Box>
               <FormFieldInput

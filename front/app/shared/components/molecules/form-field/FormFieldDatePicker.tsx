@@ -33,6 +33,8 @@ export function FormFieldDatePicker({
   ...props
 }: FormFieldDatePickerProps) {
   const field = useField({ name, form });
+  const errors = field.state.meta?.errors ?? [];
+  const hasError = Array.isArray(errors) ? errors.length > 0 : Boolean(errors);
 
   const handleChange = (value: string) => {
     field.handleChange(value);
@@ -56,7 +58,14 @@ export function FormFieldDatePicker({
       <DatePicker
         value={String(field.state.value ?? "")}
         onChange={handleChange}
-        className={cn("max-w-[150px]", datePickerClassName)}
+        onBlur={field.handleBlur}
+        className={cn(
+          "max-w-[150px]",
+          datePickerClassName,
+          hasError &&
+            "border-1 border-red-500 focus:border-red-500 focus:ring-red-500"
+        )}
+        aria-invalid={hasError}
         {...restProps}
       />
       <FormErrorMessage field={field} />

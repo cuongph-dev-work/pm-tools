@@ -18,7 +18,25 @@ export interface DatePickerProps {
   "aria-invalid"?: boolean;
   "aria-errormessage"?: string;
   disabled?: boolean;
+  minDate?: Date | string;
+  maxDate?: Date | string;
 }
+
+// Constants
+const DATE_FORMATS: Record<string, string> = {
+  vi: "DD/MM/YYYY",
+  ja: "YYYY年MM月DD日",
+  en: "MM/DD/YYYY",
+} as const;
+
+const PARSE_FORMATS = [
+  "DD/MM/YYYY",
+  "MM/DD/YYYY",
+  "YYYY-MM-DD",
+  "YYYY年MM月DD日",
+] as const;
+
+const BLUR_DELAY_MS = 200;
 
 export const DatePicker = React.forwardRef<
   React.ElementRef<typeof Input>,
@@ -35,6 +53,8 @@ export const DatePicker = React.forwardRef<
       "aria-invalid": ariaInvalid,
       "aria-errormessage": ariaErrorMessage,
       disabled,
+      minDate,
+      maxDate,
       ...props
     },
     ref
@@ -50,17 +70,26 @@ export const DatePicker = React.forwardRef<
       return date.isValid() ? date.toDate() : undefined;
     }, [value]);
 
+    // Parse minDate and maxDate to Date objects
+    const parsedMinDate = React.useMemo(() => {
+      if (!minDate) return undefined;
+      if (minDate instanceof Date) return minDate;
+      const date = dayjs(minDate);
+      return date.isValid() ? date.toDate() : undefined;
+    }, [minDate]);
+
+    const parsedMaxDate = React.useMemo(() => {
+      if (!maxDate) return undefined;
+      if (maxDate instanceof Date) return maxDate;
+      const date = dayjs(maxDate);
+      return date.isValid() ? date.toDate() : undefined;
+    }, [maxDate]);
+
     // Format date for display based on locale
     React.useEffect(() => {
       if (selectedDate) {
         const date = dayjs(selectedDate);
-        // Use locale-specific format
-        const formats: Record<string, string> = {
-          vi: "DD/MM/YYYY",
-          ja: "YYYY年MM月DD日",
-          en: "MM/DD/YYYY",
-        };
-        const format = formats[i18n.language] || formats.en;
+        const format = DATE_FORMATS[i18n.language] || DATE_FORMATS.en;
         setDisplayValue(date.format(format));
       } else {
         setDisplayValue("");
@@ -82,12 +111,7 @@ export const DatePicker = React.forwardRef<
       setDisplayValue(inputValue);
 
       // Try to parse the input value
-      const parsed = dayjs(inputValue, [
-        "DD/MM/YYYY",
-        "MM/DD/YYYY",
-        "YYYY-MM-DD",
-        "YYYY年MM月DD日",
-      ]);
+      const parsed = dayjs(inputValue, PARSE_FORMATS as unknown as string[]);
       if (parsed.isValid()) {
         onChange?.(parsed.format("YYYY-MM-DD"));
       }
@@ -110,7 +134,7 @@ export const DatePicker = React.forwardRef<
         ) {
           onBlur?.();
         }
-      }, 200);
+      }, BLUR_DELAY_MS);
     };
 
     return (
@@ -164,6 +188,8 @@ export const DatePicker = React.forwardRef<
               mode="single"
               selected={selectedDate}
               onSelect={handleSelect}
+              minDate={parsedMinDate}
+              maxDate={parsedMaxDate}
             />
           </Popover.Content>
         </Popover.Portal>

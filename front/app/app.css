@@ -100,21 +100,3 @@ a:focus-visible,
   padding: 0 !important;
   overflow: hidden !important;
 }
-
-/* Calendar day styling - force override react-day-picker default styles */
-.rdp-day_today {
-  background-color: rgb(255 237 213) !important; /* orange-100 */
-  border: 2px solid rgb(253 186 116) !important; /* orange-300 */
-  color: rgb(17 24 39) !important; /* gray-900 */
-  font-weight: 600 !important;
-}
-
-.rdp-day_selected {
-  background-color: rgb(255 237 213) !important; /* orange-100 */
-  color: rgb(17 24 39) !important; /* gray-900 */
-  font-weight: 600 !important;
-  text-decoration: underline !important;
-  text-decoration-color: rgb(249 115 22) !important; /* orange-500 */
-  text-underline-offset: 2px !important;
-  text-decoration-thickness: 2px !important;
-}
