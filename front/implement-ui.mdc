@@ -1,0 +1,99 @@
+---
+alwaysApply: true
+---
+
+# Quy tắc khi implement component hoặc UI mới
+
+## 1. Components Common (Atoms, Molecules)
+
+### Radix UI Components
+
+- **Ưu tiên sử dụng các component của thư viện Radix UI** để đảm bảo tính nhất quán, accessibility và khả năng mở rộng.
+- Các component Radix UI đã có trong project:
+  - `@radix-ui/react-dropdown-menu`
+  - `@radix-ui/react-tabs`
+  - `@radix-ui/themes`
+
+### Layout Components
+
+- **Ưu tiên sử dụng các Layout components của Radix UI Themes** (`Flex`, `Box`, `Container`, `Grid`) thay vì HTML elements (`div`, `section`) với Tailwind CSS classes cho layout.
+- Sử dụng `Flex` cho flexbox layout thay vì `div` với `className="flex ..."`.
+- Sử dụng `Box` cho các phần tử chứa đơn lẻ thay vì `div`.
+- Sử dụng `Container` để giới hạn chiều rộng nội dung.
+- Sử dụng `Grid` cho grid layout khi cần thiết.
+- Các props spacing của Radix UI: `p`, `px`, `py`, `pt`, `pb`, `pl`, `pr`, `m`, `mx`, `my`, `mt`, `mb`, `ml`, `mr` (có thể dùng số hoặc string như `"6"` hoặc `6`).
+- Kết hợp với `className` để custom styling khi cần thiết.
+
+```typescript
+import { Flex, Box, Container } from "@radix-ui/themes";
+
+// Thay vì: <div className="flex items-center justify-between mb-4">
+<Flex direction="row" align="center" justify="between" mb="4" gap="4">
+  {/* content */}
+</Flex>
+
+// Thay vì: <div className="mb-6">
+<Box mb="6">
+  {/* content */}
+</Box>
+```
+
+### Customization
+
+- Phải cho phép truyền `className` để dễ dàng custom giao diện khi cần thiết.
+- Kết hợp Tailwind CSS với Radix UI components.
+- Component structure:
+
+```typescript
+interface ComponentProps {
+  className?: string;
+  // ... other props
+}
+
+export function Component({ className = "", ...props }: ComponentProps) {
+  return (
+    <RadixComponent className={cn("base-styles", className)} {...props} />
+  );
+}
+```
+
+## 2. Components cấp Organism
+
+- Phải **tái sử dụng tối đa** các atoms và molecules đã có (không copy lại code).
+- Tách logic và UI rõ ràng nếu component có xử lý phức tạp.
+- Ưu tiên composition pattern thay vì inheritance.
+
+## 3. Internationalization (i18n)
+
+- **Tất cả text hiển thị trực tiếp lên UI (hardcode string) phải tích hợp i18n**, tuyệt đối không được viết text cứng trong component.
+- Sử dụng `useTranslation` hook từ `react-i18next`.
+- Thêm translation keys vào tất cả các file locale (en.json, ja.json, vi.json).
+- Sử dụng namespaces phù hợp: `nav.*`, `layout.*`, `home.*`, `form.*`, `common.*`, `errors.*`, `validation.*`
+
+## 4. Code Quality
+
+- Ưu tiên viết code dễ đọc, dễ bảo trì.
+- Có comment giải thích nếu cần thiết (nhất là với logic chưa rõ ràng).
+- Tuân thủ file naming conventions:
+  - Components: `PascalCase.tsx`
+  - Hooks: `camelCase.ts` với prefix `use`
+  - Utilities: `camelCase.ts`
+
+## 5. Architecture Pattern
+
+- Tuân thủ **Clean Architecture** và **Domain-Driven Design**:
+  - Domain logic trong `domains/*/domain/`
+  - Use cases trong `domains/*/application/use-cases/`
+  - UI components trong `domains/*/ui/` hoặc `shared/components/`
+- Shared components đặt trong `shared/components/` (theo Atomic Design).
+- Domain-specific components đặt trong `domains/*/ui/components/`.
+
+## 6. State Management
+
+- Sử dụng Zustand stores trong `shared/stores/` cho global state.
+- Local state dùng React hooks (useState, useReducer).
+- Domain-specific state hooks trong `domains/*/application/hooks/`.
+
+## 7. Tình huống đặc biệt
+
+- Nếu phát sinh tình huống đặc biệt ngoài các quy tắc trên, cần trao đổi lại với team trước khi triển khai.

@@ -1,14 +1,12 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ChevronDown, Settings } from "lucide-react";
-import React from "react";
 import { useTranslation } from "react-i18next";
-import { ProjectManagementModal } from "~/domains/project/ui/screens/ProjectManagementModal";
+import { Link } from "react-router";
 import { useProjects } from "~/shared/hooks/useProjects";
 
 export function ProjectSwitcher() {
   const { t } = useTranslation();
   const { currentProject } = useProjects();
-  const [openManager, setOpenManager] = React.useState(false);
 
   // TODO: Replace with actual projects from API/hook
   const projects = [
@@ -89,27 +87,19 @@ export function ProjectSwitcher() {
             <DropdownMenu.Separator className="h-px bg-gray-200 my-2" />
 
             <DropdownMenu.Item
-              onSelect={e => {
-                e.preventDefault();
-                setOpenManager(true);
-              }}
+              asChild
               className="px-3 py-2 rounded-md cursor-pointer outline-none hover:bg-gray-50 focus:bg-gray-50"
             >
-              <div className="flex items-center gap-2">
+              <Link to="/projects" className="flex items-center gap-2">
                 <Settings className="w-4 h-4 text-gray-500" />
                 <span className="text-sm text-gray-700">
                   {t("header.manageProjects")}
                 </span>
-              </div>
+              </Link>
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
-
-      <ProjectManagementModal
-        open={openManager}
-        onOpenChange={setOpenManager}
-      />
     </>
   );
 }

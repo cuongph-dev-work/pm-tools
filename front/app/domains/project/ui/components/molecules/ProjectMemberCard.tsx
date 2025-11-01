@@ -1,3 +1,4 @@
+import { Box, Flex } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { Avatar } from "~/shared/components/atoms/Avatar";
 import { Card } from "~/shared/components/atoms/Card";
@@ -21,29 +22,33 @@ export function ProjectMemberCard({
 }: ProjectMemberCardProps) {
   const { t } = useTranslation();
   return (
-    <Card className="flex items-center gap-3">
-      <Avatar name={name} src={avatarUrl} size="md" />
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <div className="text-sm font-medium text-gray-900 truncate">
-            {name}
-          </div>
-          {isOwner && <span className="text-yellow-600 text-xs">👑</span>}
-        </div>
-        {email && <div className="text-xs text-gray-500 truncate">{email}</div>}
-        <div className="flex items-center gap-2 mt-1">
-          {roleLabel && (
-            <span className="text-xs bg-gray-100 text-gray-700 rounded-md px-2 py-0.5">
-              {roleLabel}
-            </span>
+    <Card>
+      <Flex align="center" gap="3">
+        <Avatar name={name} src={avatarUrl} />
+        <Box className="flex-1 min-w-0">
+          <Flex align="center" gap="2">
+            <Box className="text-sm font-medium text-gray-900 truncate">
+              {name}
+            </Box>
+            {isOwner && <span className="text-yellow-600 text-xs">👑</span>}
+          </Flex>
+          {email && (
+            <Box className="text-xs text-gray-500 truncate">{email}</Box>
           )}
-          {joinedAt && (
-            <span className="text-xs text-gray-500">
-              {t("project.joinedLabel")}: {joinedAt}
-            </span>
-          )}
-        </div>
-      </div>
+          <Flex align="center" gap="2" mt="1">
+            {roleLabel && (
+              <Box className="text-xs bg-gray-100 text-gray-700 rounded-md px-2 py-0.5">
+                {roleLabel}
+              </Box>
+            )}
+            {joinedAt && (
+              <Box className="text-xs text-gray-500">
+                {t("project.joinedLabel")}: {joinedAt}
+              </Box>
+            )}
+          </Flex>
+        </Box>
+      </Flex>
     </Card>
   );
 }

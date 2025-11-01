@@ -1,21 +1,21 @@
+import { useField } from "@tanstack/react-form";
 import * as React from "react";
-import type { FormApi } from "@tanstack/react-form";
-import { useTranslation } from "react-i18next";
+import type { AnyFormApi } from "./types";
 
+import { cn } from "../../../utils/cn";
+import { Textarea } from "../../atoms/TextArea";
 import BaseFormField from "./BaseFormField";
 import { FormErrorMessage } from "./FormErrorMessage";
-import { Textarea } from "../../atoms/Textarea";
 
 export interface FormFieldTextareaProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof Textarea>,
-    "value" | "onChange" | "onBlur"
+    "value" | "onChange" | "onBlur" | "form"
   > {
   name: string;
-  form: FormApi<any>;
-  labelKey?: string;
-  descriptionKey?: string;
-  placeholderKey?: string;
+  form: AnyFormApi;
+  label?: string;
+  description?: string;
   isRequired?: boolean;
   className?: string;
   labelClassName?: string;
@@ -25,36 +25,44 @@ export interface FormFieldTextareaProps
 export function FormFieldTextarea({
   name,
   form,
-  labelKey,
-  descriptionKey,
-  placeholderKey,
+  label,
+  description,
   isRequired,
   className,
   labelClassName,
   errorClassName,
   ...props
 }: FormFieldTextareaProps) {
-  const { t } = useTranslation();
-  const field = form.useField({ name });
+  const field = useField({ name, form });
+  const errors = field.state.meta?.errors ?? [];
+  const hasError = Array.isArray(errors) ? errors.length > 0 : Boolean(errors);
+  const { className: textareaClassName, ...restProps } = props as {
+    className?: string;
+    [key: string]: unknown;
+  };
 
   return (
     <BaseFormField
       name={name}
-      labelKey={labelKey}
-      descriptionKey={descriptionKey}
+      label={label}
+      description={description}
       isRequired={isRequired}
       className={className}
       labelClassName={labelClassName}
       errorClassName={errorClassName}
     >
       <Textarea
-        value={field.state.value ?? ""}
-        onChange={(e: React.ChangeEvent) =>
-          field.handleChange((e.target as any).value)
+        value={String(field.state.value ?? "")}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+          field.handleChange(e.target.value)
         }
         onBlur={field.handleBlur}
-        placeholder={placeholderKey ? t(placeholderKey) : props.placeholder}
-        {...props}
+        className={cn(
+          textareaClassName,
+          hasError &&
+            "border-1 border-red-500 focus:border-red-500 focus:ring-red-500"
+        )}
+        {...restProps}
       />
       <FormErrorMessage field={field} />
     </BaseFormField>

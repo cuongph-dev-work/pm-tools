@@ -62,7 +62,24 @@
     "back": "Quay lại",
     "next": "Tiếp theo",
     "previous": "Trước đó",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "selectDate": "Chọn ngày",
+    "months": {
+      "january": "Tháng 1",
+      "february": "Tháng 2",
+      "march": "Tháng 3",
+      "april": "Tháng 4",
+      "may": "Tháng 5",
+      "june": "Tháng 6",
+      "july": "Tháng 7",
+      "august": "Tháng 8",
+      "september": "Tháng 9",
+      "october": "Tháng 10",
+      "november": "Tháng 11",
+      "december": "Tháng 12"
+    }
   },
   "sidebar": {
     "appName": "PM Tools",
@@ -94,12 +111,32 @@
     "allProjects": "Tất cả dự án",
     "youHaveNProjects": "Bạn có {{count}} dự án",
     "createProject": "Tạo dự án",
+    "createDialog": {
+      "title": "Tạo dự án",
+      "description": "Tạo một dự án mới để bắt đầu quản lý công việc",
+      "submitButton": "Tạo dự án"
+    },
+    "createForm": {
+      "nameLabel": "Tên dự án",
+      "namePlaceholder": "Nhập tên dự án",
+      "descriptionLabel": "Mô tả dự án",
+      "descriptionPlaceholder": "Nhập mô tả dự án",
+      "startDateLabel": "Ngày bắt đầu",
+      "endDateLabel": "Ngày kết thúc",
+      "tagsLabel": "Tags",
+      "tagsPlaceholder": "React, E-commerce, Frontend",
+      "tagsDescription": "Mỗi tag sẽ được tự động gán màu theo thứ tự định sẵn"
+    },
     "projectMembersTitle": "Thành viên dự án: {{name}}",
     "memberCount": "{{count}} thành viên",
-    "inviteMember": "Mời thành viên",
+    "inviteMember": "Mời",
     "startLabel": "Bắt đầu",
     "endLabel": "Kết thúc",
-    "joinedLabel": "Tham gia"
+    "joinedLabel": "Tham gia",
+    "deleteProjectTitle": "Xóa dự án",
+    "deleteProjectDescription": "Bạn có chắc chắn muốn xóa dự án này? Tất cả dữ liệu liên quan sẽ bị mất vĩnh viễn. Hành động này không thể hoàn tác.",
+    "confirmDelete": "Xóa",
+    "cancel": "Hủy"
   },
   "errors": {
     "notFound": "Không tìm thấy trang",
@@ -122,6 +159,7 @@
     "numberMin": "{{field}} phải tối thiểu là {{min}}",
     "numberMax": "{{field}} phải tối đa là {{max}}",
     "apiError": "Đã xảy ra lỗi khi xử lý yêu cầu của bạn",
-    "networkError": "Đã xảy ra lỗi mạng khi xử lý yêu cầu của bạn"
+    "networkError": "Đã xảy ra lỗi mạng khi xử lý yêu cầu của bạn",
+    "dateRangeInvalid": "Ngày kết thúc phải sau ngày bắt đầu"
   }
 }

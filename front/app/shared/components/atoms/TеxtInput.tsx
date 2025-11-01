@@ -1,5 +1,6 @@
 import { TextField } from "@radix-ui/themes";
 import * as React from "react";
+import { cn } from "../../utils/cn";
 
 type TextFieldRootProps = React.ComponentProps<typeof TextField.Root>;
 type TextFieldSlotProps = React.ComponentProps<typeof TextField.Slot>;
@@ -27,9 +28,14 @@ export const Input = React.forwardRef<
     },
     ref
   ) => {
-    const rootClassName = ["w-full", className].filter(Boolean).join(" ");
+    const rootClassName = cn("w-full", className);
     return (
-      <TextField.Root ref={ref} className={rootClassName} {...props}>
+      <TextField.Root
+        ref={ref}
+        className={rootClassName}
+        radius="large"
+        {...props}
+      >
         {leftSlot ? (
           <TextField.Slot {...leftSlotProps}>{leftSlot}</TextField.Slot>
         ) : null}

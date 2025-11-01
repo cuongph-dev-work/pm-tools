@@ -1,10 +1,10 @@
-import * as React from "react";
-import type { FormApi } from "@tanstack/react-form";
-import { useTranslation } from "react-i18next";
+import { useField } from "@tanstack/react-form";
+import type { AnyFormApi } from "./types";
 
+import { cn } from "../../../utils/cn";
+import DatePicker from "../../atoms/DatePicker";
 import BaseFormField from "./BaseFormField";
 import { FormErrorMessage } from "./FormErrorMessage";
-import { DatePicker } from "../../atoms/DatePicker";
 
 export interface FormFieldDatePickerProps
   extends Omit<
@@ -12,10 +12,9 @@ export interface FormFieldDatePickerProps
     "value" | "onChange" | "onBlur"
   > {
   name: string;
-  form: FormApi<any>;
-  labelKey?: string;
-  descriptionKey?: string;
-  placeholderKey?: string;
+  form: AnyFormApi;
+  label?: string;
+  description?: string;
   isRequired?: boolean;
   className?: string;
   labelClassName?: string;
@@ -25,37 +24,40 @@ export interface FormFieldDatePickerProps
 export function FormFieldDatePicker({
   name,
   form,
-  labelKey,
-  descriptionKey,
-  placeholderKey,
+  label,
+  description,
   isRequired,
   className,
   labelClassName,
   errorClassName,
   ...props
 }: FormFieldDatePickerProps) {
-  const { t } = useTranslation();
-  const field = form.useField({ name });
+  const field = useField({ name, form });
 
   const handleChange = (value: string) => {
     field.handleChange(value);
   };
 
+  const { className: datePickerClassName, ...restProps } = props as {
+    className?: string;
+    [key: string]: unknown;
+  };
+
   return (
     <BaseFormField
       name={name}
-      labelKey={labelKey}
-      descriptionKey={descriptionKey}
+      label={label}
+      description={description}
       isRequired={isRequired}
       className={className}
       labelClassName={labelClassName}
       errorClassName={errorClassName}
     >
       <DatePicker
-        value={field.state.value ?? ""}
+        value={String(field.state.value ?? "")}
         onChange={handleChange}
-        placeholder={placeholderKey ? t(placeholderKey) : props.placeholder}
-        {...props}
+        className={cn("max-w-[150px]", datePickerClassName)}
+        {...restProps}
       />
       <FormErrorMessage field={field} />
     </BaseFormField>

@@ -1,3 +1,4 @@
+import { Box } from "@radix-ui/themes";
 import { ProjectMemberCard } from "~/domains/project/ui/components/molecules/ProjectMemberCard";
 
 type Member = {
@@ -15,7 +16,7 @@ interface MemberListProps {
 
 export function MemberList({ members }: MemberListProps) {
   return (
-    <div className="space-y-3">
+    <Box className="space-y-3">
       {members.map(m => (
         <ProjectMemberCard
           key={m.id}
@@ -26,7 +27,7 @@ export function MemberList({ members }: MemberListProps) {
           joinedAt={m.joinedAt}
         />
       ))}
-    </div>
+    </Box>
   );
 }
 

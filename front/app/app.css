@@ -24,6 +24,41 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
+/* Custom scrollbar styling - thin and subtle */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.custom-scrollbar:hover {
+  scrollbar-color: rgb(209 213 219) rgb(243 244 246); /* gray-300 gray-100 */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-track {
+  background: rgb(243 244 246); /* gray-100 */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 2px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgb(209 213 219); /* gray-300 */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgb(156 163 175); /* gray-400 */
+}
+
 /* Global: remove outlines on interactive elements */
 button,
 input,
@@ -50,4 +85,36 @@ a:focus-visible,
 /* Ensure Radix Themes Dialog overlay stays above app chrome */
 .rt-DialogOverlay {
   z-index: 900; /* matches Z_INDEX.modalOverlay */
+}
+
+/* Ensure AlertDialog overlay is above Dialog */
+.rt-AlertDialogOverlay {
+  z-index: 1100; /* higher than Dialog to show on top */
+}
+
+/* Remove fixed height from react-day-picker caption */
+.rdp-month_caption {
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Calendar day styling - force override react-day-picker default styles */
+.rdp-day_today {
+  background-color: rgb(255 237 213) !important; /* orange-100 */
+  border: 2px solid rgb(253 186 116) !important; /* orange-300 */
+  color: rgb(17 24 39) !important; /* gray-900 */
+  font-weight: 600 !important;
+}
+
+.rdp-day_selected {
+  background-color: rgb(255 237 213) !important; /* orange-100 */
+  color: rgb(17 24 39) !important; /* gray-900 */
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+  text-decoration-color: rgb(249 115 22) !important; /* orange-500 */
+  text-underline-offset: 2px !important;
+  text-decoration-thickness: 2px !important;
 }

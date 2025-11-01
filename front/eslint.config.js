@@ -18,6 +18,7 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
+        project: "./tsconfig.json",
       },
       globals: {
         React: "readonly",
@@ -36,6 +37,9 @@ export default [
         Headers: "readonly",
         Request: "readonly",
         Response: "readonly",
+        HTMLInputElement: "readonly",
+        HTMLTextAreaElement: "readonly",
+        HTMLElement: "readonly",
       },
     },
     plugins: {

@@ -1,9 +1,6 @@
 // Main exports for validation utilities
 export * from "./common";
 
-// Export all schemas
-export * from "./schema";
-
 // Re-export valibot for convenience
 export * as v from "valibot";
 

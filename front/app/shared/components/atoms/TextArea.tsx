@@ -3,6 +3,7 @@ import {
   type TextAreaProps as RadixTextAreaProps,
 } from "@radix-ui/themes";
 import * as React from "react";
+import { cn } from "../../utils/cn";
 
 export type TextareaProps = Omit<RadixTextAreaProps, "className"> & {
   className?: string;
@@ -15,7 +16,8 @@ export const Textarea = React.forwardRef<
   return (
     <RadixTextArea
       ref={ref}
-      className={["w-full", className].filter(Boolean).join(" ")}
+      radius="large"
+      className={cn("w-full", className)}
       {...props}
     />
   );

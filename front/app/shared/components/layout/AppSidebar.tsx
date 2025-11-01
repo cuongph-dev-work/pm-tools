@@ -96,7 +96,6 @@ export function AppSidebar() {
         <Button
           onClick={toggleSidebar}
           variant="solid"
-          size="sm"
           className="w-8 h-8 min-w-8 p-0 shadow-md"
           aria-label="Toggle sidebar"
         >

@@ -1,7 +1,6 @@
 import { Dialog as RDialog } from "@radix-ui/themes";
 import { X } from "lucide-react";
 import React from "react";
-import { Z_INDEX } from "~/shared/styles/zIndex";
 
 interface DialogProps {
   children: React.ReactNode;
@@ -63,7 +62,6 @@ const DialogContent = React.forwardRef<
         size={size}
         className={className}
         maxWidth={maxWidth}
-        style={{ zIndex: Z_INDEX.modal }}
         onInteractOutside={
           closeOnOverlayClick
             ? props.onInteractOutside

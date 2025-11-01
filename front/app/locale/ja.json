@@ -62,7 +62,24 @@
     "back": "戻る",
     "next": "次へ",
     "previous": "前へ",
-    "logout": "ログアウト"
+    "logout": "ログアウト",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "selectDate": "日付を選択",
+    "months": {
+      "january": "1月",
+      "february": "2月",
+      "march": "3月",
+      "april": "4月",
+      "may": "5月",
+      "june": "6月",
+      "july": "7月",
+      "august": "8月",
+      "september": "9月",
+      "october": "10月",
+      "november": "11月",
+      "december": "12月"
+    }
   },
   "sidebar": {
     "appName": "PM Tools",
@@ -94,12 +111,32 @@
     "allProjects": "すべてのプロジェクト",
     "youHaveNProjects": "プロジェクトは{{count}}件あります",
     "createProject": "プロジェクトを作成",
+    "createDialog": {
+      "title": "プロジェクトを作成",
+      "description": "新しいプロジェクトを作成して作業管理を開始します",
+      "submitButton": "プロジェクトを作成"
+    },
+    "createForm": {
+      "nameLabel": "プロジェクト名",
+      "namePlaceholder": "プロジェクト名を入力",
+      "descriptionLabel": "プロジェクトの説明",
+      "descriptionPlaceholder": "プロジェクトの説明を入力",
+      "startDateLabel": "開始日",
+      "endDateLabel": "終了日",
+      "tagsLabel": "タグ",
+      "tagsPlaceholder": "React, E-commerce, Frontend",
+      "tagsDescription": "各タグは事前に定義された順序で自動的に色が割り当てられます"
+    },
     "projectMembersTitle": "プロジェクトのメンバー: {{name}}",
     "memberCount": "{{count}}人のメンバー",
     "inviteMember": "メンバーを招待",
     "startLabel": "開始",
     "endLabel": "終了",
-    "joinedLabel": "参加日"
+    "joinedLabel": "参加日",
+    "deleteProjectTitle": "プロジェクトを削除",
+    "deleteProjectDescription": "このプロジェクトを削除してもよろしいですか？関連するすべてのデータが永続的に失われます。この操作は元に戻せません。",
+    "confirmDelete": "削除",
+    "cancel": "キャンセル"
   },
   "errors": {
     "notFound": "ページが見つかりません",
@@ -122,6 +159,7 @@
     "numberMin": "{{field}}は最低{{min}}である必要があります",
     "numberMax": "{{field}}は最大{{max}}までです",
     "apiError": "リクエストの処理中にエラーが発生しました",
-    "networkError": "リクエストの処理中にネットワークエラーが発生しました"
+    "networkError": "リクエストの処理中にネットワークエラーが発生しました",
+    "dateRangeInvalid": "終了日は開始日より後である必要があります"
   }
 }

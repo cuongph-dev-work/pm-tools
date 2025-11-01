@@ -1,21 +1,21 @@
+import { useField } from "@tanstack/react-form";
 import * as React from "react";
-import type { FormApi } from "@tanstack/react-form";
-import { useTranslation } from "react-i18next";
+import type { AnyFormApi } from "./types";
 
+import { cn } from "../../../utils/cn";
+import { Input } from "../../atoms/TеxtInput";
 import BaseFormField from "./BaseFormField";
 import { FormErrorMessage } from "./FormErrorMessage";
-import { Input } from "../../atoms/TеxtInput";
 
 export interface FormFieldInputProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof Input>,
-    "value" | "onChange" | "onBlur"
+    "value" | "onChange" | "onBlur" | "form"
   > {
   name: string;
-  form: FormApi<any>;
-  labelKey?: string;
-  descriptionKey?: string;
-  placeholderKey?: string;
+  form: AnyFormApi;
+  label?: string;
+  description?: string;
   isRequired?: boolean;
   className?: string;
   labelClassName?: string;
@@ -25,38 +25,44 @@ export interface FormFieldInputProps
 export function FormFieldInput({
   name,
   form,
-  labelKey,
-  descriptionKey,
-  placeholderKey,
+  label,
+  description,
   isRequired,
   className,
   labelClassName,
   errorClassName,
   ...inputProps
 }: FormFieldInputProps) {
-  const { t } = useTranslation();
-  const field = form.useField({ name });
+  const field = useField({ name, form });
+  const errors = field.state.meta?.errors ?? [];
+  const hasError = Array.isArray(errors) ? errors.length > 0 : Boolean(errors);
+  const { className: inputClassName, ...restInputProps } = inputProps as {
+    className?: string;
+    [key: string]: unknown;
+  };
 
   return (
     <BaseFormField
       name={name}
-      labelKey={labelKey}
-      descriptionKey={descriptionKey}
+      label={label}
+      description={description}
       isRequired={isRequired}
       className={className}
       labelClassName={labelClassName}
       errorClassName={errorClassName}
     >
       <Input
-        value={field.state.value ?? ""}
-        onChange={(e: React.ChangeEvent) =>
-          field.handleChange((e.target as any).value)
+        value={String(field.state.value ?? "")}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          field.handleChange(e.target.value)
         }
         onBlur={field.handleBlur}
-        placeholder={
-          placeholderKey ? t(placeholderKey) : inputProps.placeholder
-        }
-        {...inputProps}
+        className={cn(
+          inputClassName,
+          hasError &&
+            "border-1 border-red-500 focus:border-red-500 focus:ring-red-500"
+        )}
+        {...restInputProps}
       />
       <FormErrorMessage field={field} />
     </BaseFormField>
