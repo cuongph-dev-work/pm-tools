@@ -66,6 +66,8 @@
     "cancel": "Hủy",
     "delete": "Xóa",
     "selectDate": "Chọn ngày",
+    "help": "Trợ giúp",
+    "retry": "Thử lại",
     "months": {
       "january": "Tháng 1",
       "february": "Tháng 2",
@@ -141,6 +143,8 @@
   "errors": {
     "notFound": "Không tìm thấy trang",
     "notFoundDescription": "Trang bạn đang tìm kiếm không tồn tại.",
+    "forbidden": "Không có quyền truy cập",
+    "forbiddenDescription": "Bạn không có quyền truy cập vào trang này.",
     "serverError": "Lỗi máy chủ",
     "serverErrorDescription": "Đã xảy ra lỗi máy chủ không mong muốn.",
     "networkError": "Lỗi mạng",
@@ -161,5 +165,42 @@
     "apiError": "Đã xảy ra lỗi khi xử lý yêu cầu của bạn",
     "networkError": "Đã xảy ra lỗi mạng khi xử lý yêu cầu của bạn",
     "dateRangeInvalid": "Ngày kết thúc phải sau ngày bắt đầu"
+  },
+  "backlog": {
+    "title": "Task Backlog",
+    "subtitle": "Quản lý và tổ chức tất cả các task trong dự án",
+    "addTask": "Thêm Task",
+    "searchPlaceholder": "Tìm kiếm tasks...",
+    "noTasks": "Không có task nào",
+    "assignee": "Người thực hiện",
+    "updatedDate": "Ngày cập nhật",
+    "filters": {
+      "allStatuses": "Tất cả trạng thái",
+      "allPriorities": "Tất cả ưu tiên",
+      "allSprints": "Tất cả sprints"
+    },
+    "status": {
+      "todo": "Cần làm",
+      "inProgress": "Đang làm",
+      "done": "Hoàn thành"
+    },
+    "priority": {
+      "high": "Cao",
+      "medium": "Trung bình",
+      "low": "Thấp"
+    }
+  },
+  "auth": {
+    "welcomeBack": "Chào mừng trở lại",
+    "loginOrCreateAccount": "Đăng nhập hoặc tạo tài khoản mới",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "email": "Email",
+    "emailPlaceholder": "Nhập email của bạn",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "Nhập mật khẩu của bạn",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
+    "demoAccounts": "Tài khoản demo"
   }
 }

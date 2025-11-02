@@ -3,7 +3,12 @@ import { create } from "zustand";
 export interface Task {
   id: string;
   title: string;
+  description?: string;
   status: "todo" | "in-progress" | "done";
+  priority?: "high" | "medium" | "low";
+  sprint?: string;
+  assignee?: string;
+  updatedDate?: string;
 }
 
 interface TaskState {

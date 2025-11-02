@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: PM Tools API
+  description: API documentation for Project Management Tools
+  version: 1.0.0
+  contact:
+    name: API Support
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.example.com
+    description: Production server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Common Enums
+    ProjectStatus:
+      type: string
+      enum: [ACTIVE, INACTIVE, COMPLETED, CANCELLED]
+
+    ProjectRole:
+      type: string
+      enum:
+        [
+          PROJECT_MANAGER,
+          DEVELOPER,
+          QUALITY_ASSURANCE,
+          QUALITY_CONTROL,
+          BRSE_COMTOR,
+        ]
+
+    UserRole:
+      type: string
+      enum:
+        [
+          ADMIN,
+          PROJECT_MANAGER,
+          DEVELOPER,
+          QUALITY_ASSURANCE,
+          QUALITY_CONTROL,
+          BRSE_COMTOR,
+        ]
+
+    InviteStatus:
+      type: string
+      enum: [PENDING, ACCEPTED, REJECTED, EXPIRED]
+
+    TaskType:
+      type: string
+      enum:
+        [
+          TASK,
+          CHANGE_REQUEST,
+          FEEDBACK,
+          NEW_FEATURE,
+          SUB_TASK,
+          IMPROVEMENT,
+          BUG,
+          BUG_CUSTOMER,
+          LEAKAGE,
+        ]
+
+    TaskStatus:
+      type: string
+      enum:
+        [
+          OPEN,
+          REOPEN,
+          IN_PROGRESS,
+          IN_REVIEW,
+          RESOLVED,
+          DONE,
+          PENDING,
+          CANCELLED,
+        ]
+
+    TaskPriority:
+      type: string
+      enum: [LOW, MEDIUM, HIGH]
+
+    SprintStatus:
+      type: string
+      enum: [PLANNING, IN_PROGRESS, CLOSED]
+
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+        message:
+          type: string
+        error:
+          type: string
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

@@ -66,6 +66,8 @@
     "cancel": "キャンセル",
     "delete": "削除",
     "selectDate": "日付を選択",
+    "help": "ヘルプ",
+    "retry": "再試行",
     "months": {
       "january": "1月",
       "february": "2月",
@@ -141,6 +143,8 @@
   "errors": {
     "notFound": "ページが見つかりません",
     "notFoundDescription": "お探しのページは存在しません。",
+    "forbidden": "アクセス禁止",
+    "forbiddenDescription": "このページにアクセスする権限がありません。",
     "serverError": "サーバーエラー",
     "serverErrorDescription": "予期しないサーバーエラーが発生しました。",
     "networkError": "ネットワークエラー",
@@ -161,5 +165,42 @@
     "apiError": "リクエストの処理中にエラーが発生しました",
     "networkError": "リクエストの処理中にネットワークエラーが発生しました",
     "dateRangeInvalid": "終了日は開始日より後である必要があります"
+  },
+  "backlog": {
+    "title": "タスクバックログ",
+    "subtitle": "プロジェクト内のすべてのタスクを管理および整理",
+    "addTask": "タスクを追加",
+    "searchPlaceholder": "タスクを検索...",
+    "noTasks": "タスクが見つかりません",
+    "assignee": "担当者",
+    "updatedDate": "最終更新日",
+    "filters": {
+      "allStatuses": "すべてのステータス",
+      "allPriorities": "すべての優先度",
+      "allSprints": "すべてのスプリント"
+    },
+    "status": {
+      "todo": "未着手",
+      "inProgress": "進行中",
+      "done": "完了"
+    },
+    "priority": {
+      "high": "高",
+      "medium": "中",
+      "low": "低"
+    }
+  },
+  "auth": {
+    "welcomeBack": "おかえりなさい",
+    "loginOrCreateAccount": "ログインまたは新しいアカウントを作成",
+    "login": "ログイン",
+    "register": "登録",
+    "email": "メール",
+    "emailPlaceholder": "メールアドレスを入力",
+    "password": "パスワード",
+    "passwordPlaceholder": "パスワードを入力",
+    "confirmPassword": "パスワード確認",
+    "confirmPasswordPlaceholder": "パスワードを再入力",
+    "demoAccounts": "デモアカウント"
   }
 }

@@ -1,6 +1,11 @@
 import { Outlet } from "react-router";
 import { AppHeader } from "../components/layout/AppHeader";
 import { AppSidebar } from "../components/layout/AppSidebar";
+import { requireAuth } from "../utils/auth";
+
+export async function loader() {
+  return requireAuth();
+}
 
 export default function DefaultLayout() {
   return (

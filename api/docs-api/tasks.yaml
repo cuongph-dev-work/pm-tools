@@ -1,0 +1,438 @@
+openapi: 3.0.3
+
+paths:
+  /projects/{projectId}/tasks:
+    post:
+      tags:
+        - Tasks
+      summary: Create a new task
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskDto"
+      responses:
+        "201":
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+
+    get:
+      tags:
+        - Tasks
+      summary: Get task from backlog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: keyword
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            $ref: "#/components/schemas/TaskType"
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/TaskStatus"
+        - name: priority
+          in: query
+          schema:
+            $ref: "#/components/schemas/TaskPriority"
+      responses:
+        "200":
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TaskResponse"
+
+  /projects/{projectId}/tasks/{id}:
+    get:
+      tags:
+        - Tasks
+      summary: Get task by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+
+    put:
+      tags:
+        - Tasks
+      summary: Update task
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTaskDto"
+      responses:
+        "200":
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+
+    delete:
+      tags:
+        - Tasks
+      summary: Delete task
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Task deleted successfully
+
+  /projects/{projectId}/tasks/sprint/{sprintId}:
+    get:
+      tags:
+        - Tasks
+      summary: Get tasks from sprint
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sprintId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: keyword
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            $ref: "#/components/schemas/TaskType"
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/TaskStatus"
+        - name: priority
+          in: query
+          schema:
+            $ref: "#/components/schemas/TaskPriority"
+      responses:
+        "200":
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TaskResponse"
+
+  /projects/{projectId}/tasks/{id}/sprint/{sprintId}:
+    patch:
+      tags:
+        - Tasks
+      summary: Add task to sprint
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sprintId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Task added to sprint successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+
+  /projects/{projectId}/tasks/{id}/move-to-backlog:
+    patch:
+      tags:
+        - Tasks
+      summary: Move task to backlog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Task moved to backlog successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TagDto:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    CreateTaskDto:
+      type: object
+      required:
+        - title
+        - type
+        - due_date
+        - tags
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 3000
+        type:
+          $ref: "#/components/schemas/TaskType"
+        status:
+          $ref: "#/components/schemas/TaskStatus"
+        priority:
+          $ref: "#/components/schemas/TaskPriority"
+        estimate:
+          type: number
+          minimum: 0
+        due_date:
+          type: string
+          format: date
+        assignee_id:
+          type: string
+        parent_task_id:
+          type: string
+        sprint_ids:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagDto"
+
+    UpdateTaskDto:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 3000
+        type:
+          $ref: "#/components/schemas/TaskType"
+        status:
+          $ref: "#/components/schemas/TaskStatus"
+        priority:
+          $ref: "#/components/schemas/TaskPriority"
+        estimate:
+          type: number
+          minimum: 0
+        due_date:
+          type: string
+          format: date
+        assignee_id:
+          type: string
+        parent_task_id:
+          type: string
+        sprint_ids:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagDto"
+        clear_tags:
+          type: boolean
+        remove_tag_ids:
+          type: array
+          items:
+            type: string
+        clear_sprints:
+          type: boolean
+        remove_sprint_ids:
+          type: array
+          items:
+            type: string
+
+    TagResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        fullName:
+          type: string
+
+    SprintListResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+
+    TaskResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        type:
+          $ref: "#/components/schemas/TaskType"
+        status:
+          $ref: "#/components/schemas/TaskStatus"
+        priority:
+          $ref: "#/components/schemas/TaskPriority"
+        estimate:
+          type: number
+        due_date:
+          type: string
+          format: date
+        assignee:
+          $ref: "#/components/schemas/UserResponse"
+        sprints:
+          type: array
+          items:
+            $ref: "#/components/schemas/SprintListResponse"
+        project_id:
+          type: string
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagResponse"
+        parent_task:
+          $ref: "#/components/schemas/TaskResponse"
+        sub_tasks:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaskResponse"
+        created_by:
+          $ref: "#/components/schemas/UserResponse"
+        updated_by:
+          $ref: "#/components/schemas/UserResponse"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        is_overdue:
+          type: boolean

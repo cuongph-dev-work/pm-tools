@@ -1,0 +1,235 @@
+openapi: 3.0.3
+
+paths:
+  /project-invites/projects/{projectId}/invites:
+    post:
+      tags:
+        - Project Invites
+      summary: Create project invite
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInviteDto'
+      responses:
+        '201':
+          description: Invite created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/InviteResponse'
+
+  /project-invites/projects/{projectId}/members:
+    get:
+      tags:
+        - Project Invites
+      summary: Get project members
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of project members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    email:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    fullName:
+                      type: string
+                    role:
+                      type: string
+                      enum: [PROJECT_MANAGER, DEVELOPER, QUALITY_ASSURANCE, QUALITY_CONTROL, BRSE_COMTOR]
+
+  /project-invites/my-invites:
+    get:
+      tags:
+        - Project Invites
+      summary: Get my invites
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of invites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteListResponse'
+
+  /project-invites/invites/token/{token}:
+    get:
+      tags:
+        - Project Invites
+      summary: Get invite by token
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invite details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteResponse'
+
+  /project-invites/invites/{token}/respond:
+    post:
+      tags:
+        - Project Invites
+      summary: Respond to invite
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RespondInviteDto'
+      responses:
+        '200':
+          description: Invite response processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateInviteDto:
+      type: object
+      required:
+        - invited_email
+        - role
+      properties:
+        invited_email:
+          type: array
+          items:
+            type: string
+            format: email
+        role:
+          type: string
+          enum: [PROJECT_MANAGER, DEVELOPER, QUALITY_ASSURANCE, QUALITY_CONTROL, BRSE_COMTOR]
+        message:
+          type: string
+          maxLength: 1000
+
+    RespondInviteDto:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum: [PENDING, ACCEPTED, REJECTED, EXPIRED]
+
+    InviteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        project:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+        invited_by:
+          type: object
+          properties:
+            id:
+              type: string
+            email:
+              type: string
+            first_name:
+              type: string
+            last_name:
+              type: string
+            fullName:
+              type: string
+        invited_email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [PROJECT_MANAGER, DEVELOPER, QUALITY_ASSURANCE, QUALITY_CONTROL, BRSE_COMTOR]
+        status:
+          type: string
+          enum: [PENDING, ACCEPTED, REJECTED, EXPIRED]
+        expired_at:
+          type: string
+          format: date-time
+        accepted_at:
+          type: string
+          format: date-time
+        rejected_at:
+          type: string
+          format: date-time
+        message:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    InviteListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/InviteResponse'
+        total:
+          type: number
+        page:
+          type: number
+        limit:
+          type: number
+        total_pages:
+          type: number
+

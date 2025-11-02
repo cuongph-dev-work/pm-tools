@@ -66,6 +66,8 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "selectDate": "Select Date",
+    "help": "Help",
+    "retry": "Retry",
     "months": {
       "january": "January",
       "february": "February",
@@ -141,6 +143,8 @@
   "errors": {
     "notFound": "Page not found",
     "notFoundDescription": "The page you are looking for does not exist.",
+    "forbidden": "Forbidden",
+    "forbiddenDescription": "You do not have permission to access this page.",
     "serverError": "Server error",
     "serverErrorDescription": "An unexpected server error occurred.",
     "networkError": "Network error",
@@ -161,5 +165,42 @@
     "apiError": "An error occurred while processing your request",
     "networkError": "A network error occurred while processing your request",
     "dateRangeInvalid": "End date must be after start date"
+  },
+  "backlog": {
+    "title": "Task Backlog",
+    "subtitle": "Manage and organize all tasks in the project",
+    "addTask": "Add Task",
+    "searchPlaceholder": "Search tasks...",
+    "noTasks": "No tasks found",
+    "assignee": "Assignee",
+    "updatedDate": "Last updated",
+    "filters": {
+      "allStatuses": "All statuses",
+      "allPriorities": "All priorities",
+      "allSprints": "All sprints"
+    },
+    "status": {
+      "todo": "To do",
+      "inProgress": "In progress",
+      "done": "Done"
+    },
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    }
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "loginOrCreateAccount": "Log in or create a new account",
+    "login": "Log in",
+    "register": "Register",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPassword": "Confirm password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "demoAccounts": "Demo accounts"
   }
 }

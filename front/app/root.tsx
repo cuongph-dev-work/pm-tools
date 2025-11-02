@@ -1,7 +1,9 @@
 import { Theme } from "@radix-ui/themes";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import i18n from "./shared/utils/i18n"; // Import i18n instance
+import { queryClient } from "./shared/utils/queryClient";
 
 import "@radix-ui/themes/styles.css";
 import "./app.css";
@@ -24,7 +26,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <Theme asChild>
         <body>
-          {children}
+          <QueryClientProvider client={queryClient}>
+            {children}
+          </QueryClientProvider>
           <ScrollRestoration />
           <Scripts />
         </body>

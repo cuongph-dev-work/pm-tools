@@ -1,0 +1,199 @@
+openapi: 3.0.3
+
+paths:
+  /projects/{projectId}/sprints:
+    post:
+      tags:
+        - Sprints
+      summary: Create a new sprint
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSprintDto"
+      responses:
+        "201":
+          description: Sprint created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SprintResponse"
+
+    get:
+      tags:
+        - Sprints
+      summary: Get all sprints
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: keywords
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of sprints
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SprintListResponse"
+
+  /projects/{projectId}/sprints/{id}:
+    get:
+      tags:
+        - Sprints
+      summary: Get sprint by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Sprint details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SprintResponse"
+
+  /projects/{projectId}/sprints/{id}/close:
+    patch:
+      tags:
+        - Sprints
+      summary: Close sprint
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Sprint closed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SprintResponse"
+
+  /projects/{projectId}/sprints/{id}/open:
+    patch:
+      tags:
+        - Sprints
+      summary: Open sprint
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Sprint opened successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SprintResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateSprintDto:
+      type: object
+      required:
+        - name
+        - start_date
+        - end_date
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 1000
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+
+    SprintResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          $ref: "#/components/schemas/SprintStatus"
+        task_count:
+          type: number
+
+    SprintListResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          $ref: "#/components/schemas/SprintStatus"
