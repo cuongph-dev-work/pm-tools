@@ -148,11 +148,19 @@
     "serverError": "Server error",
     "serverErrorDescription": "An unexpected server error occurred.",
     "networkError": "Network error",
-    "validationError": "Validation error"
+    "validationError": "Validation error",
+    "unknownError": "An error occurred"
   },
   "validation": {
     "required": "{{field}} is required",
     "emailInvalid": "Invalid email address",
+    "email": {
+      "required": "Email is required",
+      "invalid": "Invalid email address"
+    },
+    "password": {
+      "required": "Password is required"
+    },
     "passwordMinLength": "Password must be at least {{min}} characters long",
     "passwordRequiredCharacters": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
     "confirmPasswordMismatch": "Passwords do not match",

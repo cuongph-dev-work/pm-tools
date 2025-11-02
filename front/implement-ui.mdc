@@ -94,6 +94,116 @@ export function Component({ className = "", ...props }: ComponentProps) {
 - Local state dùng React hooks (useState, useReducer).
 - Domain-specific state hooks trong `domains/*/application/hooks/`.
 
-## 7. Tình huống đặc biệt
+## 7. Form Handling Pattern
+
+### Custom Form Hooks
+
+- **Tách form logic vào custom hooks** trong `domains/*/application/hooks/useXxxForm.ts`.
+- Hook pattern:
+
+```typescript
+  export interface UseXxxFormOptions {
+    initialValues?: Partial<FormData>;
+    onSubmit?: (data: Dto) => void | Promise<void>;
+    onSuccess?: () => void;
+    externalLoading?: boolean;
+    externalError?: string | null;
+  }
+
+  export function useXxxForm(options: UseXxxFormOptions = {}) {
+    const { t } = useTranslation();
+    const form = useForm({
+      defaultValues: { ... },
+      validators: {
+        onSubmit: schema, // Valibot schema hoặc inline validation
+        onSubmitAsync: asyncSubmitHandler,
+      },
+    });
+
+    const formApi = form as unknown as AnyFormApi;
+    return {
+      form: formApi,
+      isSubmitting: externalLoading || false,
+      submitError: externalError || null,
+    };
+  }
+```
+
+- Cast form to `AnyFormApi` để dùng với form field components.
+
+### Form Field Components
+
+- **Sử dụng form field components** từ `shared/components/molecules/form-field/`:
+  - `FormFieldInput` cho input fields
+  - `FormFieldTextarea` cho textarea
+  - `FormFieldDatePicker` cho date picker
+- Props chung:
+  - `name`: string (required)
+  - `form`: AnyFormApi (required)
+  - `label?: string`
+  - `description?: string`
+  - `isRequired?: boolean`
+  - `className?`, `labelClassName?`, `errorClassName?`
+- Form field components tự động hiển thị error messages qua `FormErrorMessage`.
+
+### Form Validation
+
+- **Validation schemas**:
+  - Tạo trong `domains/*/domain/validation/*.schema.ts` cho domain-specific schemas
+  - Hoặc trong `shared/utils/validation/schema/` cho shared schemas
+  - Schema creators nhận `TFunction` để support i18n
+- **Validation pattern**:
+
+```typescript
+  // Option 1: Valibot schema
+  validators: {
+    onSubmit: createXxxSchema(t),
+    onSubmitAsync: asyncSubmitHandler,
+  }
+
+  // Option 2: Inline validation
+  validators: {
+    onSubmit: ({ value }) => {
+      const errors: Record<string, string | undefined> = {};
+      if (!value.field) {
+        errors.field = t("validation.field.required");
+      }
+      return Object.keys(errors).length > 0 ? errors : undefined;
+    },
+    onSubmitAsync: asyncSubmitHandler,
+  }
+```
+
+## 8. Protected Routes Pattern
+
+- **Sử dụng `ProtectedRoute` component** để wrap protected routes trong layouts.
+- Check authentication qua `localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)`.
+- Redirect với `navigate("/login", { replace: true })` nếu chưa authenticated.
+- Pattern trong layouts:
+
+```typescript
+  export default function DefaultLayout() {
+    return (
+      <ProtectedRoute>
+        {/* Layout content */}
+        <Outlet />
+      </ProtectedRoute>
+    );
+  }
+```
+
+- **Login screens**: Check và redirect nếu đã authenticated (trong `useEffect`).
+
+## 9. Screen Components Pattern
+
+- Screen components đặt trong `domains/*/ui/screens/`.
+- Export default function component.
+- Sử dụng Radix UI layout components (`Flex`, `Box`, `Container`).
+- Authentication check:
+  - Protected screens: Wrap trong `ProtectedRoute` ở layout level.
+  - Login screens: Check token và redirect trong `useEffect` nếu đã authenticated.
+- Form handling: Sử dụng custom form hooks và form field components.
+
+## 10. Tình huống đặc biệt
 
 - Nếu phát sinh tình huống đặc biệt ngoài các quy tắc trên, cần trao đổi lại với team trước khi triển khai.

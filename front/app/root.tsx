@@ -43,9 +43,30 @@ export default function App() {
 
 export function HydrateFallback() {
   return (
-    <div id="loading-splash">
-      <div id="loading-splash-spinner" />
-      <p>Loading, please wait...</p>
+    <div className="fixed inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
+      <div className="flex flex-col items-center gap-8">
+        {/* Logo/Brand Name with fade-in animation */}
+        <div className="flex flex-col items-center gap-3 animate-fade-in">
+          <div className="text-5xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent animate-gradient">
+            PM Tools
+          </div>
+          <p className="text-sm text-gray-600 font-medium">
+            Project Management
+          </p>
+        </div>
+
+        {/* Spinner with pulse animation */}
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-gray-200 rounded-full"></div>
+          <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+          <div className="w-16 h-16 border-4 border-purple-600 border-r-transparent rounded-full animate-spin-reverse absolute top-0 left-0 opacity-50"></div>
+        </div>
+
+        {/* Loading text with pulse animation */}
+        <p className="text-sm text-gray-500 animate-pulse">
+          Loading, please wait...
+        </p>
+      </div>
     </div>
   );
 }

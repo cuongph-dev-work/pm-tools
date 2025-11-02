@@ -148,11 +148,19 @@
     "serverError": "Lỗi máy chủ",
     "serverErrorDescription": "Đã xảy ra lỗi máy chủ không mong muốn.",
     "networkError": "Lỗi mạng",
-    "validationError": "Lỗi xác thực"
+    "validationError": "Lỗi xác thực",
+    "unknownError": "Đã xảy ra lỗi"
   },
   "validation": {
     "required": "{{field}} là bắt buộc",
     "emailInvalid": "Địa chỉ email không hợp lệ",
+    "email": {
+      "required": "Email là bắt buộc",
+      "invalid": "Địa chỉ email không hợp lệ"
+    },
+    "password": {
+      "required": "Mật khẩu là bắt buộc"
+    },
     "passwordMinLength": "Mật khẩu phải có ít nhất {{min}} ký tự",
     "passwordRequiredCharacters": "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một số",
     "confirmPasswordMismatch": "Mật khẩu không khớp",

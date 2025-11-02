@@ -8,4 +8,3 @@ export class ApiAuthRepository implements AuthRepository {
     return apiPost<SignInResponse>("/auth/sign-in", credentials);
   }
 }
-

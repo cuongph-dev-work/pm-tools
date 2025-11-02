@@ -1,10 +1,10 @@
 import { Box } from "@radix-ui/themes";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { Button } from "~/shared/components/atoms/Button";
-import Input from "~/shared/components/atoms/TеxtInput";
+import { FormFieldInput } from "~/shared/components/molecules/form-field";
 import { useAuth } from "~/shared/hooks/useAuth";
+import { useLoginForm } from "../../../application/hooks/useLoginForm";
 import { useSignIn } from "../../../application/hooks/useSignIn";
 
 export function LoginForm() {
@@ -12,13 +12,9 @@ export function LoginForm() {
   const navigate = useNavigate();
   const { setUser, setTokens } = useAuth();
   const { signIn, loading, error } = useSignIn();
-  const [email, setEmail] = useState("admin@example.com");
-  const [password, setPassword] = useState("password");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
+  const { form, isSubmitting, submitError } = useLoginForm({
+    onSubmit: async ({ email, password }) => {
       const response = await signIn({ email, password });
       setTokens(response.access_token, response.refresh_token);
 
@@ -31,46 +27,51 @@ export function LoginForm() {
 
       // Redirect to home or dashboard
       navigate("/");
-    } catch {
-      // Error is handled by useSignIn hook and displayed to user
-    }
-  };
+    },
+    externalLoading: loading,
+    externalError: error,
+  });
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={e => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+    >
       <Box className="space-y-4">
-        <Box>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("auth.email")}
-          </label>
-          <Input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder={t("auth.emailPlaceholder")}
-          />
-        </Box>
+        <FormFieldInput
+          name="email"
+          form={form}
+          type="email"
+          label={t("auth.email")}
+          placeholder={t("auth.emailPlaceholder")}
+          isRequired
+        />
 
-        <Box>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("auth.password")}
-          </label>
-          <Input
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            placeholder={t("auth.passwordPlaceholder")}
-          />
-        </Box>
+        <FormFieldInput
+          name="password"
+          form={form}
+          type="password"
+          label={t("auth.password")}
+          placeholder={t("auth.passwordPlaceholder")}
+          isRequired
+        />
 
-        {error && (
+        {submitError && (
           <Box className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
-            {error}
+            {submitError}
           </Box>
         )}
 
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? t("common.loading") : t("auth.login")}
+        <Button
+          type="submit"
+          className="w-full"
+          style={{ width: "100%" }}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? t("common.loading") : t("auth.login")}
         </Button>
       </Box>
     </form>

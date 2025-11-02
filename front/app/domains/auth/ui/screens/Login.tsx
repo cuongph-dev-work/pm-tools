@@ -1,17 +1,25 @@
 import { Box, Container, Flex } from "@radix-ui/themes";
 import { HelpCircle } from "lucide-react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { Tabs } from "~/shared/components/atoms/Tabs";
-import { redirectIfAuthenticated } from "~/shared/utils/authRedirect";
+import { STORAGE_KEYS } from "~/shared/constants/storage";
 import { LoginForm } from "../components/molecules/LoginForm";
-import { RegisterForm } from "../components/molecules/RegisterForm";
-
-export async function loader() {
-  return redirectIfAuthenticated();
-}
 
 export default function Login() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const token = window.localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+
+    if (token) {
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
 
   return (
     <Flex
@@ -22,7 +30,7 @@ export default function Login() {
       p="6"
       position="relative"
     >
-      <Container size="2" className="w-full max-w-md">
+      <Container size="2" className="w-full max-w-md mx-auto">
         <Box className="bg-white rounded-lg shadow-lg p-8">
           <Box mb="6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -35,17 +43,9 @@ export default function Login() {
 
           <Tabs
             defaultValue="login"
-            tabs={[
-              { value: "login", label: t("auth.login") },
-              { value: "register", label: t("auth.register") },
-            ]}
+            tabs={[{ value: "login", label: t("auth.login") }]}
           >
-            {active => (
-              <Box>
-                {active === "login" && <LoginForm />}
-                {active === "register" && <RegisterForm />}
-              </Box>
-            )}
+            {active => <Box>{active === "login" && <LoginForm />}</Box>}
           </Tabs>
         </Box>
       </Container>
