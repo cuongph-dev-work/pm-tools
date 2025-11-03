@@ -1,16 +1,17 @@
-import type { ProjectRepository } from "../../domain/repositories/ProjectRepository";
-import type { ProjectDTO } from "../dto/ProjectDTO";
-import { ProjectMapper } from "../mappers/ProjectMapper";
+import type { ProjectRepository, ProjectFilters, PaginatedProjects } from "~/domains/project/domain/repositories/ProjectRepository";
 
 export class ListProjectsUseCase {
-  private readonly repository: ProjectRepository;
+  constructor(private readonly repository: ProjectRepository) {}
 
-  constructor(repository: ProjectRepository) {
-    this.repository = repository;
+  async execute(filters?: ProjectFilters): Promise<PaginatedProjects> {
+    return await this.repository.findAll(filters);
   }
+}
 
-  async execute(): Promise<ProjectDTO[]> {
-    const entities = await this.repository.list();
-    return entities.map(ProjectMapper.toDTO);
+export class ListMemberProjectsUseCase {
+  constructor(private readonly repository: ProjectRepository) {}
+
+  async execute() {
+    return await this.repository.findMemberOf();
   }
 }

@@ -1,49 +1,73 @@
 export type ProjectId = string;
 
-export interface ProjectTag {
-  label: string;
-  color?: "blue" | "red" | "green" | "yellow" | "purple" | "orange" | string;
-}
+export type ProjectStatus = "ACTIVE" | "INACTIVE" | "COMPLETED" | "CANCELLED";
 
-export interface ProjectMember {
+export interface ProjectOwner {
   id: string;
-  name: string;
   email: string;
-  role: string;
-  isOwner?: boolean;
-  joinedAt?: string;
-  avatarUrl?: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
 }
 
 export interface ProjectProps {
   id: ProjectId;
   name: string;
   description?: string;
-  tags?: ProjectTag[];
-  memberCount?: number;
+  tags?: string[];
+  status: ProjectStatus;
   startDate?: string;
   endDate?: string;
-  members?: ProjectMember[];
+  owner: ProjectOwner;
+  createdAt: string;
+  updatedAt: string;
+  memberCount?: number;
+  inviteCount?: number;
 }
 
 export class ProjectEntity {
   readonly id: ProjectId;
   readonly name: string;
   readonly description?: string;
-  readonly tags: ProjectTag[];
-  readonly memberCount: number;
+  readonly tags: string[];
+  readonly status: ProjectStatus;
   readonly startDate?: string;
   readonly endDate?: string;
-  readonly members: ProjectMember[];
+  readonly owner: ProjectOwner;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+  readonly memberCount: number;
+  readonly inviteCount: number;
 
   constructor(props: ProjectProps) {
     this.id = props.id;
     this.name = props.name;
     this.description = props.description;
     this.tags = props.tags ?? [];
-    this.memberCount = props.memberCount ?? props.members?.length ?? 0;
+    this.status = props.status;
     this.startDate = props.startDate;
     this.endDate = props.endDate;
-    this.members = props.members ?? [];
+    this.owner = props.owner;
+    this.createdAt = props.createdAt;
+    this.updatedAt = props.updatedAt;
+    this.memberCount = props.memberCount ?? 0;
+    this.inviteCount = props.inviteCount ?? 0;
+  }
+
+  toJSON(): ProjectProps {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      tags: this.tags,
+      status: this.status,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      owner: this.owner,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      memberCount: this.memberCount,
+      inviteCount: this.inviteCount,
+    };
   }
 }

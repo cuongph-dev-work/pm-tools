@@ -22,6 +22,7 @@
     "@react-router/serve": "^7.7.1",
     "@tanstack/react-form": "^1.19.3",
     "@tanstack/react-query": "^5.90.6",
+    "@tanstack/valibot-form-adapter": "^0.42.1",
     "axios": "^1.13.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

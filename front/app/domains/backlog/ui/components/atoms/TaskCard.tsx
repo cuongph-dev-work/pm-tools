@@ -6,7 +6,6 @@ interface TaskCardProps {
   task: TaskDTO;
   statusOptions: Array<{ value: string; label: string }>;
   priorityOptions: Array<{ value: string; label: string }>;
-  sprintOptions: Array<{ value: string; label: string }>;
   className?: string;
 }
 
@@ -14,7 +13,6 @@ export function TaskCard({
   task,
   statusOptions,
   priorityOptions,
-  sprintOptions,
   className = "",
 }: TaskCardProps) {
   const { t } = useTranslation();
@@ -85,27 +83,27 @@ export function TaskCard({
               </Text>
             )}
             {/* Sprint tag */}
-            {task.sprint && (
+            {task.sprints && task.sprints.length > 0 && (
               <Text
                 as="span"
                 className="px-2 py-1 rounded-full text-xs font-medium bg-blue-500 text-white"
               >
-                {sprintOptions.find(opt => opt.value === task.sprint)?.label ||
-                  task.sprint}
+                {task.sprints[0].name}
               </Text>
             )}
           </Flex>
           {task.assignee && (
             <Box mt="2">
               <Text as="p" size="2" className="text-sm text-gray-600">
-                {t("backlog.assignee")}: {task.assignee}
+                {t("backlog.assignee")}: {task.assignee.fullName}
               </Text>
             </Box>
           )}
         </Box>
-        {task.updatedDate && (
+        {task.updated_at && (
           <Box className="text-sm text-gray-500">
-            {t("backlog.updatedDate")}: {task.updatedDate}
+            {t("backlog.updatedDate")}:{" "}
+            {new Date(task.updated_at).toLocaleDateString()}
           </Box>
         )}
       </Flex>

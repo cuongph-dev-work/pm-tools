@@ -105,6 +105,9 @@
     "manageProjects": "Quản lý dự án"
   },
   "project": {
+    "name": "Tên dự án",
+    "description": "Mô tả",
+    "status": "Trạng thái",
     "manageDescription": "Tạo, chỉnh sửa và quản lý các dự án của bạn",
     "tabs": {
       "projects": "Dự án của tôi",
@@ -113,10 +116,16 @@
     "allProjects": "Tất cả dự án",
     "youHaveNProjects": "Bạn có {{count}} dự án",
     "createProject": "Tạo dự án",
+    "editProject": "Chỉnh sửa dự án",
     "createDialog": {
       "title": "Tạo dự án",
       "description": "Tạo một dự án mới để bắt đầu quản lý công việc",
       "submitButton": "Tạo dự án"
+    },
+    "editDialog": {
+      "title": "Chỉnh sửa dự án",
+      "description": "Cập nhật thông tin dự án",
+      "submitButton": "Cập nhật dự án"
     },
     "createForm": {
       "nameLabel": "Tên dự án",
@@ -127,7 +136,14 @@
       "endDateLabel": "Ngày kết thúc",
       "tagsLabel": "Tags",
       "tagsPlaceholder": "React, E-commerce, Frontend",
-      "tagsDescription": "Mỗi tag sẽ được tự động gán màu theo thứ tự định sẵn"
+      "tagsDescription": "Mỗi tag sẽ được tự động gán màu theo thứ tự định sẵn",
+      "statusLabel": "Trạng thái"
+    },
+    "statuses": {
+      "ACTIVE": "Đang hoạt động",
+      "INACTIVE": "Không hoạt động",
+      "COMPLETED": "Hoàn thành",
+      "CANCELLED": "Đã hủy"
     },
     "projectMembersTitle": "Thành viên dự án: {{name}}",
     "memberCount": "{{count}} thành viên",
@@ -138,7 +154,10 @@
     "deleteProjectTitle": "Xóa dự án",
     "deleteProjectDescription": "Bạn có chắc chắn muốn xóa dự án này? Tất cả dữ liệu liên quan sẽ bị mất vĩnh viễn. Hành động này không thể hoàn tác.",
     "confirmDelete": "Xóa",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "createSuccess": "Dự án đã được tạo thành công",
+    "updateSuccess": "Dự án đã được cập nhật thành công",
+    "deleteSuccess": "Dự án đã được xóa thành công"
   },
   "errors": {
     "notFound": "Không tìm thấy trang",
@@ -166,6 +185,7 @@
     "confirmPasswordMismatch": "Mật khẩu không khớp",
     "stringMinLength": "{{field}} phải có ít nhất {{min}} ký tự",
     "stringMaxLength": "{{field}} phải có tối đa {{max}} ký tự",
+    "maxLength": "{{field}} không được vượt quá {{max}} ký tự",
     "phoneInvalid": "Số điện thoại không hợp lệ",
     "urlInvalid": "URL không hợp lệ",
     "numberMin": "{{field}} phải tối thiểu là {{min}}",
@@ -190,7 +210,8 @@
     "status": {
       "todo": "Cần làm",
       "inProgress": "Đang làm",
-      "done": "Hoàn thành"
+      "done": "Hoàn thành",
+      "blocked": "Bị chặn"
     },
     "priority": {
       "high": "Cao",
@@ -219,12 +240,14 @@
     },
     "taskTypes": {
       "task": "Task",
+      "bug": "Bug",
+      "story": "User Story",
+      "epic": "Epic",
       "changeRequest": "Change Request",
       "feedback": "Feedback",
       "newFeature": "New Feature",
       "subTask": "Sub-task",
       "improvement": "Improvement",
-      "bug": "Bug",
       "bugCustomer": "Bug Customer",
       "leakage": "Leakage"
     }

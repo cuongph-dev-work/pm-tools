@@ -1,3 +1,4 @@
+import type { CreateTaskDTO, TaskDTO } from "../../application/dto/TaskDTO";
 import { TaskEntity } from "../../domain/entities/Task";
 import type { TaskRepository } from "../../domain/repositories/TaskRepository";
 
@@ -99,5 +100,24 @@ export class FakeTaskRepository implements TaskRepository {
 
   async getById(id: string): Promise<TaskEntity | null> {
     return this.tasks.find(t => t.id === id) ?? null;
+  }
+
+  async create(projectId: string, data: CreateTaskDTO): Promise<TaskDTO> {
+    // Mock implementation for development
+    const newTask: TaskDTO = {
+      id: `task-${Date.now()}`,
+      title: data.title,
+      description: data.description,
+      type: data.type,
+      status: data.status ?? "todo",
+      priority: data.priority,
+      estimate: data.estimate,
+      due_date: data.due_date,
+      project_id: projectId,
+      tags: data.tags,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    return newTask;
   }
 }
