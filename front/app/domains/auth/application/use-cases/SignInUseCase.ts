@@ -1,6 +1,6 @@
+import type { AuthRepository } from "../../domain/repositories/AuthRepository";
 import type { SignInDto } from "../dto/SignInDto";
 import type { SignInResponse } from "../dto/SignInResponse";
-import type { AuthRepository } from "../../domain/repositories/AuthRepository";
 
 export class SignInUseCase {
   private readonly repository: AuthRepository;
@@ -13,4 +13,3 @@ export class SignInUseCase {
     return this.repository.signIn(credentials);
   }
 }
-

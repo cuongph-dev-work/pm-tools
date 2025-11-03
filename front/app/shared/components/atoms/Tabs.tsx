@@ -1,4 +1,5 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { Text } from "@radix-ui/themes";
 import React from "react";
 
 interface TabsProps {
@@ -33,7 +34,9 @@ export function Tabs({
                 data-[state=inactive]:text-gray-600 hover:text-gray-800
               `}
             >
-              <span className="block truncate">{tab.label}</span>
+              <Text as="span" className="block truncate">
+                {tab.label}
+              </Text>
             </TabsPrimitive.Trigger>
           ))}
         </TabsPrimitive.List>

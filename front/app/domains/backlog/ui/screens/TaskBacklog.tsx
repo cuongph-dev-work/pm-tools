@@ -1,14 +1,16 @@
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { PlusIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/shared/components/atoms/Button";
 import { useFilterTasks } from "../../application/hooks/useFilterTasks";
 import { useListTasksQuery } from "../../application/hooks/useListTasksQuery";
 import { TaskBacklogFilters } from "../components/molecules/TaskBacklogFilters";
 import { TaskList } from "../components/molecules/TaskList";
+import { CreateTaskDialog } from "./CreateTaskDialog";
 export default function TaskBacklog() {
   const { t } = useTranslation();
+  const [openCreate, setOpenCreate] = useState(false);
   const { data: tasks = [], isLoading: loading } = useListTasksQuery();
   const { filters, filteredTasks, updateFilter } = useFilterTasks(tasks);
 
@@ -55,9 +57,14 @@ export default function TaskBacklog() {
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
             {t("backlog.title")}
           </h1>
-          <p className="text-sm text-gray-600">{t("backlog.subtitle")}</p>
+          <Text as="p" size="2" className="text-sm text-gray-600">
+            {t("backlog.subtitle")}
+          </Text>
         </Box>
-        <Button leftIcon={<PlusIcon className="w-4 h-4" />}>
+        <Button
+          leftIcon={<PlusIcon className="w-4 h-4" />}
+          onClick={() => setOpenCreate(true)}
+        >
           {t("backlog.addTask")}
         </Button>
       </Flex>
@@ -79,6 +86,8 @@ export default function TaskBacklog() {
         priorityOptions={priorityOptions}
         sprintOptions={sprintOptions}
       />
+
+      <CreateTaskDialog open={openCreate} onOpenChange={setOpenCreate} />
     </Box>
   );
 }

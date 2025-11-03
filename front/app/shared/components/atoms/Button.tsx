@@ -1,5 +1,6 @@
 import {
   Button as RadixButton,
+  Text,
   type ButtonProps as RadixButtonProps,
 } from "@radix-ui/themes";
 import React from "react";
@@ -25,11 +26,15 @@ export function Button({
   return (
     <RadixButton className={composedClassName} {...props}>
       {leftIcon && (
-        <span className="inline-flex items-center ml-1">{leftIcon}</span>
+        <Text as="span" className="inline-flex items-center ml-1">
+          {leftIcon}
+        </Text>
       )}
-      <span>{children || label}</span>
+      <Text as="span">{children || label}</Text>
       {rightIcon && (
-        <span className="inline-flex items-center mr-1">{rightIcon}</span>
+        <Text as="span" className="inline-flex items-center mr-1">
+          {rightIcon}
+        </Text>
       )}
     </RadixButton>
   );

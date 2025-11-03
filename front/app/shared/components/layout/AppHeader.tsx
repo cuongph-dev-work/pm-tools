@@ -1,3 +1,4 @@
+import { Box, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../molecules/LanguageSwitcher";
 import { ProjectSwitcher } from "../molecules/ProjectSwitcher";
@@ -18,9 +19,11 @@ export function AppHeader() {
             <h1 className="text-lg font-bold text-gray-900">
               {t("header.appName")}
             </h1>
-            <p className="text-xs text-gray-500 mt-0.5">
-              {t("header.appDescription")}
-            </p>
+            <Box mt="0.5">
+              <Text as="p" size="1" className="text-xs text-gray-500">
+                {t("header.appDescription")}
+              </Text>
+            </Box>
           </div>
 
           {/* Right Side - Project Switcher and Language Switcher */}

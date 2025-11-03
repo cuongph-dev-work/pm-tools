@@ -1,36 +1,12 @@
 import { Box } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 import { Button } from "~/shared/components/atoms/Button";
 import { FormFieldInput } from "~/shared/components/molecules/form-field";
-import { useAuth } from "~/shared/hooks/useAuth";
 import { useLoginForm } from "../../../application/hooks/useLoginForm";
-import { useSignIn } from "../../../application/hooks/useSignIn";
 
 export function LoginForm() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { setUser, setTokens } = useAuth();
-  const { signIn, loading, error } = useSignIn();
-
-  const { form, isSubmitting, submitError } = useLoginForm({
-    onSubmit: async ({ email, password }) => {
-      const response = await signIn({ email, password });
-      setTokens(response.access_token, response.refresh_token);
-
-      // Set user info from token (in real app, decode JWT or fetch user profile)
-      setUser({
-        id: String(response.sub),
-        name: "User",
-        email: email,
-      });
-
-      // Redirect to home or dashboard
-      navigate("/");
-    },
-    externalLoading: loading,
-    externalError: error,
-  });
+  const { form, isSubmitting, submitError } = useLoginForm();
 
   return (
     <form
@@ -69,9 +45,10 @@ export function LoginForm() {
           type="submit"
           className="w-full"
           style={{ width: "100%" }}
+          loading={isSubmitting}
           disabled={isSubmitting}
         >
-          {isSubmitting ? t("common.loading") : t("auth.login")}
+          {t("auth.login")}
         </Button>
       </Box>
     </form>

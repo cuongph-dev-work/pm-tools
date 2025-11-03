@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { Browser, BrowserContext, Page, chromium } from 'playwright';
+import { Browser, BrowserContext, Page } from 'playwright';
 
 @Injectable()
 export class PlaywrightService implements OnModuleInit, OnModuleDestroy {
@@ -7,8 +7,8 @@ export class PlaywrightService implements OnModuleInit, OnModuleDestroy {
   private browser: Browser;
 
   async onModuleInit() {
-    this.browser = await chromium.launch({ headless: false });
-    this.logger.log('▶️ Playwright browser launched');
+    // this.browser = await chromium.launch({ headless: false });
+    // this.logger.log('▶️ Playwright browser launched');
   }
 
   async onModuleDestroy() {

@@ -1,3 +1,4 @@
+import { Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 
@@ -11,12 +12,12 @@ export default function Home() {
         <h1 className="text-5xl font-bold text-gray-900 mb-6">
           {t("home.title")}
         </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+        <Text as="p" size="5" className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
           {t("home.subtitle")}
-        </p>
-        <p className="text-lg text-gray-500 mb-8 max-w-2xl mx-auto">
+        </Text>
+        <Text as="p" size="4" className="text-lg text-gray-500 mb-8 max-w-2xl mx-auto">
           {t("home.description")}
-        </p>
+        </Text>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to="/post"
@@ -37,74 +38,86 @@ export default function Home() {
       <div id="features" className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div className="text-center p-6 bg-white rounded-lg shadow-sm">
           <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-blue-600 font-bold">TS</span>
+            <Text as="span" className="text-blue-600 font-bold">
+              TS
+            </Text>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             {t("home.features.typescript")}
           </h3>
-          <p className="text-gray-600 text-sm">
+          <Text as="p" size="2" className="text-gray-600 text-sm">
             Full TypeScript support for better development experience
-          </p>
+          </Text>
         </div>
 
         <div className="text-center p-6 bg-white rounded-lg shadow-sm">
           <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-green-600 font-bold">R7</span>
+            <Text as="span" className="text-green-600 font-bold">
+              R7
+            </Text>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             {t("home.features.router")}
           </h3>
-          <p className="text-gray-600 text-sm">
+          <Text as="p" size="2" className="text-gray-600 text-sm">
             Latest React Router with file-based routing
-          </p>
+          </Text>
         </div>
 
         <div className="text-center p-6 bg-white rounded-lg shadow-sm">
           <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-purple-600 font-bold">F</span>
+            <Text as="span" className="text-purple-600 font-bold">
+              F
+            </Text>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             {t("home.features.forms")}
           </h3>
-          <p className="text-gray-600 text-sm">
+          <Text as="p" size="2" className="text-gray-600 text-sm">
             Powerful form handling with TanStack Form
-          </p>
+          </Text>
         </div>
 
         <div className="text-center p-6 bg-white rounded-lg shadow-sm">
           <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-red-600 font-bold">V</span>
+            <Text as="span" className="text-red-600 font-bold">
+              V
+            </Text>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             {t("home.features.validation")}
           </h3>
-          <p className="text-gray-600 text-sm">
+          <Text as="p" size="2" className="text-gray-600 text-sm">
             Schema validation with Valibot
-          </p>
+          </Text>
         </div>
 
         <div className="text-center p-6 bg-white rounded-lg shadow-sm">
           <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-yellow-600 font-bold">i18n</span>
+            <Text as="span" className="text-yellow-600 font-bold">
+              i18n
+            </Text>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             {t("home.features.i18n")}
           </h3>
-          <p className="text-gray-600 text-sm">
+          <Text as="p" size="2" className="text-gray-600 text-sm">
             Multi-language support with react-i18next
-          </p>
+          </Text>
         </div>
 
         <div className="text-center p-6 bg-white rounded-lg shadow-sm">
           <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-cyan-600 font-bold">CSS</span>
+            <Text as="span" className="text-cyan-600 font-bold">
+              CSS
+            </Text>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             {t("home.features.styling")}
           </h3>
-          <p className="text-gray-600 text-sm">
+          <Text as="p" size="2" className="text-gray-600 text-sm">
             Modern styling with Tailwind CSS
-          </p>
+          </Text>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Box, Container, Flex } from "@radix-ui/themes";
+import { Box, Container, Flex, Text } from "@radix-ui/themes";
 import { HelpCircle } from "lucide-react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -36,9 +36,9 @@ export default function Login() {
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               {t("auth.welcomeBack")}
             </h1>
-            <p className="text-sm text-gray-600">
+            <Text as="p" size="2" className="text-sm text-gray-600">
               {t("auth.loginOrCreateAccount")}
-            </p>
+            </Text>
           </Box>
 
           <Tabs

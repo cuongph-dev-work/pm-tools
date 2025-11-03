@@ -1,5 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { Check, ChevronDown, Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { TaskFilters } from "~/domains/backlog/application/hooks/useFilterTasks";
@@ -48,13 +48,13 @@ export function TaskBacklogFilters({
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 min-w-[160px] text-left">
-              <span className="text-sm text-gray-700 flex-1">
+              <Text as="span" size="2" className="text-sm text-gray-700 flex-1">
                 {getSelectedLabel(
                   filters.status,
                   statusOptions,
                   t("backlog.filters.allStatuses")
                 )}
-              </span>
+              </Text>
               <ChevronDown className="w-4 h-4 text-gray-500" />
             </button>
           </DropdownMenu.Trigger>
@@ -70,9 +70,9 @@ export function TaskBacklogFilters({
                 }`}
                 onSelect={() => onFilterChange("status", null)}
               >
-                <span className="text-sm text-gray-700">
+                <Text as="span" size="2" className="text-sm text-gray-700">
                   {t("backlog.filters.allStatuses")}
-                </span>
+                </Text>
                 {!filters.status && (
                   <Check className="w-4 h-4 text-gray-600 ml-2" />
                 )}
@@ -87,9 +87,9 @@ export function TaskBacklogFilters({
                     }`}
                     onSelect={() => onFilterChange("status", option.value)}
                   >
-                    <span className="text-sm text-gray-700">
+                    <Text as="span" size="2" className="text-sm text-gray-700">
                       {option.label}
-                    </span>
+                    </Text>
                     {isSelected && (
                       <Check className="w-4 h-4 text-gray-600 ml-2" />
                     )}
@@ -103,13 +103,13 @@ export function TaskBacklogFilters({
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 min-w-[160px] text-left">
-              <span className="text-sm text-gray-700 flex-1">
+              <Text as="span" size="2" className="text-sm text-gray-700 flex-1">
                 {getSelectedLabel(
                   filters.priority,
                   priorityOptions,
                   t("backlog.filters.allPriorities")
                 )}
-              </span>
+              </Text>
               <ChevronDown className="w-4 h-4 text-gray-500" />
             </button>
           </DropdownMenu.Trigger>
@@ -125,9 +125,9 @@ export function TaskBacklogFilters({
                 }`}
                 onSelect={() => onFilterChange("priority", null)}
               >
-                <span className="text-sm text-gray-700">
+                <Text as="span" size="2" className="text-sm text-gray-700">
                   {t("backlog.filters.allPriorities")}
-                </span>
+                </Text>
                 {!filters.priority && (
                   <Check className="w-4 h-4 text-gray-600 ml-2" />
                 )}
@@ -142,9 +142,9 @@ export function TaskBacklogFilters({
                     }`}
                     onSelect={() => onFilterChange("priority", option.value)}
                   >
-                    <span className="text-sm text-gray-700">
+                    <Text as="span" size="2" className="text-sm text-gray-700">
                       {option.label}
-                    </span>
+                    </Text>
                     {isSelected && (
                       <Check className="w-4 h-4 text-gray-600 ml-2" />
                     )}
@@ -158,13 +158,13 @@ export function TaskBacklogFilters({
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 min-w-[160px] text-left">
-              <span className="text-sm text-gray-700 flex-1">
+              <Text as="span" size="2" className="text-sm text-gray-700 flex-1">
                 {getSelectedLabel(
                   filters.sprint,
                   sprintOptions,
                   t("backlog.filters.allSprints")
                 )}
-              </span>
+              </Text>
               <ChevronDown className="w-4 h-4 text-gray-500" />
             </button>
           </DropdownMenu.Trigger>
@@ -180,9 +180,9 @@ export function TaskBacklogFilters({
                 }`}
                 onSelect={() => onFilterChange("sprint", null)}
               >
-                <span className="text-sm text-gray-700">
+                <Text as="span" size="2" className="text-sm text-gray-700">
                   {t("backlog.filters.allSprints")}
-                </span>
+                </Text>
                 {!filters.sprint && (
                   <Check className="w-4 h-4 text-gray-600 ml-2" />
                 )}
@@ -197,9 +197,9 @@ export function TaskBacklogFilters({
                     }`}
                     onSelect={() => onFilterChange("sprint", option.value)}
                   >
-                    <span className="text-sm text-gray-700">
+                    <Text as="span" size="2" className="text-sm text-gray-700">
                       {option.label}
-                    </span>
+                    </Text>
                     {isSelected && (
                       <Check className="w-4 h-4 text-gray-600 ml-2" />
                     )}

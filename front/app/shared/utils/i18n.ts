@@ -1,23 +1,11 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-// Import translation files
-import enTranslations from "../../locale/en.json";
-import jaTranslations from "../../locale/ja.json";
+// Import translation file (Vietnamese only)
 import viTranslations from "../../locale/vi.json";
 
-// Merge translations with validation messages
+// Resources (Vietnamese only)
 const resources = {
-  en: {
-    translation: {
-      ...enTranslations,
-    },
-  },
-  ja: {
-    translation: {
-      ...jaTranslations,
-    },
-  },
   vi: {
     translation: {
       ...viTranslations,
@@ -25,18 +13,19 @@ const resources = {
   },
 };
 
-// Get saved language from localStorage or default to 'en'
+// Get saved language from localStorage or default to 'vi'
 const getSavedLanguage = (): string => {
   if (typeof window !== "undefined" && window.localStorage) {
-    return window.localStorage.getItem("i18nextLng") || "en";
+    const saved = window.localStorage.getItem("i18nextLng") || "vi";
+    return saved === "vi" ? "vi" : "vi"; // force vi only
   }
-  return "en";
+  return "vi";
 };
 
 i18n.use(initReactI18next).init({
   resources,
   lng: getSavedLanguage(), // use saved language or default
-  fallbackLng: "en",
+  fallbackLng: "vi",
   interpolation: {
     escapeValue: false, // React already escapes values
   },

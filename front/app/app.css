@@ -143,3 +143,16 @@ a:focus-visible,
 .animate-spin-reverse {
   animation: spin-reverse 1s linear infinite;
 }
+
+.rt-TextFieldRoot,
+.rt-TextAreaRoot {
+  @apply bg-[var(--color-gray-100)] shadow-[inset_0_0_0_var(--text-field-border-width)_var(--color-gray-100)];
+}
+
+.rt-TextFieldRoot.is-invalid {
+  @apply shadow-[inset_0_0_0_var(--text-field-border-width)_var(--color-red-500)];
+}
+
+.rt-TextArea.is-invalid {
+  @apply shadow-[inset_0_0_0_var(--text-field-border-width)_var(--color-red-500)];
+}

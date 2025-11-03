@@ -1,17 +1,13 @@
 import { useField } from "@tanstack/react-form";
 import * as React from "react";
-import type { AnyFormApi } from "./types";
-
-import { cn } from "../../../utils/cn";
-import { Textarea } from "../../atoms/TextArea";
+import { Select, type SelectOption } from "~/shared/components/atoms/Select";
 import BaseFormField from "./BaseFormField";
 import { FormErrorMessage } from "./FormErrorMessage";
+import type { AnyFormApi } from "./types";
 
-export interface FormFieldTextareaProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof Textarea>,
-    "value" | "onChange" | "onBlur" | "form"
-  > {
+export type { SelectOption };
+
+export interface FormFieldSelectProps {
   name: string;
   form: AnyFormApi;
   label?: string;
@@ -20,9 +16,12 @@ export interface FormFieldTextareaProps
   className?: string;
   labelClassName?: string;
   errorClassName?: string;
+  options: SelectOption[];
+  placeholder?: string;
+  leftIcon?: React.ReactNode;
 }
 
-export function FormFieldTextarea({
+export function FormFieldSelect({
   name,
   form,
   label,
@@ -31,15 +30,14 @@ export function FormFieldTextarea({
   className,
   labelClassName,
   errorClassName,
-  ...props
-}: FormFieldTextareaProps) {
+  options,
+  placeholder,
+  leftIcon,
+}: FormFieldSelectProps) {
   const field = useField({ name, form });
   const errors = field.state.meta?.errors ?? [];
   const hasError = Array.isArray(errors) ? errors.length > 0 : Boolean(errors);
-  const { className: textareaClassName, ...restProps } = props as {
-    className?: string;
-    [key: string]: unknown;
-  };
+  const value = field.state.value as string | undefined;
 
   return (
     <BaseFormField
@@ -51,18 +49,18 @@ export function FormFieldTextarea({
       labelClassName={labelClassName}
       errorClassName={errorClassName}
     >
-      <Textarea
-        value={String(field.state.value ?? "")}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-          field.handleChange(e.target.value)
-        }
+      <Select
+        value={value}
+        options={options}
+        placeholder={placeholder}
+        leftIcon={leftIcon}
+        onChange={field.handleChange}
         onBlur={field.handleBlur}
-        className={cn(textareaClassName, hasError && "is-invalid")}
-        {...restProps}
+        aria-invalid={hasError}
       />
       <FormErrorMessage field={field} />
     </BaseFormField>
   );
 }
 
-export default FormFieldTextarea;
+export default FormFieldSelect;

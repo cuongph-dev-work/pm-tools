@@ -1,6 +1,6 @@
 import { access_token_private_key, refresh_token_private_key } from '@configs/jwt.constraints';
 import { UserService } from '@modules/user/user.service';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -69,13 +69,13 @@ export class AuthService {
     const user: User | null = await this.userService.findByEmailWithPassword(email);
 
     if (!user) {
-      throw new UnauthorizedException(this.i18n.t('message.wrong_account'));
+      throw new BadRequestException(this.i18n.t('message.wrong_account'));
     }
 
     const is_matching = await bcrypt.compare(password, user.password);
 
     if (!is_matching) {
-      throw new UnauthorizedException(this.i18n.t('message.wrong_account'));
+      throw new BadRequestException(this.i18n.t('message.wrong_account'));
     }
 
     if (user.block_to && user.block_to > new Date()) {

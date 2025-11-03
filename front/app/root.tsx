@@ -1,4 +1,4 @@
-import { Theme } from "@radix-ui/themes";
+import { Text, Theme } from "@radix-ui/themes";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
@@ -50,9 +50,9 @@ export function HydrateFallback() {
           <div className="text-5xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent animate-gradient">
             PM Tools
           </div>
-          <p className="text-sm text-gray-600 font-medium">
+          <Text as="p" size="2" className="text-sm text-gray-600 font-medium">
             Project Management
-          </p>
+          </Text>
         </div>
 
         {/* Spinner with pulse animation */}
@@ -63,9 +63,9 @@ export function HydrateFallback() {
         </div>
 
         {/* Loading text with pulse animation */}
-        <p className="text-sm text-gray-500 animate-pulse">
+        <Text as="p" size="2" className="text-sm text-gray-500 animate-pulse">
           Loading, please wait...
-        </p>
+        </Text>
       </div>
     </div>
   );

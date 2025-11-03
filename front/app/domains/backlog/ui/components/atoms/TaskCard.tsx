@@ -1,4 +1,4 @@
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import type { TaskDTO } from "../../../application/dto/TaskDTO";
 
@@ -55,41 +55,52 @@ export function TaskCard({
             {task.title}
           </h3>
           {task.description && (
-            <p className="text-sm text-gray-600 mb-3">{task.description}</p>
+            <Box mb="3">
+              <Text as="p" size="2" className="text-sm text-gray-600">
+                {task.description}
+              </Text>
+            </Box>
           )}
           <Flex direction="row" align="center" gap="2" wrap="wrap">
             {/* Status tag */}
-            <span
+            <Text
+              as="span"
               className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(
                 task.status
               )}`}
             >
               {statusOptions.find(opt => opt.value === task.status)?.label ||
                 task.status}
-            </span>
+            </Text>
             {/* Priority tag */}
             {task.priority && (
-              <span
+              <Text
+                as="span"
                 className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityClass(
                   task.priority
                 )}`}
               >
                 {priorityOptions.find(opt => opt.value === task.priority)
                   ?.label || task.priority}
-              </span>
+              </Text>
             )}
             {/* Sprint tag */}
             {task.sprint && (
-              <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-500 text-white">
+              <Text
+                as="span"
+                className="px-2 py-1 rounded-full text-xs font-medium bg-blue-500 text-white"
+              >
                 {sprintOptions.find(opt => opt.value === task.sprint)?.label ||
                   task.sprint}
-              </span>
+              </Text>
             )}
           </Flex>
           {task.assignee && (
-            <p className="text-sm text-gray-600 mt-2">
-              {t("backlog.assignee")}: {task.assignee}
-            </p>
+            <Box mt="2">
+              <Text as="p" size="2" className="text-sm text-gray-600">
+                {t("backlog.assignee")}: {task.assignee}
+              </Text>
+            </Box>
           )}
         </Box>
         {task.updatedDate && (

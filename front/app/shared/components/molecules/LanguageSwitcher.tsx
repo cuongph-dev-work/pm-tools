@@ -1,4 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { Text } from "@radix-ui/themes";
 import { Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -11,7 +12,7 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
 
   const languages = [
     { code: "vi", label: t("common.vietnamese") },
-    { code: "en", label: t("common.english") },
+    // { code: "en", label: t("common.english") },
   ];
 
   return (
@@ -21,7 +22,9 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
           className={`p-1.5 text-gray-900 hover:bg-gray-50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${className}`}
           title={t("common.language")}
         >
-          <span className="text-sm font-semibold">文A</span>
+          <Text as="span" size="2" className="text-sm font-semibold">
+            文A
+          </Text>
         </button>
       </DropdownMenu.Trigger>
 
@@ -44,7 +47,9 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
                   i18n.changeLanguage(lang.code);
                 }}
               >
-                <span className="text-sm text-gray-700">{lang.label}</span>
+                <Text as="span" size="2" className="text-sm text-gray-700">
+                  {lang.label}
+                </Text>
                 {isSelected && <Check className="w-4 h-4 text-gray-600 ml-2" />}
               </DropdownMenu.Item>
             );

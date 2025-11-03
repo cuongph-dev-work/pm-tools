@@ -1,4 +1,4 @@
-import { Box } from "@radix-ui/themes";
+import { Box, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import type { TaskDTO } from "../../../application/dto/TaskDTO";
 import { TaskCard } from "../atoms/TaskCard";
@@ -25,7 +25,9 @@ export function TaskList({
   if (loading) {
     return (
       <Box className={`text-center py-12 ${className}`}>
-        <p className="text-gray-500">{t("common.loading")}</p>
+        <Text as="p" size="3" className="text-gray-500">
+          {t("common.loading")}
+        </Text>
       </Box>
     );
   }
@@ -33,7 +35,9 @@ export function TaskList({
   if (tasks.length === 0) {
     return (
       <Box className={`text-center py-12 ${className}`}>
-        <p className="text-gray-500">{t("backlog.noTasks")}</p>
+        <Text as="p" size="3" className="text-gray-500">
+          {t("backlog.noTasks")}
+        </Text>
       </Box>
     );
   }

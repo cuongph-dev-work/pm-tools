@@ -1,4 +1,5 @@
 import { useField } from "@tanstack/react-form";
+import { Eye, EyeOff } from "lucide-react";
 import * as React from "react";
 import type { AnyFormApi } from "./types";
 
@@ -36,10 +37,17 @@ export function FormFieldInput({
   const field = useField({ name, form });
   const errors = field.state.meta?.errors ?? [];
   const hasError = Array.isArray(errors) ? errors.length > 0 : Boolean(errors);
-  const { className: inputClassName, ...restInputProps } = inputProps as {
+  const {
+    className: inputClassName,
+    type,
+    ...restInputProps
+  } = inputProps as {
     className?: string;
+    type?: string;
     [key: string]: unknown;
   };
+  const isPassword = type === "password";
+  const [showPassword, setShowPassword] = React.useState(false);
 
   return (
     <BaseFormField
@@ -57,11 +65,44 @@ export function FormFieldInput({
           field.handleChange(e.target.value)
         }
         onBlur={field.handleBlur}
-        className={cn(
-          inputClassName,
-          hasError &&
-            "border-1 border-red-500 focus:border-red-500 focus:ring-red-500"
-        )}
+        type={
+          isPassword
+            ? showPassword
+              ? "text"
+              : "password"
+            : (type as
+                | "number"
+                | "search"
+                | "time"
+                | "text"
+                | "hidden"
+                | "password"
+                | "date"
+                | "datetime-local"
+                | "email"
+                | "month"
+                | "tel"
+                | "url"
+                | "week"
+                | undefined)
+        }
+        className={cn(inputClassName, hasError && "is-invalid")}
+        rightSlot={
+          isPassword ? (
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="flex items-center justify-center p-0 w-5 h-5 text-gray-500 hover:text-gray-700 focus:outline-none"
+              aria-label={showPassword ? "Ẩn mật khẩu" : "Hiển thị mật khẩu"}
+            >
+              {showPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </button>
+          ) : undefined
+        }
         {...restInputProps}
       />
       <FormErrorMessage field={field} />

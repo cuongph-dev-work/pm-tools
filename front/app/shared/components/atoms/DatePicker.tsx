@@ -140,7 +140,7 @@ export const DatePicker = React.forwardRef<
     return (
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
-          <div className="relative">
+          <div className="relative inline-block">
             <Input
               ref={ref}
               id={id}

@@ -1,4 +1,4 @@
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { Avatar } from "~/shared/components/atoms/Avatar";
 import { Card } from "~/shared/components/atoms/Card";
@@ -30,7 +30,11 @@ export function ProjectMemberCard({
             <Box className="text-sm font-medium text-gray-900 truncate">
               {name}
             </Box>
-            {isOwner && <span className="text-yellow-600 text-xs">👑</span>}
+            {isOwner && (
+              <Text as="span" size="1" className="text-yellow-600 text-xs">
+                👑
+              </Text>
+            )}
           </Flex>
           {email && (
             <Box className="text-xs text-gray-500 truncate">{email}</Box>

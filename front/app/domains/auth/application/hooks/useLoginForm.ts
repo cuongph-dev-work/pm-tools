@@ -1,62 +1,52 @@
 import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import type { AnyFormApi } from "~/shared/components/molecules/form-field/types";
+import { queryKeys } from "~/shared/constants/queryKeys";
+import { useAuth } from "~/shared/hooks/useAuth";
+import { createLoginSchema } from "../../domain/validation/auth.schema";
+import { ApiAuthRepository } from "../../infrastructure/repositories/ApiAuthRepository";
 import type { SignInDto } from "../dto/SignInDto";
+import { SignInUseCase } from "../use-cases/SignInUseCase";
 
 export interface LoginFormData {
   email: string;
   password: string;
 }
 
-export interface UseLoginFormOptions {
-  initialValues?: Partial<LoginFormData>;
-  onSubmit?: (data: SignInDto) => void | Promise<void>;
-  onSuccess?: () => void;
-  externalLoading?: boolean;
-  externalError?: string | null;
-}
-
-export function useLoginForm({
-  initialValues,
-  onSubmit,
-  onSuccess,
-  externalLoading = false,
-  externalError = null,
-}: UseLoginFormOptions = {}) {
+export function useLoginForm() {
   const { t } = useTranslation();
+  const { setUser, setTokens } = useAuth();
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationKey: queryKeys.auth.signIn(),
+    mutationFn: async (credentials: SignInDto) => {
+      const repository = new ApiAuthRepository();
+      const useCase = new SignInUseCase(repository);
+      return useCase.execute(credentials);
+    },
+  });
 
   const asyncSubmitHandler = async ({ value }: { value: LoginFormData }) => {
-    await onSubmit?.({
+    const response = await mutation.mutateAsync({
       email: value.email,
       password: value.password,
     });
-    onSuccess?.();
+
+    setTokens(response.access_token, response.refresh_token);
+    setUser({ id: String(response.sub), name: "User", email: value.email });
+    navigate("/");
   };
 
   const form = useForm({
     defaultValues: {
-      email: initialValues?.email || "admin@example.com",
-      password: initialValues?.password || "password",
+      email: "admin@example.com",
+      password: "Password@123",
     } as LoginFormData,
     validators: {
-      onSubmit: ({ value }) => {
-        const errors: Record<string, string | undefined> = {};
-
-        if (!value.email || value.email.trim() === "") {
-          errors.email = t("validation.email.required");
-        } else if (!/\S+@\S+\.\S+/.test(value.email)) {
-          errors.email = t("validation.email.invalid");
-        }
-
-        if (!value.password || value.password.trim() === "") {
-          errors.password = t("validation.password.required");
-        }
-
-        if (Object.keys(errors).length > 0) {
-          return errors;
-        }
-        return undefined;
-      },
+      onSubmit: createLoginSchema(t),
       onSubmitAsync: asyncSubmitHandler,
     },
   });
@@ -66,7 +56,11 @@ export function useLoginForm({
 
   return {
     form: formApi,
-    isSubmitting: externalLoading,
-    submitError: externalError,
+    isSubmitting: mutation.isPending,
+    submitError: mutation.error
+      ? mutation.error instanceof Error
+        ? mutation.error.message
+        : "An error occurred"
+      : null,
   };
 }

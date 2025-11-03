@@ -1,4 +1,4 @@
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { Button } from "~/shared/components/atoms/Button";
@@ -18,9 +18,13 @@ export default function NotFound() {
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
           {t("errors.notFound")}
         </h2>
-        <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+        <Text
+          as="p"
+          size="4"
+          className="text-lg text-gray-600 mb-8 max-w-md mx-auto"
+        >
           {t("errors.notFoundDescription")}
-        </p>
+        </Text>
         <Flex
           direction="row"
           align="center"

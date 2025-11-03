@@ -196,6 +196,37 @@
       "high": "Cao",
       "medium": "Trung bình",
       "low": "Thấp"
+    },
+    "createDialog": {
+      "title": "Thêm Task Mới",
+      "description": "Tạo task mới với loại và thông tin chi tiết",
+      "submitButton": "Thêm Task Mới"
+    },
+    "form": {
+      "type": "Loại task",
+      "title": "Tiêu đề",
+      "titlePlaceholder": "Nhập tiêu đề task...",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Mô tả chi tiết về task...",
+      "priority": "Độ ưu tiên",
+      "estimate": "Ước tính (h)",
+      "assignee": "Người thực hiện",
+      "assigneePlaceholder": "Tên người được giao task...",
+      "dueDate": "Ngày đến hạn",
+      "tags": "Tags",
+      "tagsPlaceholder": "Nhập tags, phân cách bằng dấu phẩy...",
+      "tagsHint": "Ví dụ: Frontend, API, Design"
+    },
+    "taskTypes": {
+      "task": "Task",
+      "changeRequest": "Change Request",
+      "feedback": "Feedback",
+      "newFeature": "New Feature",
+      "subTask": "Sub-task",
+      "improvement": "Improvement",
+      "bug": "Bug",
+      "bugCustomer": "Bug Customer",
+      "leakage": "Leakage"
     }
   },
   "auth": {
@@ -209,6 +240,10 @@
     "passwordPlaceholder": "Nhập mật khẩu của bạn",
     "confirmPassword": "Xác nhận mật khẩu",
     "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
-    "demoAccounts": "Tài khoản demo"
+    "demoAccounts": "Tài khoản demo",
+    "loginForm": {
+      "emailLabel": "Email",
+      "passwordLabel": "Mật khẩu"
+    }
   }
 }

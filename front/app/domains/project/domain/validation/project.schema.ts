@@ -1,11 +1,9 @@
 import dayjs from "dayjs";
-import { useTranslation } from "react-i18next";
 import * as v from "valibot";
+import type { I18nT } from "~/shared/types/i18n";
 import { createValidationSchemas } from "~/shared/utils/validation/common";
 
-type TFunction = ReturnType<typeof useTranslation>["t"];
-
-export const createProjectSchema = (t: TFunction) => {
+export const createProjectSchema = (t: I18nT) => {
   const baseSchemas = createValidationSchemas(t);
 
   return v.pipe(

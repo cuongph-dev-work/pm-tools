@@ -1,4 +1,4 @@
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { TagIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -63,9 +63,11 @@ export function ProjectFormFields({
           placeholder={t("project.createForm.tagsPlaceholder")}
           leftSlot={<TagIcon className="w-4 h-4 text-gray-400" />}
         />
-        <p className="mt-1 text-xs text-gray-500">
-          {t("project.createForm.tagsDescription")}
-        </p>
+        <Box mt="1">
+          <Text as="p" size="1" className="text-xs text-gray-500">
+            {t("project.createForm.tagsDescription")}
+          </Text>
+        </Box>
       </Box>
     </Box>
   );

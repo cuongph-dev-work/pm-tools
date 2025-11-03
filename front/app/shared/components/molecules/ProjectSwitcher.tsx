@@ -1,4 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { Text } from "@radix-ui/themes";
 import { ChevronDown, Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
@@ -36,9 +37,9 @@ export function ProjectSwitcher() {
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button className="flex items-center gap-1.5 px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-md hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
-            <span className="text-xs text-gray-900 font-medium">
+            <Text as="span" size="1" className="text-xs text-gray-900 font-medium">
               {truncatedName}
-            </span>
+            </Text>
             <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
           </button>
         </DropdownMenu.Trigger>
@@ -75,9 +76,13 @@ export function ProjectSwitcher() {
                       </div>
                     </div>
                     {isCurrent && (
-                      <span className="ml-3 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">
+                      <Text
+                        as="span"
+                        size="1"
+                        className="ml-3 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full"
+                      >
                         {t("header.current")}
-                      </span>
+                      </Text>
                     )}
                   </div>
                 </DropdownMenu.Item>
@@ -92,9 +97,9 @@ export function ProjectSwitcher() {
             >
               <Link to="/projects" className="flex items-center gap-2">
                 <Settings className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-700">
+                <Text as="span" size="2" className="text-sm text-gray-700">
                   {t("header.manageProjects")}
-                </span>
+                </Text>
               </Link>
             </DropdownMenu.Item>
           </DropdownMenu.Content>

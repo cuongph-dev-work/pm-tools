@@ -1,3 +1,10 @@
+import axios, {
+  type AxiosError,
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type InternalAxiosRequestConfig,
+} from "axios";
 import { STORAGE_KEYS } from "../constants/storage";
 
 const API_BASE_URL =
@@ -20,93 +27,77 @@ export class ApiException extends Error {
   }
 }
 
-async function handleResponse<T>(
-  response: Response,
-  onUnauthorized?: () => void
-): Promise<T> {
-  if (!response.ok) {
-    // Handle 401 Unauthorized - Clear storage and redirect to login
-    if (response.status === 401) {
-      if (typeof window !== "undefined") {
-        window.localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-        window.localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-
-        // Call logout callback if provided
-        onUnauthorized?.();
-
-        // Redirect to login page
-        window.location.href = "/login";
-      }
-    }
-
-    const errorData: ApiError = await response.json().catch(() => ({
-      statusCode: response.status,
-      message: response.statusText,
-      error: "Unknown error",
-    }));
-
-    throw new ApiException(
-      errorData.statusCode || response.status,
-      errorData.message || response.statusText,
-      errorData.error || "Unknown error"
-    );
-  }
-
-  return response.json();
-}
-
 let unauthorizedCallback: (() => void) | undefined;
 
 export function setUnauthorizedCallback(callback: () => void) {
   unauthorizedCallback = callback;
 }
 
+// Create Axios instance
+export const apiClient: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  // Let axios infer Content-Type; we'll only add when needed
+  withCredentials: false,
+});
+
+// Attach Authorization header automatically
+apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (typeof window !== "undefined") {
+    const token = window.localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+    if (token) {
+      config.headers = config.headers ?? {};
+      (config.headers as Record<string, string>).Authorization =
+        `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
+// Centralized response/error handling
+apiClient.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  (error: AxiosError<ApiError>) => {
+    const status = error.response?.status;
+
+    if (status === 401 && typeof window !== "undefined") {
+      window.localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+      window.localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+
+      // Call logout callback if provided
+      unauthorizedCallback?.();
+      // Only redirect to login if not already on login page
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }
+
+    const responseData = error.response?.data;
+    const statusCode = status ?? 0;
+    const message = responseData?.message || error.message || "Unknown error";
+    const err = responseData?.error || "Unknown error";
+
+    throw new ApiException(statusCode, message, err);
+  }
+);
+
 export async function apiRequest<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: AxiosRequestConfig = {}
 ): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
+  const method = options.method ?? "GET";
+  const headers = options.headers ?? {};
 
-  const token =
-    typeof window !== "undefined"
-      ? window.localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
-      : null;
-
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(options.headers as Record<string, string> | undefined),
-  };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const response = await fetch(url, {
-    ...options,
-    headers,
+  const res = await apiClient.request<T>({
+    url: endpoint,
+    method,
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Version: 1,
+    },
+    data: options.data,
   });
 
-  return handleResponse<T>(response, unauthorizedCallback);
-}
-
-export async function apiPost<T>(
-  endpoint: string,
-  data: unknown,
-  options: RequestInit = {}
-): Promise<T> {
-  return apiRequest<T>(endpoint, {
-    ...options,
-    method: "POST",
-    body: JSON.stringify(data),
-  });
-}
-
-export async function apiGet<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
-  return apiRequest<T>(endpoint, {
-    ...options,
-    method: "GET",
-  });
+  return res.data;
 }

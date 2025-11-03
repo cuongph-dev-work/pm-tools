@@ -1,3 +1,4 @@
+import { Box, Text } from "@radix-ui/themes";
 import * as React from "react";
 
 export interface BaseFormFieldProps {
@@ -35,23 +36,29 @@ export function BaseFormField({
           className={`block text-sm font-medium text-gray-700 mb-1 ${labelClassName}`}
         >
           {label}
-          {isRequired ? <span className="ml-0.5 text-red-600">*</span> : null}
+          {isRequired ? (
+            <Box ml="1" display="inline-block" asChild>
+              <Text as="span" size="1" className="text-red-600">
+                *
+              </Text>
+            </Box>
+          ) : null}
         </label>
       )}
 
-      <div
-        id={fieldId}
-        aria-labelledby={label ? labelId : undefined}
-        aria-describedby={description ? descriptionId : undefined}
-        aria-errormessage={errorId}
-      >
-        {children}
-      </div>
+      {children}
 
       {description && (
-        <p id={descriptionId} className="mt-1 text-xs text-gray-500">
-          {description}
-        </p>
+        <Box mt="1">
+          <Text
+            id={descriptionId}
+            as="p"
+            size="1"
+            className="text-xs text-gray-500"
+          >
+            {description}
+          </Text>
+        </Box>
       )}
 
       <div id={errorId} className={errorClassName} aria-live="polite" />

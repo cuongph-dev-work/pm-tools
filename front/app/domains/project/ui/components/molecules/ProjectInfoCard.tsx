@@ -1,4 +1,4 @@
-import { Box, Flex, IconButton } from "@radix-ui/themes";
+import { Box, Flex, IconButton, Text } from "@radix-ui/themes";
 import { Calendar, Pencil, Trash2, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Card } from "~/shared/components/atoms/Card";
@@ -89,9 +89,9 @@ export function ProjectInfoCard({
       )}
       <Box className="text-base font-semibold text-gray-900 pr-16">{name}</Box>
       {description && (
-        <p className="text-sm text-gray-600 leading-6 line-clamp-2">
+        <Text as="p" size="2" className="text-sm text-gray-600 leading-6 line-clamp-2">
           {description}
-        </p>
+        </Text>
       )}
 
       {tags.length > 0 && (
@@ -110,13 +110,13 @@ export function ProjectInfoCard({
         {typeof memberCount === "number" && (
           <Flex gap="1" className=" bg-gray-100 rounded-md px-2 py-1">
             <Users className="w-3.5 h-3.5" />
-            <span>{memberCount}</span>
+            <Text as="span">{memberCount}</Text>
           </Flex>
         )}
         {startDate && (
           <Flex gap="1" className=" bg-gray-100 rounded-md px-2 py-1">
             <Calendar className="w-3.5 h-3.5" />
-            <span>{startDate}</span>
+            <Text as="span">{startDate}</Text>
           </Flex>
         )}
       </Flex>

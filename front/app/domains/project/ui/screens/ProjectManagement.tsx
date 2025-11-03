@@ -1,4 +1,4 @@
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,9 +22,9 @@ export default function ProjectManagement() {
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
           {t("header.manageProjects")}
         </h1>
-        <p className="text-sm text-gray-600">
+        <Text as="p" size="2" className="text-sm text-gray-600">
           {t("project.manageDescription")}
-        </p>
+        </Text>
       </Box>
 
       <Tabs
