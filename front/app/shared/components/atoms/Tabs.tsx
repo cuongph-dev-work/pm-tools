@@ -4,6 +4,8 @@ import React from "react";
 
 interface TabsProps {
   defaultValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
   tabs: Array<{ value: string; label: string }>;
   children: (activeTab: string) => React.ReactNode;
   className?: string;
@@ -11,6 +13,8 @@ interface TabsProps {
 
 export function Tabs({
   defaultValue,
+  value,
+  onValueChange,
   tabs,
   children,
   className = "",
@@ -18,6 +22,8 @@ export function Tabs({
   return (
     <TabsPrimitive.Root
       defaultValue={defaultValue || tabs[0]?.value}
+      value={value}
+      onValueChange={onValueChange}
       className={className}
     >
       <div className="flex w-full">

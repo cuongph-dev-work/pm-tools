@@ -11,6 +11,7 @@ import {
   List,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 // 3. Internal utilities (using path alias)
 import { Button } from "~/shared/components/atoms/Button";
@@ -25,8 +26,20 @@ type NavigationItem = {
   requiresProject: boolean;
 };
 
+// Page ID to route path mapping
+const PAGE_ROUTES: Record<string, string> = {
+  backlog: "/backlog",
+  kanban: "/kanban",
+  sprint: "/sprint",
+  projects: "/projects",
+  logwork: "/logwork",
+  "git-alerts": "/git-alerts",
+  settings: "/settings",
+};
+
 export function AppSidebar() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { currentPage, setCurrentPage } = useNavigation();
   const { currentProject } = useProjects();
   const { isCollapsed, toggleSidebar } = useSidebar();
@@ -36,7 +49,7 @@ export function AppSidebar() {
       id: "backlog",
       title: t("sidebar.navigation.backlog"),
       icon: List,
-      requiresProject: true,
+      requiresProject: false, // Allow navigation without project
     },
     {
       id: "kanban",
@@ -80,8 +93,16 @@ export function AppSidebar() {
   //   },
   // ];
 
-  const handleNavigation = (id: string) => {
-    setCurrentPage(id as Parameters<typeof setCurrentPage>[0]);
+  const handleNavigation = (id: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    const route = PAGE_ROUTES[id];
+    if (route) {
+      setCurrentPage(id as Parameters<typeof setCurrentPage>[0]);
+      navigate(route);
+    }
   };
 
   const sidebarWidth = isCollapsed ? "w-16" : "w-64";
@@ -123,28 +144,28 @@ export function AppSidebar() {
               const Icon = item.icon;
 
               return (
-                <div
+                <button
                   key={item.id}
-                  onClick={() => {
+                  type="button"
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     if (!isDisabled) {
-                      handleNavigation(item.id);
+                      handleNavigation(item.id, e);
                     }
                   }}
+                  disabled={isDisabled}
                   className={`
-                    w-full flex items-center gap-3 rounded text-sm transition-colors select-none
+                    w-full flex items-center gap-3 rounded text-sm transition-colors select-none border-none bg-transparent
                     ${isCollapsed ? "justify-center px-2 py-2" : "px-3 py-2"}
                     ${isActive ? "bg-gray-100 text-gray-900" : ""}
                     ${isDisabled ? "text-gray-400 cursor-not-allowed" : "text-gray-700 hover:bg-gray-50 cursor-pointer"}
                   `}
-                  style={{
-                    pointerEvents: isDisabled ? "none" : "auto",
-                    userSelect: "none",
-                  }}
                   title={isCollapsed ? item.title : undefined}
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
                   {!isCollapsed && <span>{item.title}</span>}
-                </div>
+                </button>
               );
             })}
           </div>

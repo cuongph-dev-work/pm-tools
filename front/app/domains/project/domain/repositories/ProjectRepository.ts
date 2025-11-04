@@ -1,3 +1,4 @@
+import type { MemberDTO } from "../../application/dto/MemberDTO";
 import { ProjectEntity } from "../entities/Project";
 import { ProjectListItemEntity } from "../entities/ProjectListItem";
 import type { ProjectId } from "../entities/types";
@@ -41,6 +42,7 @@ export interface ProjectRepository {
   findAll(filters?: ProjectFilters): Promise<PaginatedProjects>;
   findById(id: ProjectId): Promise<ProjectEntity | null>;
   findMemberOf(): Promise<ProjectListItemEntity[]>;
+  getMembers(projectId: ProjectId): Promise<MemberDTO[]>;
   create(data: CreateProjectData): Promise<string>;
   update(id: ProjectId, data: UpdateProjectData): Promise<string>;
   delete(id: ProjectId): Promise<{ success: boolean }>;

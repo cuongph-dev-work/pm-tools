@@ -16,7 +16,11 @@ export default function ProjectManagement() {
   const { t } = useTranslation();
   const { deleteProject } = useDeleteProject();
   const { projects, currentProject, setSelectedProjectId } = useListProjects();
-  const { members } = useProjectMembers(currentProject?.id);
+  const [activeTab, setActiveTab] = useState("projects");
+  const { members } = useProjectMembers(
+    currentProject?.id,
+    activeTab === "members"
+  );
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
 
@@ -32,6 +36,8 @@ export default function ProjectManagement() {
       </Box>
 
       <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
         tabs={[
           { value: "projects", label: t("project.tabs.projects") },
           { value: "members", label: t("project.tabs.members") },
@@ -92,7 +98,7 @@ export default function ProjectManagement() {
                     </Box>
                     <Box className="text-sm text-gray-600">
                       {t("project.memberCount", {
-                        count: 0,
+                        count: members.length,
                       })}
                     </Box>
                   </Box>

@@ -1,4 +1,8 @@
 import type {
+  MemberDTO,
+  MemberResponseDTO,
+} from "~/domains/project/application/dto/MemberDTO";
+import type {
   CreateProjectRequestDTO,
   PaginatedProjectsDTO,
   ProjectDTO,
@@ -61,6 +65,27 @@ export class ApiProjectRepository implements ProjectRepository {
       PROJECT_ENDPOINTS.MEMBER_OF
     );
     return ProjectMapper.toListItemEntityList(response.data);
+  }
+
+  async getMembers(projectId: ProjectId): Promise<MemberDTO[]> {
+    const url = PROJECT_ENDPOINTS.MEMBERS.replace(":id", projectId);
+    const response = await apiRequest<MemberResponseDTO[]>(url);
+
+    // Get project to check owner
+    const project = await this.findById(projectId);
+    const ownerId = project?.owner.id;
+
+    return response.map(member => ({
+      id: member.id,
+      name: member.user.fullName,
+      email: member.user.email,
+      role: member.role,
+      status: member.status,
+      isOwner: member.user.id === ownerId,
+      joinedAt: member.joined_at,
+      leftAt: member.left_at,
+      avatarUrl: undefined, // TODO: Add avatar_url if available in API
+    }));
   }
 
   async create(data: CreateProjectData): Promise<string> {

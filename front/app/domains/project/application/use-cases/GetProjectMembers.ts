@@ -1,5 +1,6 @@
 import type { ProjectRepository } from "../../domain/repositories/ProjectRepository";
 import type { MemberDTO } from "../dto/MemberDTO";
+import type { ProjectId } from "../../domain/entities/Project";
 
 export class GetProjectMembersUseCase {
   private readonly repository: ProjectRepository;
@@ -8,8 +9,7 @@ export class GetProjectMembersUseCase {
     this.repository = repository;
   }
 
-  async execute(projectId: string): Promise<MemberDTO[]> {
-    const project = await this.repository.getById(projectId);
-    return project?.members ?? [];
+  async execute(projectId: ProjectId): Promise<MemberDTO[]> {
+    return await this.repository.getMembers(projectId);
   }
 }

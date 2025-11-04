@@ -6,7 +6,7 @@ import { isEmpty, isUndefined } from 'lodash';
 import { I18nService } from 'nestjs-i18n';
 import { WrapperType } from 'src/types/request.type';
 import { CreateProjectDto, SearchProjectDto, UpdateProjectDto } from './dtos';
-import { ProjectResponseDto, ProjectStatsResponseDto } from './dtos/project-response.dto';
+import { ProjectMemberResponseDto, ProjectResponseDto, ProjectStatsResponseDto } from './dtos/project-response.dto';
 import { ProjectRepository } from './project.repository';
 
 @Injectable()
@@ -56,7 +56,7 @@ export class ProjectService {
     if (!isUndefined(updateProjectDto.status)) {
       project.status = updateProjectDto.status;
     }
-    if (!isUndefined(updateProjectDto.start_date) && !isEmpty(updateProjectDto.end_date)) {
+    if (!isUndefined(updateProjectDto.start_date) && !isEmpty(updateProjectDto.start_date)) {
       const startDate = new Date(updateProjectDto.start_date);
       project.start_date = startDate;
     }
@@ -137,5 +137,25 @@ export class ProjectService {
       start_date: project.start_date,
       end_date: project.end_date,
     });
+  }
+
+  async getProjectMembers(id: string, currentUser: User): Promise<ProjectMemberResponseDto[]> {
+    const project = await this.projectRepository.findProjectById(id);
+
+    if (!project) {
+      throw new NotFoundException(this.i18n.t('message.project_not_found'));
+    }
+
+    const members = project.members?.getItems() || [];
+
+    // Check if user is member or owner
+    const isOwner = project.owner.id === currentUser.id;
+    const isMember = members?.some(member => member.user.id === currentUser.id);
+
+    if (!isOwner && !isMember) {
+      throw new ForbiddenException(this.i18n.t('message.project_access_forbidden'));
+    }
+
+    return members.map(member => plainToInstance(ProjectMemberResponseDto, member));
   }
 }

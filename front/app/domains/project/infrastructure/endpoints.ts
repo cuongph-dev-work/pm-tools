@@ -6,4 +6,5 @@ export const PROJECT_ENDPOINTS = {
   DELETE: "/projects/:id",
   MEMBER_OF: "/projects/member-of",
   STATS: "/projects/:id/stats",
+  MEMBERS: "/projects/:id/members",
 } as const;

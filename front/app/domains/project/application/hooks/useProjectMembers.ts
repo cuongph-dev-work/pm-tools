@@ -1,20 +1,15 @@
-import { useEffect, useState } from "react";
-import { FakeProjectRepository } from "../../infrastructure/repositories/FakeProjectRepository";
-import type { MemberDTO } from "../dto/MemberDTO";
-import { GetProjectMembersUseCase } from "../use-cases/GetProjectMembers";
+import type { ProjectId } from "../../domain/entities/Project";
+import { useListProjectMembersQuery } from "./query/members.query";
 
-export function useProjectMembers(projectId: string | null | undefined) {
-  const [members, setMembers] = useState<MemberDTO[]>([]);
+export function useProjectMembers(
+  projectId: ProjectId | null | undefined,
+  enabled: boolean = true
+) {
+  const {
+    data: members = [],
+    isLoading,
+    error,
+  } = useListProjectMembersQuery(projectId, enabled);
 
-  useEffect(() => {
-    if (!projectId) {
-      setMembers([]);
-      return;
-    }
-    const repo = new FakeProjectRepository();
-    const usecase = new GetProjectMembersUseCase(repo);
-    usecase.execute(projectId).then(setMembers);
-  }, [projectId]);
-
-  return { members } as const;
+  return { members, isLoading, error } as const;
 }

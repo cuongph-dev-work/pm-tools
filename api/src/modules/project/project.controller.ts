@@ -35,10 +35,10 @@ export class ProjectController {
   }
 
   @Roles([])
-  @Get('/:id')
-  @Cache('project:{0}', { ttl: 1800 }) // Cache for 30 minutes
-  getProjectById(@Param('id') id: string) {
-    return this.projectService.findProjectById(id);
+  @Get('/:id/members')
+  @Cache('project-members:{0}', { ttl: 1800 }) // Cache for 30 minutes
+  getProjectMembers(@Param('id') id: string, @CurrentUser() currentUser: User) {
+    return this.projectService.getProjectMembers(id, currentUser);
   }
 
   @Roles([])
@@ -46,6 +46,13 @@ export class ProjectController {
   @Cache('project-stats:{0}:{1}', { ttl: 3600 }) // Cache for 1 hour
   getProjectStats(@Param('id') id: string, @CurrentUser() currentUser: User) {
     return this.projectService.getProjectStats(id, currentUser);
+  }
+
+  @Roles([])
+  @Get('/:id')
+  @Cache('project:{0}', { ttl: 1800 }) // Cache for 30 minutes
+  getProjectById(@Param('id') id: string) {
+    return this.projectService.findProjectById(id);
   }
 
   @Roles([])

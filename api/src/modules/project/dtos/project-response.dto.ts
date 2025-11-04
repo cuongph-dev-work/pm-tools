@@ -1,4 +1,4 @@
-import { PROJECT_STATUS } from '@configs/enum/db';
+import { MEMBER_STATUS, PROJECT_ROLE, PROJECT_STATUS } from '@configs/enum/db';
 import { Exclude, Expose, Transform, Type } from 'class-transformer';
 
 @Exclude()
@@ -95,4 +95,47 @@ export class ProjectMemberOfResponseDto {
   @Expose()
   @Type(() => ProjectResponseDto)
   data: ProjectResponseDto[];
+}
+
+@Exclude()
+class MemberUserResponseDto {
+  @Expose()
+  id: string;
+
+  @Expose()
+  email: string;
+
+  @Expose()
+  first_name?: string;
+
+  @Expose()
+  last_name?: string;
+
+  @Expose()
+  fullName?: string;
+}
+
+@Exclude()
+export class ProjectMemberResponseDto {
+  @Expose()
+  id: string;
+
+  @Expose()
+  @Type(() => MemberUserResponseDto)
+  user: MemberUserResponseDto;
+
+  @Expose()
+  role: PROJECT_ROLE;
+
+  @Expose()
+  status: MEMBER_STATUS;
+
+  @Expose()
+  joined_at: Date;
+
+  @Expose()
+  left_at?: Date;
+
+  @Expose()
+  created_at: Date;
 }

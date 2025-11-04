@@ -151,6 +151,13 @@
     "startLabel": "Bắt đầu",
     "endLabel": "Kết thúc",
     "joinedLabel": "Tham gia",
+    "memberRoles": {
+      "PROJECT_MANAGER": "Quản lý dự án",
+      "DEVELOPER": "Lập trình viên",
+      "DESIGNER": "Thiết kế",
+      "TESTER": "Kiểm thử",
+      "VIEWER": "Xem"
+    },
     "deleteProjectTitle": "Xóa dự án",
     "deleteProjectDescription": "Bạn có chắc chắn muốn xóa dự án này? Tất cả dữ liệu liên quan sẽ bị mất vĩnh viễn. Hành động này không thể hoàn tác.",
     "confirmDelete": "Xóa",
