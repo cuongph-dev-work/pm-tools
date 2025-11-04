@@ -37,7 +37,11 @@ export function ProjectSwitcher() {
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button className="flex items-center gap-1.5 px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-md hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
-            <Text as="span" size="1" className="text-xs text-gray-900 font-medium">
+            <Text
+              as="span"
+              size="1"
+              className="text-xs text-gray-900 font-medium"
+            >
               {truncatedName}
             </Text>
             <ChevronDown className="w-3.5 h-3.5 text-gray-500" />

@@ -12,7 +12,7 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
 
   const languages = [
     { code: "vi", label: t("common.vietnamese") },
-    // { code: "en", label: t("common.english") },
+    { code: "en", label: t("common.english") },
   ];
 
   return (

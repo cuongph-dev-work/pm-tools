@@ -5,23 +5,20 @@ import { createValidationSchemas } from "~/shared/utils/validation/common";
 
 // Create Project Schema
 export const createProjectSchema = (t: I18nT) => {
-  const baseSchemas = createValidationSchemas(t);
+  const base = createValidationSchemas(t);
 
   return v.pipe(
     v.object({
       name: v.pipe(
-        v.string(t("validation.required", { field: t("project.name") })),
-        v.maxLength(255, t("validation.maxLength", { field: t("project.name"), max: 255 }))
+        base.requiredString(t("project.name")),
+        base.maxLengthString(t("project.name"), 255)
       ),
       description: v.optional(
-        v.pipe(
-          v.string(),
-          v.maxLength(3000, t("validation.maxLength", { field: t("project.description"), max: 3000 }))
-        )
+        base.maxLengthString(t("project.description"), 3000)
       ),
-      tags: v.optional(v.string()),
-      startDate: v.optional(v.string()),
-      endDate: v.optional(v.string()),
+      tags: base.optionalString(),
+      startDate: base.optionalString(),
+      endDate: base.optionalString(),
     }),
     v.forward(
       v.partialCheck(
@@ -44,26 +41,20 @@ export const createProjectSchema = (t: I18nT) => {
 
 // Update Project Schema
 export const updateProjectSchema = (t: I18nT) => {
+  const base = createValidationSchemas(t);
+
   return v.pipe(
     v.object({
-      name: v.optional(
-        v.pipe(
-          v.string(),
-          v.maxLength(255, t("validation.maxLength", { field: t("project.name"), max: 255 }))
-        )
-      ),
+      name: v.optional(base.maxLengthString(t("project.name"), 255)),
       description: v.optional(
-        v.pipe(
-          v.string(),
-          v.maxLength(3000, t("validation.maxLength", { field: t("project.description"), max: 3000 }))
-        )
+        base.maxLengthString(t("project.description"), 3000)
       ),
-      tags: v.optional(v.string()),
+      tags: base.optionalString(),
       status: v.optional(
         v.picklist(["ACTIVE", "INACTIVE", "COMPLETED", "CANCELLED"])
       ),
-      startDate: v.optional(v.string()),
-      endDate: v.optional(v.string()),
+      startDate: base.optionalString(),
+      endDate: base.optionalString(),
     }),
     v.forward(
       v.partialCheck(

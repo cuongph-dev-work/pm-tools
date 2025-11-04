@@ -10,17 +10,39 @@ import "./app.css";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Set initial language on mount
+    // Set initial language and font on mount
     if (typeof window !== "undefined" && window.document) {
-      window.document.documentElement.lang = i18n.language || "en";
+      const currentLang = i18n.language || "en";
+      window.document.documentElement.lang = currentLang;
+      // Apply font based on current language
+      const fontMap: Record<string, string> = {
+        vi: '"Noto Sans", "Noto Sans Vietnamese", ui-sans-serif, system-ui, sans-serif',
+        en: '"Inter", ui-sans-serif, system-ui, sans-serif',
+      };
+      const fontFamily = fontMap[currentLang] || fontMap.en;
+      window.document.documentElement.style.fontFamily = fontFamily;
     }
   }, []);
 
+  // Default to 'en' for SSR, will be updated on client
+  const currentLang = i18n.language || "en";
+
   return (
-    <html lang="en">
+    <html lang={currentLang}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Google Fonts - Noto Sans for Vietnamese, Inter for English */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Sans+Vietnamese:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
         <Meta />
         <Links />
       </head>

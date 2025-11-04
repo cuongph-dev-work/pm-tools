@@ -1,10 +1,11 @@
 /// <reference lib="dom" />
 import * as Popover from "@radix-ui/react-popover";
 import dayjs from "dayjs";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "../../utils/cn";
+import { parseToNativeDate } from "../../utils/date";
 import { Calendar } from "./Calendar";
 import { Input } from "./TеxtInput";
 
@@ -64,26 +65,18 @@ export const DatePicker = React.forwardRef<
     const [displayValue, setDisplayValue] = React.useState("");
 
     // Parse value to Date
-    const selectedDate = React.useMemo(() => {
-      if (!value) return undefined;
-      const date = dayjs(value);
-      return date.isValid() ? date.toDate() : undefined;
-    }, [value]);
+    const selectedDate = React.useMemo(() => parseToNativeDate(value), [value]);
 
     // Parse minDate and maxDate to Date objects
-    const parsedMinDate = React.useMemo(() => {
-      if (!minDate) return undefined;
-      if (minDate instanceof Date) return minDate;
-      const date = dayjs(minDate);
-      return date.isValid() ? date.toDate() : undefined;
-    }, [minDate]);
+    const parsedMinDate = React.useMemo(
+      () => parseToNativeDate(minDate),
+      [minDate]
+    );
 
-    const parsedMaxDate = React.useMemo(() => {
-      if (!maxDate) return undefined;
-      if (maxDate instanceof Date) return maxDate;
-      const date = dayjs(maxDate);
-      return date.isValid() ? date.toDate() : undefined;
-    }, [maxDate]);
+    const parsedMaxDate = React.useMemo(
+      () => parseToNativeDate(maxDate),
+      [maxDate]
+    );
 
     // Format date for display based on locale
     React.useEffect(() => {
@@ -137,6 +130,14 @@ export const DatePicker = React.forwardRef<
       }, BLUR_DELAY_MS);
     };
 
+    const handleClear = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange?.("");
+      setDisplayValue("");
+      setOpen(false);
+    };
+
     return (
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
@@ -159,6 +160,16 @@ export const DatePicker = React.forwardRef<
               readOnly
               {...props}
             />
+            {value && !disabled && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-md transition-colors"
+                aria-label="Clear date"
+              >
+                <X className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
           </div>
         </Popover.Trigger>
         <Popover.Portal>

@@ -1,8 +1,8 @@
 import { useField, useForm } from "@tanstack/react-form";
-import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { AnyFormApi } from "~/shared/components/molecules/form-field/types";
+import { parseToNativeDate } from "~/shared/utils/date";
 import {
   createProjectSchema,
   type ProjectFormData,
@@ -81,17 +81,15 @@ export function useProjectForm({
   const endDateValue = endDateField.state.value as string | undefined;
 
   // Parse dates for minDate/maxDate props
-  const startDateParsed = useMemo(() => {
-    if (!startDateValue) return undefined;
-    const date = dayjs(startDateValue);
-    return date.isValid() ? date.toDate() : undefined;
-  }, [startDateValue]);
+  const startDateParsed = useMemo(
+    () => parseToNativeDate(startDateValue),
+    [startDateValue]
+  );
 
-  const endDateParsed = useMemo(() => {
-    if (!endDateValue) return undefined;
-    const date = dayjs(endDateValue);
-    return date.isValid() ? date.toDate() : undefined;
-  }, [endDateValue]);
+  const endDateParsed = useMemo(
+    () => parseToNativeDate(endDateValue),
+    [endDateValue]
+  );
 
   return {
     form: form as unknown as AnyFormApi,

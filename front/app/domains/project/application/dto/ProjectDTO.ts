@@ -7,6 +7,23 @@ export interface ProjectOwnerDTO {
   fullName: string;
 }
 
+// Project list item (with member_count and invite_count)
+export interface ProjectListItemDTO {
+  id: string;
+  name: string;
+  description?: string;
+  tags?: string[];
+  status: "ACTIVE" | "INACTIVE" | "COMPLETED" | "CANCELLED";
+  start_date?: string | null;
+  end_date?: string | null;
+  owner: ProjectOwnerDTO;
+  created_at: string;
+  updated_at: string;
+  member_count?: number;
+  invite_count?: number;
+}
+
+// Project detail (with member_count and invite_count)
 export interface ProjectDTO {
   id: string;
   name: string;
@@ -42,7 +59,7 @@ export interface UpdateProjectRequestDTO {
 
 // Paginated response
 export interface PaginatedProjectsDTO {
-  data: ProjectDTO[];
+  data: ProjectListItemDTO[];
   total: number;
   page: number;
   limit: number;

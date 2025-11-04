@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ProjectId } from "~/domains/project/domain/entities/Project";
 import type { UpdateProjectData } from "~/domains/project/domain/repositories/ProjectRepository";
-import { UpdateProjectUseCase } from "../use-cases/UpdateProject";
 import { ApiProjectRepository } from "~/domains/project/infrastructure/repositories/ApiProjectRepository";
+import { queryKeys } from "~/shared/constants/queryKeys";
+import { UpdateProjectUseCase } from "../../use-cases/UpdateProject";
 
 const repository = new ApiProjectRepository();
 const updateProjectUseCase = new UpdateProjectUseCase(repository);
@@ -20,8 +21,10 @@ export function useUpdateProjectMutation() {
       updateProjectUseCase.execute(id, data),
     onSuccess: (_, variables) => {
       // Invalidate specific project and list cache
-      queryClient.invalidateQueries({ queryKey: ["projects", variables.id] });
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.projects.detail(variables.id),
+      });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all });
     },
   });
 }

@@ -9,6 +9,7 @@ Hướng dẫn chi tiết để implement UI components và features trong PM To
 ### Bước 1: Phân Tích Requirements
 
 **Xác định rõ**:
+
 - [ ] Feature thuộc domain nào? (auth, backlog, project, ...)
 - [ ] Có cần entities mới không?
 - [ ] Có cần API integration không?
@@ -19,6 +20,7 @@ Hướng dẫn chi tiết để implement UI components và features trong PM To
 ### Bước 2: Domain Layer Setup
 
 **2.1. Tạo Entity** (nếu cần):
+
 ```typescript
 // app/domains/{domain}/domain/entities/{Entity}.ts
 export type {Entity}Id = string;
@@ -60,6 +62,7 @@ export class {Entity}Entity {
 ```
 
 **2.2. Tạo Repository Interface**:
+
 ```typescript
 // app/domains/{domain}/domain/repositories/{Entity}Repository.ts
 import type { {Entity}Entity } from "../entities/{Entity}";
@@ -73,6 +76,7 @@ export interface {Entity}Repository {
 ```
 
 **2.3. Tạo Validation Schema**:
+
 ```typescript
 // app/domains/{domain}/domain/validation/{domain}.schema.ts
 import * as v from "valibot";
@@ -103,6 +107,7 @@ export const createCreate{Entity}Schema = (t: TFunction) => {
 ### Bước 3: Application Layer Setup
 
 **3.1. Tạo DTOs**:
+
 ```typescript
 // app/domains/{domain}/application/dto/{Entity}DTO.ts
 export interface {Entity}DTO {
@@ -125,6 +130,7 @@ export interface Update{Entity}Request {
 ```
 
 **3.2. Tạo Mapper**:
+
 ```typescript
 // app/domains/{domain}/application/mappers/{Entity}Mapper.ts
 import { {Entity}Entity } from "~/domains/{domain}/domain/entities/{Entity}";
@@ -159,6 +165,7 @@ export class {Entity}Mapper {
 ```
 
 **3.3. Tạo Use Cases**:
+
 ```typescript
 // app/domains/{domain}/application/use-cases/Create{Entity}.ts
 import type { {Entity}Repository } from "~/domains/{domain}/domain/repositories/{Entity}Repository";
@@ -202,6 +209,7 @@ export class List{Entity}sUseCase {
 **3.4. Tạo Custom Hooks**:
 
 **Query Hook**:
+
 ```typescript
 // app/domains/{domain}/application/hooks/useList{Entity}sQuery.ts
 import { useQuery } from "@tanstack/react-query";
@@ -217,6 +225,7 @@ export function useList{Entity}sQuery() {
 ```
 
 **Mutation Hook**:
+
 ```typescript
 // app/domains/{domain}/application/hooks/useCreate{Entity}Mutation.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -238,6 +247,7 @@ export function useCreate{Entity}Mutation() {
 ```
 
 **Form Hook**:
+
 ```typescript
 // app/domains/{domain}/application/hooks/useCreate{Entity}Form.ts
 import { useForm } from "@tanstack/react-form";
@@ -282,6 +292,7 @@ export function useCreate{Entity}Form() {
 ### Bước 4: Infrastructure Layer Setup
 
 **4.1. Define Endpoints**:
+
 ```typescript
 // app/domains/{domain}/infrastructure/endpoints.ts
 export const {DOMAIN}_ENDPOINTS = {
@@ -294,6 +305,7 @@ export const {DOMAIN}_ENDPOINTS = {
 ```
 
 **4.2. Implement API Repository**:
+
 ```typescript
 // app/domains/{domain}/infrastructure/repositories/Api{Entity}Repository.ts
 import type { {Entity}Repository } from "~/domains/{domain}/domain/repositories/{Entity}Repository";
@@ -335,6 +347,7 @@ export class Api{Entity}Repository implements {Entity}Repository {
 ```
 
 **4.3. Create Fake Repository (cho development)**:
+
 ```typescript
 // app/domains/{domain}/infrastructure/repositories/Fake{Entity}Repository.ts
 import type { {Entity}Repository } from "~/domains/{domain}/domain/repositories/{Entity}Repository";
@@ -364,6 +377,7 @@ export class Fake{Entity}Repository implements {Entity}Repository {
 ### Bước 5: UI Layer Implementation
 
 **5.1. Tạo Atoms** (nếu cần components mới):
+
 ```typescript
 // app/shared/components/atoms/{ComponentName}.tsx
 interface {ComponentName}Props {
@@ -383,6 +397,7 @@ export function {ComponentName}({ className, ...props }: {ComponentName}Props) {
 **5.2. Tạo Domain-Specific Components**:
 
 **Card Component**:
+
 ```typescript
 // app/domains/{domain}/ui/components/atoms/{Entity}Card.tsx
 import { Card } from "~/shared/components/atoms/Card";
@@ -421,6 +436,7 @@ export function {Entity}Card({ {entity}, onEdit, onDelete }: {Entity}CardProps) 
 ```
 
 **List Component**:
+
 ```typescript
 // app/domains/{domain}/ui/components/molecules/{Entity}List.tsx
 import { {Entity}Card } from "../atoms/{Entity}Card";
@@ -457,6 +473,7 @@ export function {Entity}List({ {entity}s, onEdit, onDelete }: {Entity}ListProps)
 ```
 
 **Form Component**:
+
 ```typescript
 // app/domains/{domain}/ui/components/molecules/Create{Entity}Form.tsx
 import { useTranslation } from "react-i18next";
@@ -513,6 +530,7 @@ export function Create{Entity}Form() {
 **5.3. Tạo Screens**:
 
 **List Screen**:
+
 ```typescript
 // app/domains/{domain}/ui/screens/{Entity}List.tsx
 import { useTranslation } from "react-i18next";
@@ -570,6 +588,7 @@ export default function {Entity}ListScreen() {
 ```
 
 **Create/Edit Screen**:
+
 ```typescript
 // app/domains/{domain}/ui/screens/Create{Entity}.tsx
 import { useTranslation } from "react-i18next";
@@ -594,6 +613,7 @@ export default function Create{Entity}Screen() {
 ### Bước 6: Routing & Navigation
 
 **6.1. Add Routes**:
+
 ```typescript
 // app/routes.ts
 import { type RouteConfig, index, route } from "@react-router/dev/routes";
@@ -602,12 +622,19 @@ export default [
   // ... existing routes
 
   route("/{entity}s", "./domains/{domain}/ui/screens/{Entity}List.tsx"),
-  route("/{entity}s/create", "./domains/{domain}/ui/screens/Create{Entity}.tsx"),
-  route("/{entity}s/:id/edit", "./domains/{domain}/ui/screens/Edit{Entity}.tsx"),
+  route(
+    "/{entity}s/create",
+    "./domains/{domain}/ui/screens/Create{Entity}.tsx"
+  ),
+  route(
+    "/{entity}s/:id/edit",
+    "./domains/{domain}/ui/screens/Edit{Entity}.tsx"
+  ),
 ] satisfies RouteConfig;
 ```
 
 **6.2. Add Navigation Links**:
+
 ```typescript
 // app/shared/components/layout/AppSidebar.tsx (hoặc AppHeader)
 <Link to="/{entity}s" className="nav-link">
@@ -618,6 +645,7 @@ export default [
 ### Bước 7: Internationalization
 
 **Add Translation Keys**:
+
 ```json
 // app/locale/vi.json
 {
@@ -656,6 +684,7 @@ pnpm check-all
 ### Form Field với TanStack Form
 
 **Basic Input**:
+
 ```typescript
 <form.Field name="fieldName">
   {(field) => (
@@ -671,6 +700,7 @@ pnpm check-all
 ```
 
 **Textarea**:
+
 ```typescript
 <form.Field name="description">
   {(field) => (
@@ -685,6 +715,7 @@ pnpm check-all
 ```
 
 **Select**:
+
 ```typescript
 <form.Field name="status">
   {(field) => (
@@ -702,6 +733,7 @@ pnpm check-all
 ```
 
 **Date Picker**:
+
 ```typescript
 <form.Field name="dueDate">
   {(field) => (
@@ -855,11 +887,13 @@ if (items.length === 0) {
 Khi implement feature mới, check tất cả các items sau:
 
 ### Domain Layer
+
 - [ ] Entity created with business logic
 - [ ] Repository interface defined
 - [ ] Validation schema created with i18n
 
 ### Application Layer
+
 - [ ] DTOs defined (Request/Response)
 - [ ] Mapper created (Entity ↔ DTO)
 - [ ] Use cases implemented
@@ -868,11 +902,13 @@ Khi implement feature mới, check tất cả các items sau:
 - [ ] Form hook created (với TanStack Form)
 
 ### Infrastructure Layer
+
 - [ ] Endpoints defined
 - [ ] API Repository implemented
 - [ ] Fake Repository created (cho dev)
 
 ### UI Layer
+
 - [ ] Atoms created (nếu cần)
 - [ ] Domain components created (Card, List, Form)
 - [ ] Screens created (List, Create, Edit)
@@ -880,11 +916,13 @@ Khi implement feature mới, check tất cả các items sau:
 - [ ] Loading/Error/Empty states handled
 
 ### Integration
+
 - [ ] Routes added to `app/routes.ts`
 - [ ] Navigation links added
 - [ ] Translation keys added to `app/locale/vi.json`
 
 ### Quality
+
 - [ ] `pnpm check-all` passed
 - [ ] No TypeScript errors
 - [ ] No ESLint warnings
@@ -930,6 +968,7 @@ Nếu feature chủ yếu là forms:
 ### ❌ Pitfall 1: Business Logic trong UI
 
 **Wrong**:
+
 ```typescript
 // In component
 const [filtered, setFiltered] = useState([]);
@@ -939,6 +978,7 @@ useEffect(() => {
 ```
 
 **Right**:
+
 ```typescript
 // Move to hook
 const { filteredTasks } = useFilterTasks(tasks);
@@ -947,6 +987,7 @@ const { filteredTasks } = useFilterTasks(tasks);
 ### ❌ Pitfall 2: Direct API Calls trong Component
 
 **Wrong**:
+
 ```typescript
 // In component
 const handleSubmit = async () => {
@@ -955,6 +996,7 @@ const handleSubmit = async () => {
 ```
 
 **Right**:
+
 ```typescript
 // Use hook → use case → repository
 const { mutate } = useCreateTaskMutation();
@@ -964,11 +1006,13 @@ const handleSubmit = () => mutate(data);
 ### ❌ Pitfall 3: Hardcoded Strings
 
 **Wrong**:
+
 ```typescript
 <button>Create Task</button>
 ```
 
 **Right**:
+
 ```typescript
 <button>{t("task.create")}</button>
 ```
@@ -976,12 +1020,14 @@ const handleSubmit = () => mutate(data);
 ### ❌ Pitfall 4: Missing Error Handling
 
 **Wrong**:
+
 ```typescript
 const { data } = useQuery();
 return <List items={data} />; // data might be undefined
 ```
 
 **Right**:
+
 ```typescript
 const { data, isLoading, error } = useQuery();
 if (isLoading) return <Loading />;
@@ -994,11 +1040,13 @@ return <List items={data || []} />;
 ## 🎓 Learning Resources
 
 ### Internal References
+
 - Check existing domains: `auth`, `backlog`, `project`
 - Reuse patterns from shared components
 - Follow established validation patterns
 
 ### External Resources
+
 - [TanStack Form Docs](https://tanstack.com/form)
 - [TanStack Query Docs](https://tanstack.com/query)
 - [Valibot Docs](https://valibot.dev)

@@ -1,15 +1,22 @@
 import type {
-  ProjectRepository,
-  CreateProjectData,
-  UpdateProjectData,
-  ProjectFilters,
-  PaginatedProjects,
-} from "~/domains/project/domain/repositories/ProjectRepository";
-import type { ProjectId } from "~/domains/project/domain/entities/Project";
-import { ProjectEntity } from "~/domains/project/domain/entities/Project";
-import type { ProjectDTO, CreateProjectRequestDTO, UpdateProjectRequestDTO, PaginatedProjectsDTO } from "~/domains/project/application/dto/ProjectDTO";
+  CreateProjectRequestDTO,
+  PaginatedProjectsDTO,
+  ProjectDTO,
+  ProjectListItemDTO,
+  UpdateProjectRequestDTO,
+} from "~/domains/project/application/dto/ProjectDTO";
 import { ProjectMapper } from "~/domains/project/application/mappers/ProjectMapper";
-import { apiClient } from "~/shared/utils/api";
+import { ProjectEntity } from "~/domains/project/domain/entities/Project";
+import { ProjectListItemEntity } from "~/domains/project/domain/entities/ProjectListItem";
+import type { ProjectId } from "~/domains/project/domain/entities/types";
+import type {
+  CreateProjectData,
+  PaginatedProjects,
+  ProjectFilters,
+  ProjectRepository,
+  UpdateProjectData,
+} from "~/domains/project/domain/repositories/ProjectRepository";
+import { ApiException, apiRequest } from "~/shared/utils/api";
 import { PROJECT_ENDPOINTS } from "../endpoints";
 
 export class ApiProjectRepository implements ProjectRepository {
@@ -25,38 +32,38 @@ export class ApiProjectRepository implements ProjectRepository {
     if (filters?.limit) params.append("limit", filters.limit.toString());
 
     const url = `${PROJECT_ENDPOINTS.LIST}${params.toString() ? `?${params.toString()}` : ""}`;
-    const response = await apiClient.get<PaginatedProjectsDTO>(url);
+    const response = await apiRequest<PaginatedProjectsDTO>(url);
 
     return {
-      data: ProjectMapper.toEntityList(response.data.data),
-      total: response.data.total,
-      page: response.data.page,
-      limit: response.data.limit,
-      totalPages: response.data.total_pages,
+      data: ProjectMapper.toListItemEntityList(response.data),
+      total: response.total,
+      page: response.page,
+      limit: response.limit,
+      totalPages: response.total_pages,
     };
   }
 
   async findById(id: ProjectId): Promise<ProjectEntity | null> {
     try {
       const url = PROJECT_ENDPOINTS.GET.replace(":id", id);
-      const response = await apiClient.get<ProjectDTO>(url);
-      return ProjectMapper.toEntity(response.data);
-    } catch (error: any) {
-      if (error.response?.status === 404) {
+      const response = await apiRequest<ProjectDTO>(url);
+      return ProjectMapper.toEntity(response);
+    } catch (error: unknown) {
+      if (error instanceof ApiException && error.statusCode === 404) {
         return null;
       }
       throw error;
     }
   }
 
-  async findMemberOf(): Promise<ProjectEntity[]> {
-    const response = await apiClient.get<{ data: ProjectDTO[] }>(
+  async findMemberOf(): Promise<ProjectListItemEntity[]> {
+    const response = await apiRequest<{ data: ProjectListItemDTO[] }>(
       PROJECT_ENDPOINTS.MEMBER_OF
     );
-    return ProjectMapper.toEntityList(response.data.data);
+    return ProjectMapper.toListItemEntityList(response.data);
   }
 
-  async create(data: CreateProjectData): Promise<ProjectEntity> {
+  async create(data: CreateProjectData): Promise<string> {
     const requestData: CreateProjectRequestDTO = {
       name: data.name,
       description: data.description,
@@ -65,15 +72,18 @@ export class ApiProjectRepository implements ProjectRepository {
       end_date: data.endDate,
     };
 
-    const response = await apiClient.post<ProjectDTO>(
+    const response = await apiRequest<{ id: string }>(
       PROJECT_ENDPOINTS.CREATE,
-      requestData
+      {
+        method: "POST",
+        data: requestData,
+      }
     );
 
-    return ProjectMapper.toEntity(response.data);
+    return response.id;
   }
 
-  async update(id: ProjectId, data: UpdateProjectData): Promise<ProjectEntity> {
+  async update(id: ProjectId, data: UpdateProjectData): Promise<string> {
     const url = PROJECT_ENDPOINTS.UPDATE.replace(":id", id);
 
     const requestData: UpdateProjectRequestDTO = {
@@ -85,13 +95,18 @@ export class ApiProjectRepository implements ProjectRepository {
       end_date: data.endDate,
     };
 
-    const response = await apiClient.patch<ProjectDTO>(url, requestData);
+    const response = await apiRequest<{ id: string }>(url, {
+      method: "PATCH",
+      data: requestData,
+    });
 
-    return ProjectMapper.toEntity(response.data);
+    return response.id;
   }
 
-  async delete(id: ProjectId): Promise<void> {
+  async delete(id: ProjectId): Promise<{ success: boolean }> {
     const url = PROJECT_ENDPOINTS.DELETE.replace(":id", id);
-    await apiClient.delete(url);
+    return await apiRequest<{ success: boolean }>(url, {
+      method: "DELETE",
+    });
   }
 }

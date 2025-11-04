@@ -2,8 +2,8 @@ import { Flex } from "@radix-ui/themes";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useEditProjectForm } from "~/domains/project/application/hooks/useEditProjectForm";
-import type { ProjectFormSubmitData } from "~/domains/project/application/hooks/useProjectForm";
-import type { ProjectFormData } from "~/domains/project/domain/validation/project.schema";
+import type { ProjectId } from "~/domains/project/domain/entities/Project";
+import type { UpdateProjectFormData } from "~/domains/project/domain/validation/project.schema";
 import { Button } from "~/shared/components/atoms/Button";
 import {
   Dialog,
@@ -15,26 +15,27 @@ import { ProjectFormFields } from "./ProjectFormFields";
 export interface EditProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  projectId: ProjectId;
   project: {
     name: string;
     description?: string;
     startDate?: string;
     endDate?: string;
     tags?: string;
+    status?: string;
   };
-  onSubmit?: (data: ProjectFormSubmitData) => void;
 }
 
 export function EditProjectDialog({
   open,
   onOpenChange,
+  projectId,
   project,
-  onSubmit,
 }: EditProjectDialogProps) {
   const { t } = useTranslation();
 
   // Convert project data to form format (dates need to be in YYYY-MM-DD format)
-  const initialValues: Partial<ProjectFormData> = {
+  const initialValues: Partial<UpdateProjectFormData> = {
     name: project.name,
     description: project.description || "",
     startDate: project.startDate
@@ -42,41 +43,40 @@ export function EditProjectDialog({
       : "",
     endDate: project.endDate ? dayjs(project.endDate).format("YYYY-MM-DD") : "",
     tags: project.tags || "",
+    status:
+      (project.status as "ACTIVE" | "INACTIVE" | "COMPLETED" | "CANCELLED") ||
+      "ACTIVE",
   };
 
-  const { form, isSubmitting, handleCancel, startDateParsed, endDateParsed } =
+  const { form, isSubmitting, startDateParsed, endDateParsed } =
     useEditProjectForm({
+      projectId,
       initialValues,
-      onSubmit,
       onSuccess: () => {
         onOpenChange(false);
       },
     });
 
-  const handleCancelClick = () => {
-    handleCancel();
+  const handleCancel = () => {
+    form.reset();
     onOpenChange(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    form.handleSubmit();
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        title={t("project.editDialog.title", {
-          defaultValue: "Chỉnh sửa dự án",
-        })}
-        description={t("project.editDialog.description", {
-          defaultValue: "Cập nhật thông tin dự án",
-        })}
+        title={t("project.editDialog.title")}
+        description={t("project.editDialog.description")}
         size="4"
         maxWidth="600px"
       >
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <ProjectFormFields
             form={form}
             startDateParsed={startDateParsed}
@@ -88,15 +88,13 @@ export function EditProjectDialog({
               <Button
                 type="button"
                 variant="soft"
-                onClick={handleCancelClick}
+                onClick={handleCancel}
                 disabled={isSubmitting}
               >
                 {t("common.cancel")}
               </Button>
               <Button type="submit" disabled={isSubmitting} variant="solid">
-                {t("project.editDialog.submitButton", {
-                  defaultValue: "Lưu",
-                })}
+                {t("project.editDialog.submitButton")}
               </Button>
             </Flex>
           </DialogFooter>

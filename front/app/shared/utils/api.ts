@@ -34,7 +34,7 @@ export function setUnauthorizedCallback(callback: () => void) {
 }
 
 // Create Axios instance
-export const apiClient: AxiosInstance = axios.create({
+const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   // Let axios infer Content-Type; we'll only add when needed
   withCredentials: false,

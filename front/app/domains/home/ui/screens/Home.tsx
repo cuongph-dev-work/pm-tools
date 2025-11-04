@@ -12,10 +12,18 @@ export default function Home() {
         <h1 className="text-5xl font-bold text-gray-900 mb-6">
           {t("home.title")}
         </h1>
-        <Text as="p" size="5" className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+        <Text
+          as="p"
+          size="5"
+          className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto"
+        >
           {t("home.subtitle")}
         </Text>
-        <Text as="p" size="4" className="text-lg text-gray-500 mb-8 max-w-2xl mx-auto">
+        <Text
+          as="p"
+          size="4"
+          className="text-lg text-gray-500 mb-8 max-w-2xl mx-auto"
+        >
           {t("home.description")}
         </Text>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

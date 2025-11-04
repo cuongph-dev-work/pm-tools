@@ -1,10 +1,14 @@
 import { useForm } from "@tanstack/react-form";
-import { valibotValidator } from "@tanstack/valibot-form-adapter";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { ProjectId } from "~/domains/project/domain/entities/Project";
-import { updateProjectSchema, type UpdateProjectFormData } from "~/domains/project/domain/validation/project.schema";
-import { useUpdateProjectMutation } from "./useUpdateProjectMutation";
-import { ProjectMapper } from "../mappers/ProjectMapper";
+import {
+  updateProjectSchema,
+  type UpdateProjectFormData,
+} from "~/domains/project/domain/validation/project.schema";
+import type { AnyFormApi } from "~/shared/components/molecules/form-field/types";
+import { parseToNativeDate } from "~/shared/utils/date";
+import { useUpdateProjectMutation } from "./mutation/update.mutation";
 
 export interface UseEditProjectFormOptions {
   projectId: ProjectId;
@@ -29,25 +33,33 @@ export function useEditProjectForm({
       startDate: initialValues.startDate || "",
       endDate: initialValues.endDate || "",
     } as UpdateProjectFormData,
-    validatorAdapter: valibotValidator(),
     validators: {
       onSubmit: updateProjectSchema(t),
-    },
-    onSubmit: async ({ value }) => {
-      try {
-        const requestData = ProjectMapper.toUpdateRequestDTO(value);
-        await updateMutation.mutateAsync({ id: projectId, data: requestData });
+      onSubmitAsync: async ({ value }) => {
+        await updateMutation.mutateAsync({
+          id: projectId,
+          data: value,
+        });
         onSuccess?.();
-      } catch (error) {
-        console.error("Failed to update project:", error);
-        throw error;
-      }
+      },
     },
   });
 
+  const startDateParsed = useMemo(
+    () => parseToNativeDate(form.state.values.startDate),
+    [form.state.values.startDate]
+  );
+
+  const endDateParsed = useMemo(
+    () => parseToNativeDate(form.state.values.endDate),
+    [form.state.values.endDate]
+  );
+
   return {
-    form,
+    form: form as unknown as AnyFormApi,
     isSubmitting: updateMutation.isPending,
     error: updateMutation.error,
+    startDateParsed,
+    endDateParsed,
   };
 }

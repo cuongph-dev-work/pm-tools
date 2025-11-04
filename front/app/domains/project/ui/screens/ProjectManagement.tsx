@@ -4,17 +4,21 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/shared/components/atoms/Button";
 import { Tabs } from "~/shared/components/atoms/Tabs";
+import { useDeleteProject } from "../../application/hooks/useDeleteProject";
 import { useListProjects } from "../../application/hooks/useListProjects";
 import { useProjectMembers } from "../../application/hooks/useProjectMembers";
 import MemberList from "../components/atoms/MemberList";
 import ProjectList from "../components/atoms/ProjectList";
 import { CreateProjectDialog } from "../components/molecules/CreateProjectDialog";
+import { EditProjectDialog } from "../components/molecules/EditProjectDialog";
 
 export default function ProjectManagement() {
   const { t } = useTranslation();
+  const { deleteProject } = useDeleteProject();
   const { projects, currentProject, setSelectedProjectId } = useListProjects();
   const { members } = useProjectMembers(currentProject?.id);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
 
   return (
     <Box className="mx-auto" p="6">
@@ -65,8 +69,8 @@ export default function ProjectManagement() {
                   projects={projects}
                   currentProjectId={currentProject?.id || null}
                   onSelect={setSelectedProjectId}
-                  onEdit={() => {}}
-                  onDelete={(_: string) => {}}
+                  onEdit={setEditingProjectId}
+                  onDelete={deleteProject}
                 />
               </Box>
             )}
@@ -88,7 +92,7 @@ export default function ProjectManagement() {
                     </Box>
                     <Box className="text-sm text-gray-600">
                       {t("project.memberCount", {
-                        count: currentProject.memberCount,
+                        count: 0,
                       })}
                     </Box>
                   </Box>
@@ -107,6 +111,27 @@ export default function ProjectManagement() {
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
       />
+
+      {editingProjectId &&
+        (() => {
+          const project = projects.find(p => p.id === editingProjectId);
+          if (!project) return null;
+          return (
+            <EditProjectDialog
+              open={!!editingProjectId}
+              onOpenChange={open => !open && setEditingProjectId(null)}
+              projectId={editingProjectId}
+              project={{
+                name: project.name,
+                description: project.description,
+                startDate: project.startDate ?? undefined,
+                endDate: project.endDate ?? undefined,
+                tags: project.tags.join(", "),
+                status: project.status,
+              }}
+            />
+          );
+        })()}
     </Box>
   );
 }

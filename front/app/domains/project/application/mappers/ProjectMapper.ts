@@ -1,9 +1,40 @@
-import { ProjectEntity, type ProjectOwner } from "../../domain/entities/Project";
-import type { ProjectDTO, ProjectOwnerDTO, CreateProjectRequestDTO, UpdateProjectRequestDTO } from "../dto/ProjectDTO";
-import type { CreateProjectFormData, UpdateProjectFormData } from "../../domain/validation/project.schema";
+import {
+  ProjectEntity,
+  type ProjectOwner,
+} from "../../domain/entities/Project";
+import { ProjectListItemEntity } from "../../domain/entities/ProjectListItem";
+import type {
+  ProjectDTO,
+  ProjectListItemDTO,
+  ProjectOwnerDTO,
+  CreateProjectRequestDTO,
+  UpdateProjectRequestDTO,
+} from "../dto/ProjectDTO";
+import type {
+  CreateProjectFormData,
+  UpdateProjectFormData,
+} from "../../domain/validation/project.schema";
 
 export class ProjectMapper {
-  // DTO to Entity
+  // List Item DTO to List Item Entity
+  static toListItemEntity(dto: ProjectListItemDTO): ProjectListItemEntity {
+    return new ProjectListItemEntity({
+      id: dto.id,
+      name: dto.name,
+      description: dto.description,
+      tags: dto.tags,
+      status: dto.status,
+      startDate: dto.start_date,
+      endDate: dto.end_date,
+      owner: this.mapOwner(dto.owner),
+      createdAt: dto.created_at,
+      updatedAt: dto.updated_at,
+      memberCount: dto.member_count,
+      inviteCount: dto.invite_count,
+    });
+  }
+
+  // DTO to Entity (for detail with member_count and invite_count)
   static toEntity(dto: ProjectDTO): ProjectEntity {
     return new ProjectEntity({
       id: dto.id,
@@ -40,7 +71,9 @@ export class ProjectMapper {
   }
 
   // Form Data to Create Request DTO
-  static toCreateRequestDTO(formData: CreateProjectFormData): CreateProjectRequestDTO {
+  static toCreateRequestDTO(
+    formData: CreateProjectFormData
+  ): CreateProjectRequestDTO {
     return {
       name: formData.name,
       description: formData.description,
@@ -51,7 +84,9 @@ export class ProjectMapper {
   }
 
   // Form Data to Update Request DTO
-  static toUpdateRequestDTO(formData: UpdateProjectFormData): UpdateProjectRequestDTO {
+  static toUpdateRequestDTO(
+    formData: UpdateProjectFormData
+  ): UpdateProjectRequestDTO {
     return {
       name: formData.name,
       description: formData.description,
@@ -84,12 +119,19 @@ export class ProjectMapper {
     };
   }
 
-  // Batch mapping
+  // Batch mapping for list items
+  static toListItemEntityList(
+    dtos: ProjectListItemDTO[]
+  ): ProjectListItemEntity[] {
+    return dtos.map(dto => this.toListItemEntity(dto));
+  }
+
+  // Batch mapping for detail entities
   static toEntityList(dtos: ProjectDTO[]): ProjectEntity[] {
-    return dtos.map((dto) => this.toEntity(dto));
+    return dtos.map(dto => this.toEntity(dto));
   }
 
   static toDTOList(entities: ProjectEntity[]): ProjectDTO[] {
-    return entities.map((entity) => this.toDTO(entity));
+    return entities.map(entity => this.toDTO(entity));
   }
 }

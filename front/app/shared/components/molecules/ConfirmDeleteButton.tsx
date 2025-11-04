@@ -10,6 +10,7 @@ export interface ConfirmDeleteButtonProps {
   onConfirm: () => void;
   onCancel?: () => void;
   children?: React.ReactNode;
+  isLoading?: boolean;
 }
 
 export function ConfirmDeleteButton({
@@ -20,6 +21,7 @@ export function ConfirmDeleteButton({
   onConfirm,
   onCancel,
   children,
+  isLoading,
 }: ConfirmDeleteButtonProps) {
   const { t } = useTranslation();
 
@@ -51,7 +53,13 @@ export function ConfirmDeleteButton({
             </Button>
           </AlertDialog.Cancel>
           <AlertDialog.Action>
-            <Button variant="solid" color="red" onClick={handleConfirm}>
+            <Button
+              variant="solid"
+              color="red"
+              onClick={handleConfirm}
+              disabled={isLoading}
+              loading={isLoading}
+            >
               {defaultConfirmText}
             </Button>
           </AlertDialog.Action>

@@ -157,7 +157,8 @@
     "cancel": "Hủy",
     "createSuccess": "Dự án đã được tạo thành công",
     "updateSuccess": "Dự án đã được cập nhật thành công",
-    "deleteSuccess": "Dự án đã được xóa thành công"
+    "deleteSuccess": "Dự án đã được xóa thành công",
+    "noDescription": "Chưa có mô tả"
   },
   "errors": {
     "notFound": "Không tìm thấy trang",

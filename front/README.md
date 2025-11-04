@@ -88,6 +88,7 @@ front/
 ### 1. Clean Architecture / Hexagonal Architecture
 
 Tách biệt rõ ràng giữa các layers:
+
 - Domain độc lập với framework và UI
 - Application layer orchestrate use cases
 - Infrastructure implement các ports
@@ -130,6 +131,7 @@ export class ListProjectsUseCase {
 ### 5. State Management (Zustand)
 
 Stores trong `shared/stores/`:
+
 - `authStore.ts`: Authentication state
 - `projectStore.ts`: Project state
 - `taskStore.ts`: Task state
@@ -280,6 +282,7 @@ docker run -p 3000:3000 pm-tools-frontend
 ### Production Build
 
 Build output:
+
 ```
 build/
 ├── client/    # Static assets

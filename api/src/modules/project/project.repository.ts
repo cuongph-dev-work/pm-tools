@@ -54,7 +54,18 @@ export class ProjectRepository extends EntityRepository<Project> {
     const [total, projects] = await Promise.all([clonedQb.getCount(), qb.getResult()]);
 
     return {
-      data: projects.map(project => plainToInstance(ProjectResponseDto, project)),
+      data: projects.map(project => {
+        const members = project.members?.getItems();
+        const invites = project.invites?.getItems();
+        const memberCount = members?.filter(member => member.status === 'ACTIVE').length;
+        const inviteCount = invites?.filter(invite => invite.status === 'PENDING').length;
+
+        return plainToInstance(ProjectResponseDto, {
+          ...project,
+          member_count: memberCount,
+          invite_count: inviteCount,
+        });
+      }),
       total,
       page,
       limit,
@@ -104,12 +115,7 @@ export class ProjectRepository extends EntityRepository<Project> {
 
   async createPrjAndAddMember(payload: Project, currentUser: User) {
     return this.em.transactional(async em => {
-      const project = new Project();
-      project.name = payload.name;
-      project.description = payload.description;
-      project.owner = currentUser;
-      project.tags = payload.tags;
-
+      const project = em.create(Project, payload);
       await em.persistAndFlush(project);
 
       const member = new ProjectMember();

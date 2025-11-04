@@ -3,7 +3,6 @@ import { BeforeCreate, BeforeUpdate, Entity, Enum, Filter, ManyToOne, OneToMany,
 import * as bcrypt from 'bcryptjs';
 import { WrapperType } from 'src/types/request.type';
 import { BaseEntity } from './base.abstract';
-import { FileStorage } from './file-storage.entity';
 import { GitAlertRecipient } from './git-alert-recipient.entity';
 import { ProjectInviteMember } from './project-invite-member.entity';
 import { ProjectMember } from './project-member.entity';
@@ -48,8 +47,8 @@ export class User extends BaseEntity {
   /**
    * ID of the user's avatar/profile image
    */
-  @ManyToOne(() => FileStorage, { nullable: true })
-  avatar?: Opt<FileStorage>;
+  @ManyToOne('FileStorage', { nullable: true })
+  avatar?: Opt<any>;
 
   /**
    * User's first name

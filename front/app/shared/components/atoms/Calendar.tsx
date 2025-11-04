@@ -492,9 +492,9 @@ export const Calendar = React.memo(function Calendar({
       ),
       day_range_end: "day-range-end",
       day_selected:
-        "!bg-[var(--accent-9)] !text-white !font-semibold !shadow-md",
+        "!bg-[var(--accent-9)] !text-white !font-semibold !shadow-md !ring-0",
       day_today:
-        "!bg-transparent !text-[var(--accent-11)] !font-bold !ring-2 !ring-[var(--accent-9)] !ring-inset",
+        "bg-transparent text-[var(--accent-11)] font-bold ring-2 ring-[var(--accent-9)] ring-inset",
       day_outside:
         "text-[var(--gray-a9)] opacity-40 aria-selected:bg-[var(--accent-a2)] aria-selected:text-[var(--accent-a11)]",
       day_disabled:
@@ -541,8 +541,9 @@ export const Calendar = React.memo(function Calendar({
     () => ({
       sunday: "!text-[var(--accent-9)] font-semibold",
       today:
-        "!bg-transparent !text-[var(--accent-11)] !font-bold !ring-2 !ring-[var(--accent-9)] !ring-inset",
-      selected: "!bg-[var(--accent-9)] !text-white !font-semibold !shadow-md",
+        "bg-transparent text-[var(--accent-11)] font-bold ring-2 ring-[var(--accent-9)] ring-inset",
+      selected:
+        "!bg-[var(--accent-9)] !text-white !font-semibold !shadow-md !ring-0",
     }),
     []
   );

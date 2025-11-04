@@ -1,4 +1,6 @@
-import { ProjectEntity, type ProjectId } from "../entities/Project";
+import { ProjectEntity } from "../entities/Project";
+import { ProjectListItemEntity } from "../entities/ProjectListItem";
+import type { ProjectId } from "../entities/types";
 
 export interface CreateProjectData {
   name: string;
@@ -28,7 +30,7 @@ export interface ProjectFilters {
 }
 
 export interface PaginatedProjects {
-  data: ProjectEntity[];
+  data: ProjectListItemEntity[];
   total: number;
   page: number;
   limit: number;
@@ -38,8 +40,8 @@ export interface PaginatedProjects {
 export interface ProjectRepository {
   findAll(filters?: ProjectFilters): Promise<PaginatedProjects>;
   findById(id: ProjectId): Promise<ProjectEntity | null>;
-  findMemberOf(): Promise<ProjectEntity[]>;
-  create(data: CreateProjectData): Promise<ProjectEntity>;
-  update(id: ProjectId, data: UpdateProjectData): Promise<ProjectEntity>;
-  delete(id: ProjectId): Promise<void>;
+  findMemberOf(): Promise<ProjectListItemEntity[]>;
+  create(data: CreateProjectData): Promise<string>;
+  update(id: ProjectId, data: UpdateProjectData): Promise<string>;
+  delete(id: ProjectId): Promise<{ success: boolean }>;
 }

@@ -67,6 +67,7 @@ app/
 ### 1. Clean Architecture Layers
 
 **🔴 CRITICAL - Dependency Rule**: Dependencies chỉ chảy từ ngoài vào trong
+
 ```
 UI → Application → Domain ← Infrastructure
      ↓             ↓
@@ -96,6 +97,7 @@ UI → Application → Domain ← Infrastructure
 ### 2. Domain-Driven Design Patterns
 
 **Entities**:
+
 ```typescript
 // app/domains/{domain}/domain/entities/{Entity}.ts
 export type {Entity}Id = string;
@@ -123,6 +125,7 @@ export class {Entity}Entity {
 ```
 
 **Repository Pattern**:
+
 ```typescript
 // Domain: Define interface
 export interface {Entity}Repository {
@@ -139,6 +142,7 @@ export class Api{Entity}Repository implements {Entity}Repository {
 ```
 
 **Use Cases**:
+
 ```typescript
 // app/domains/{domain}/application/use-cases/{Action}{Entity}.ts
 export class {Action}{Entity}UseCase {
@@ -153,6 +157,7 @@ export class {Action}{Entity}UseCase {
 ### 3. Cross-Domain Communication
 
 **🟡 IMPORTANT Rules**:
+
 - ✅ Domains có thể gọi use cases của domain khác qua Application Layer
 - ✅ Sử dụng DTOs để truyền data giữa domains
 - ❌ KHÔNG truy cập trực tiếp entities của domain khác
@@ -165,23 +170,27 @@ export class {Action}{Entity}UseCase {
 ### Shared Components Structure
 
 **Atoms** (`app/shared/components/atoms/`):
+
 - Basic HTML elements với styling
 - Không chứa business logic
 - Highly reusable
 - Examples: Button, TextInput, Select, DatePicker, Card
 
 **Molecules** (`app/shared/components/molecules/`):
+
 - Kết hợp nhiều atoms
 - Logic đơn giản, tái sử dụng cao
 - Examples: FormFieldInput, FormFieldSelect, ConfirmDeleteButton
 
 **Layout** (`app/shared/components/layout/`):
+
 - Structural components
 - Examples: AppHeader, AppSidebar
 
 ### Domain-Specific Components
 
 **Placement Rule**:
+
 - ✅ Component dùng cho 1 domain → `app/domains/{domain}/ui/components/`
 - ✅ Component dùng cho nhiều domains → `app/shared/components/`
 - ✅ Follow Atomic Design: atoms/ và molecules/ trong domain
@@ -241,11 +250,11 @@ Endpoints: endpoints.ts (trong mỗi domain infrastructure)
 ```typescript
 // Components: PascalCase
 export function LoginForm() {}
-export const TaskCard = () => {}
+export const TaskCard = () => {};
 
 // Functions: camelCase
 function handleSubmit() {}
-const calculateTotal = () => {}
+const calculateTotal = () => {};
 
 // Constants: UPPER_SNAKE_CASE
 export const API_BASE_URL = "...";
@@ -261,7 +270,7 @@ interface TaskCardProps {}
 
 // Hooks: camelCase với "use" prefix
 export function useLoginForm() {}
-export const useListTasks = () => {}
+export const useListTasks = () => {};
 
 // Classes: PascalCase
 export class SignInUseCase {}
@@ -295,11 +304,13 @@ export class TaskMapper {}
 ### 1. Validation với Valibot
 
 **Schema Location**:
+
 ```
 app/domains/{domain}/domain/validation/{domain}.schema.ts
 ```
 
 **Schema Pattern**:
+
 ```typescript
 import * as v from "valibot";
 import type { TFunction } from "i18next";
@@ -316,16 +327,23 @@ export const createLoginSchema = (t: TFunction) => {
     ),
     password: v.pipe(
       v.string(t("validation.required", { field: t("auth.password") })),
-      v.minLength(8, t("validation.minLength", { field: t("auth.password"), min: 8 }))
+      v.minLength(
+        8,
+        t("validation.minLength", { field: t("auth.password"), min: 8 })
+      )
     ),
   });
 };
 ```
 
 **Common Validation Utilities**:
+
 ```typescript
 // app/shared/utils/validation/common.ts
-import { createValidationSchemas, createValidationMessages } from "~/shared/utils/validation/common";
+import {
+  createValidationSchemas,
+  createValidationMessages,
+} from "~/shared/utils/validation/common";
 
 // Usage
 const messages = createValidationMessages(t);
@@ -339,7 +357,10 @@ const schemas = createValidationSchemas(t);
 ```typescript
 import { useForm } from "@tanstack/react-form";
 import { valibotValidator } from "@tanstack/valibot-form-adapter";
-import { createLoginSchema, type LoginFormData } from "~/domains/auth/domain/validation/auth.schema";
+import {
+  createLoginSchema,
+  type LoginFormData,
+} from "~/domains/auth/domain/validation/auth.schema";
 
 export function useLoginForm() {
   const { t } = useTranslation();
@@ -444,6 +465,7 @@ function Component() {
 ### Translation Rules
 
 **🟡 IMPORTANT**:
+
 - ✅ LUÔN dùng `useTranslation` hook, không hardcode text
 - ✅ Use meaningful namespaces: auth, validation, common, errors
 - ✅ Support interpolation với `{{ variable }}`
@@ -483,6 +505,7 @@ export class ApiAuthRepository implements AuthRepository {
 ### 3. API Client Configuration
 
 **Base Client**: `app/shared/utils/api.ts`
+
 ```typescript
 import axios from "axios";
 
@@ -541,6 +564,7 @@ export function useFilterTasks() {
 ### Tailwind CSS Conventions
 
 **🟡 IMPORTANT Rules**:
+
 ```typescript
 // ✅ Sử dụng utility classes
 <div className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-md">
@@ -613,6 +637,7 @@ pnpm start            # Start production server
 ### Pre-commit Checklist
 
 **🟡 IMPORTANT - Chạy trước khi commit**:
+
 ```bash
 pnpm check-all
 ```
@@ -704,6 +729,7 @@ export const createLoginSchema = (t: TFunction) => {
 ## 📦 Import Organization
 
 **Thứ tự import**:
+
 ```typescript
 // 1. React và React Router
 import { useState, useEffect } from "react";
@@ -755,10 +781,10 @@ interface TaskCardProps {
 }
 
 // ❌ BAD: Don't use `any`
-function process(data: any) { } // WRONG!
+function process(data: any) {} // WRONG!
 
 // ✅ GOOD: Use proper types or `unknown`
-function process(data: unknown) { }
+function process(data: unknown) {}
 ```
 
 ### Type vs Interface

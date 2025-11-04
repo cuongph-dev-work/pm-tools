@@ -1,7 +1,6 @@
 import { Flex } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { useCreateProjectForm } from "~/domains/project/application/hooks/useCreateProjectForm";
-import type { ProjectFormSubmitData } from "~/domains/project/application/hooks/useProjectForm";
 import { Button } from "~/shared/components/atoms/Button";
 import {
   Dialog,
@@ -13,27 +12,28 @@ import { ProjectFormFields } from "./ProjectFormFields";
 interface CreateProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit?: (data: ProjectFormSubmitData) => void;
 }
 
 export function CreateProjectDialog({
   open,
   onOpenChange,
-  onSubmit,
 }: CreateProjectDialogProps) {
   const { t } = useTranslation();
 
-  const { form, isSubmitting, handleCancel, startDateParsed, endDateParsed } =
+  const { form, isSubmitting, startDateParsed, endDateParsed } =
     useCreateProjectForm({
-      onSubmit,
-      onSuccess: () => {
-        onOpenChange(false);
-      },
+      onSuccess: () => onOpenChange(false),
     });
 
-  const handleCancelClick = () => {
-    handleCancel();
+  const handleCancel = () => {
+    form.reset();
     onOpenChange(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    form.handleSubmit();
   };
 
   return (
@@ -44,13 +44,7 @@ export function CreateProjectDialog({
         size="4"
         maxWidth="600px"
       >
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <ProjectFormFields
             form={form}
             startDateParsed={startDateParsed}
@@ -62,7 +56,7 @@ export function CreateProjectDialog({
               <Button
                 type="button"
                 variant="soft"
-                onClick={handleCancelClick}
+                onClick={handleCancel}
                 disabled={isSubmitting}
               >
                 {t("common.cancel")}

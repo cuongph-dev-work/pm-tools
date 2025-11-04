@@ -1,9 +1,12 @@
 import { Box, Flex, IconButton, Text } from "@radix-ui/themes";
 import { Calendar, Pencil, Trash2, Users } from "lucide-react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "~/shared/components/atoms/Card";
 import { Tag } from "~/shared/components/atoms/Tag";
-import ConfirmDeleteButton from "../../../../../shared/components/molecules/ConfirmDeleteButton";
+import { ConfirmDeleteButton } from "~/shared/components/molecules/ConfirmDeleteButton";
+import { formatDateByLocale } from "~/shared/utils/date";
+import { useDeleteProject } from "../../../application/hooks/useDeleteProject";
 
 type TagVariant =
   | "default"
@@ -14,22 +17,23 @@ type TagVariant =
   | "purple"
   | "orange";
 
-const isValidTagVariant = (color?: string): color is TagVariant => {
-  return (
-    color !== undefined &&
-    ["default", "blue", "red", "green", "yellow", "purple", "orange"].includes(
-      color
-    )
-  );
-};
+const TAG_VARIANTS: TagVariant[] = [
+  "default",
+  "blue",
+  "red",
+  "green",
+  "yellow",
+  "purple",
+  "orange",
+];
+
+const isValidTagVariant = (color?: string): color is TagVariant =>
+  color !== undefined && TAG_VARIANTS.includes(color as TagVariant);
 
 export interface ProjectInfoCardProps {
   name: string;
   description?: string;
-  tags?: Array<{
-    label: string;
-    color?: string;
-  }>;
+  tags?: Array<{ label: string; color?: string }>;
   memberCount?: number;
   startDate?: string;
   endDate?: string;
@@ -52,14 +56,26 @@ export function ProjectInfoCard({
   onClick,
   className = "",
 }: ProjectInfoCardProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { isDeleting } = useDeleteProject();
+  const formattedStartDate = useMemo(
+    () => formatDateByLocale(startDate, i18n.language),
+    [startDate, i18n.language]
+  );
+  const formattedEndDate = useMemo(
+    () => formatDateByLocale(endDate, i18n.language),
+    [endDate, i18n.language]
+  );
+
+  const hasActions = onEdit || onDelete;
+
   return (
     <Card
       className={`space-y-3 h-full relative ${className}`}
       onClick={onClick}
     >
-      {(onEdit || onDelete) && (
-        <Box className="absolute top-3 right-3">
+      {hasActions && (
+        <Box className="absolute top-3 right-3 z-10">
           <Flex align="center" gap="2">
             {onEdit && (
               <IconButton
@@ -76,8 +92,8 @@ export function ProjectInfoCard({
               <ConfirmDeleteButton
                 title={t("project.deleteProjectTitle")}
                 description={t("project.deleteProjectDescription")}
-                onConfirm={() => {}}
-                onCancel={() => {}}
+                onConfirm={onDelete}
+                isLoading={isDeleting}
               >
                 <IconButton variant="soft" color="red">
                   <Trash2 className="w-4 h-4 text-red-600" />
@@ -87,20 +103,28 @@ export function ProjectInfoCard({
           </Flex>
         </Box>
       )}
+
       <Box className="text-base font-semibold text-gray-900 pr-16">{name}</Box>
-      {description && (
-        <Text as="p" size="2" className="text-sm text-gray-600 leading-6 line-clamp-2">
-          {description}
+
+      <Box mb="2">
+        <Text
+          as="p"
+          size="2"
+          className={`text-sm leading-6 line-clamp-2 ${
+            description ? "text-gray-600" : "text-gray-400 italic"
+          }`}
+        >
+          {description || t("project.noDescription")}
         </Text>
-      )}
+      </Box>
 
       {tags.length > 0 && (
         <Flex wrap="wrap" gap="2">
-          {tags.map((t, idx) => (
+          {tags.map((tag, idx) => (
             <Tag
-              key={`${t.label}-${idx}`}
-              label={t.label}
-              variant={isValidTagVariant(t.color) ? t.color : "default"}
+              key={`${tag.label}-${idx}`}
+              label={tag.label}
+              variant={isValidTagVariant(tag.color) ? tag.color : "default"}
             />
           ))}
         </Flex>
@@ -108,25 +132,30 @@ export function ProjectInfoCard({
 
       <Flex align="center" gap="2" className="text-xs text-gray-700">
         {typeof memberCount === "number" && (
-          <Flex gap="1" className=" bg-gray-100 rounded-md px-2 py-1">
+          <Flex
+            gap="1"
+            align="center"
+            className="bg-gray-100 rounded-md px-2 py-1"
+          >
             <Users className="w-3.5 h-3.5" />
             <Text as="span">{memberCount}</Text>
           </Flex>
         )}
-        {startDate && (
-          <Flex gap="1" className=" bg-gray-100 rounded-md px-2 py-1">
+        {(formattedStartDate || formattedEndDate) && (
+          <Flex
+            gap="1"
+            align="center"
+            className="bg-gray-100 rounded-md px-2 py-1"
+          >
             <Calendar className="w-3.5 h-3.5" />
-            <Text as="span">{startDate}</Text>
+            <Text as="span">
+              {formattedStartDate && formattedEndDate
+                ? `${formattedStartDate} ~ ${formattedEndDate}`
+                : formattedStartDate || formattedEndDate}
+            </Text>
           </Flex>
         )}
       </Flex>
-
-      {startDate && endDate && (
-        <Flex gap="1" className="text-xs text-gray-600">
-          {t("project.startLabel")}: {startDate} - {t("project.endLabel")}:{" "}
-          {endDate}
-        </Flex>
-      )}
     </Card>
   );
 }

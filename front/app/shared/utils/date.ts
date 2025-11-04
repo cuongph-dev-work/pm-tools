@@ -96,6 +96,23 @@ export const formatDate = (
 };
 
 /**
+ * Format date based on locale (YYYY-MM-DD for en, DD-MM-YYYY for vi)
+ */
+export const formatDateByLocale = (
+  dateString: string | null | undefined,
+  locale: string
+): string | undefined => {
+  if (!dateString) return undefined;
+  const date = dayjs(dateString);
+  if (!date.isValid()) return undefined;
+
+  // Format: YYYY-MM-DD for en, DD-MM-YYYY for vi
+  return locale === "vi"
+    ? date.format("DD/MM/YYYY")
+    : date.format("YYYY/MM/DD");
+};
+
+/**
  * Parse date string with timezone
  */
 export const parseDate = (
@@ -108,6 +125,18 @@ export const parseDate = (
   date = date.tz(getTimezoneValue(timezone));
 
   return date;
+};
+
+/**
+ * Parse date string to native Date object or undefined if invalid
+ */
+export const parseToNativeDate = (
+  dateValue?: string | Date | Dayjs
+): Date | undefined => {
+  if (!dateValue) return undefined;
+  if (dateValue instanceof Date) return dateValue;
+  const date = dayjs(dateValue);
+  return date.isValid() ? date.toDate() : undefined;
 };
 
 /**
