@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { STORAGE_KEYS } from "../constants/storage";
 
 export interface Project {
   id: string;
@@ -11,7 +13,15 @@ interface ProjectState {
   setCurrentProject: (project: Project | null) => void;
 }
 
-export const useProjectStore = create<ProjectState>(set => ({
-  currentProject: null,
-  setCurrentProject: project => set({ currentProject: project }),
-}));
+export const useProjectStore = create<ProjectState>()(
+  persist(
+    set => ({
+      currentProject: null,
+      setCurrentProject: project => set({ currentProject: project }),
+    }),
+    {
+      name: STORAGE_KEYS.CURRENT_PROJECT,
+      partialize: state => ({ currentProject: state.currentProject }),
+    }
+  )
+);

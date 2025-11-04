@@ -2,35 +2,37 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Text } from "@radix-ui/themes";
 import { ChevronDown, Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
+import { useListProjects } from "~/domains/project/application/hooks/useListProjects";
 import { useProjects } from "~/shared/hooks/useProjects";
 
 export function ProjectSwitcher() {
   const { t } = useTranslation();
-  const { currentProject } = useProjects();
-
-  // TODO: Replace with actual projects from API/hook
-  const projects = [
-    {
-      id: "1",
-      name: "E-commerce Platform",
-      members: [
-        { id: "1", name: "User 1" },
-        { id: "2", name: "User 2" },
-      ],
-    },
-    {
-      id: "2",
-      name: "Mobile App",
-      members: [{ id: "1", name: "User 1" }],
-    },
-  ];
+  const { currentProject, setCurrentProject } = useProjects();
+  const { projects, isLoading } = useListProjects();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const displayName = currentProject?.name || projects[0]?.name || "";
   const truncatedName =
     displayName.length > 20
       ? `${displayName.substring(0, 17)}...`
       : displayName;
+
+  const handleSelectProject = (projectId: string) => {
+    const project = projects.find(p => p.id === projectId);
+    if (project) {
+      setCurrentProject({
+        id: project.id,
+        name: project.name,
+      });
+      // Navigate to backlog page with projectId if not already on a project route
+      const currentPath = location.pathname;
+      if (!currentPath.includes(`/${projectId}/`)) {
+        navigate(`/${projectId}/backlog`);
+      }
+    }
+  };
 
   return (
     <>
@@ -60,38 +62,48 @@ export function ProjectSwitcher() {
 
             <DropdownMenu.Separator className="h-px bg-gray-200 my-2" />
 
-            {projects.map(project => {
-              const isCurrent =
-                currentProject?.id === project.id || project.id === "1";
-              const memberCount = project.members?.length || 0;
+            {isLoading ? (
+              <div className="px-3 py-2 text-sm text-gray-500">
+                {t("common.loading")}
+              </div>
+            ) : projects.length === 0 ? (
+              <div className="px-3 py-2 text-sm text-gray-500">
+                {t("project.noProjects")}
+              </div>
+            ) : (
+              projects.map(project => {
+                const isCurrent = currentProject?.id === project.id;
+                const memberCount = project.memberCount || 0;
 
-              return (
-                <DropdownMenu.Item
-                  key={project.id}
-                  className="px-3 py-2 rounded-md cursor-pointer outline-none hover:bg-gray-50 focus:bg-gray-50"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-900 truncate">
-                        {project.name}
+                return (
+                  <DropdownMenu.Item
+                    key={project.id}
+                    className="px-3 py-2 rounded-md cursor-pointer outline-none hover:bg-gray-50 focus:bg-gray-50"
+                    onSelect={() => handleSelectProject(project.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-gray-900 truncate">
+                          {project.name}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-0.5">
+                          {t("project.memberCount", { count: memberCount })}
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500 mt-0.5">
-                        {t("sidebar.members", { count: memberCount })}
-                      </div>
+                      {isCurrent && (
+                        <Text
+                          as="span"
+                          size="1"
+                          className="ml-3 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full"
+                        >
+                          {t("header.current")}
+                        </Text>
+                      )}
                     </div>
-                    {isCurrent && (
-                      <Text
-                        as="span"
-                        size="1"
-                        className="ml-3 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full"
-                      >
-                        {t("header.current")}
-                      </Text>
-                    )}
-                  </div>
-                </DropdownMenu.Item>
-              );
-            })}
+                  </DropdownMenu.Item>
+                );
+              })
+            )}
 
             <DropdownMenu.Separator className="h-px bg-gray-200 my-2" />
 

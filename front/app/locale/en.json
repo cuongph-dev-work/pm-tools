@@ -115,6 +115,7 @@
     },
     "allProjects": "All Projects",
     "youHaveNProjects": "You have {{count}} projects",
+    "noProjects": "No projects",
     "createProject": "Create Project",
     "editProject": "Edit Project",
     "createDialog": {

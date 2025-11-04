@@ -26,23 +26,30 @@ type NavigationItem = {
   requiresProject: boolean;
 };
 
-// Page ID to route path mapping
-const PAGE_ROUTES: Record<string, string> = {
-  backlog: "/backlog",
-  kanban: "/kanban",
-  sprint: "/sprint",
-  projects: "/projects",
-  logwork: "/logwork",
-  "git-alerts": "/git-alerts",
-  settings: "/settings",
-};
-
 export function AppSidebar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { currentPage, setCurrentPage } = useNavigation();
   const { currentProject } = useProjects();
   const { isCollapsed, toggleSidebar } = useSidebar();
+
+  // Page ID to route path mapping with projectId
+  const getPageRoute = (id: string): string => {
+    if (!currentProject) {
+      return "/projects"; // Redirect to projects page if no project selected
+    }
+    const projectId = currentProject.id;
+    const routes: Record<string, string> = {
+      backlog: `/${projectId}/backlog`,
+      kanban: `/${projectId}/kanban`,
+      sprint: `/${projectId}/sprint`,
+      projects: "/projects",
+      logwork: `/${projectId}/logwork`,
+      "git-alerts": "/git-alerts",
+      settings: "/settings",
+    };
+    return routes[id] || "/projects";
+  };
 
   const navigationItems: NavigationItem[] = [
     {
@@ -98,11 +105,9 @@ export function AppSidebar() {
       e.stopPropagation();
       e.preventDefault();
     }
-    const route = PAGE_ROUTES[id];
-    if (route) {
-      setCurrentPage(id as Parameters<typeof setCurrentPage>[0]);
-      navigate(route);
-    }
+    const route = getPageRoute(id);
+    setCurrentPage(id as Parameters<typeof setCurrentPage>[0]);
+    navigate(route);
   };
 
   const sidebarWidth = isCollapsed ? "w-16" : "w-64";

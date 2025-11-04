@@ -14,7 +14,12 @@ export default [
   layout("./shared/layouts/default.tsx", [
     index("./domains/home/ui/screens/Home.tsx"),
     route("/projects", "./domains/project/ui/screens/ProjectManagement.tsx"),
-    route("/backlog", "./domains/backlog/ui/screens/TaskBacklog.tsx"),
+    route(
+      "/:projectId/backlog",
+      "./domains/backlog/ui/screens/TaskBacklog.tsx"
+    ),
+    route("/:projectId/kanban", "./domains/kanban/ui/screens/Kanban.tsx"),
+    route("/:projectId/sprint", "./domains/sprint/ui/screens/Sprint.tsx"),
     // route("/post", "./pages/post.tsx"),
   ]),
   // Catch-all route for unknown paths - không cần auth

@@ -115,6 +115,7 @@
     },
     "allProjects": "Tất cả dự án",
     "youHaveNProjects": "Bạn có {{count}} dự án",
+    "noProjects": "Chưa có dự án",
     "createProject": "Tạo dự án",
     "editProject": "Chỉnh sửa dự án",
     "createDialog": {
