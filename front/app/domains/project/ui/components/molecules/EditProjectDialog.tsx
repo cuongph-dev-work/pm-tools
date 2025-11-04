@@ -1,6 +1,7 @@
 import { Flex } from "@radix-ui/themes";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
+import { v4 as uuidv4 } from "uuid";
 import { useEditProjectForm } from "~/domains/project/application/hooks/useEditProjectForm";
 import type { ProjectId } from "~/domains/project/domain/entities/Project";
 import type { UpdateProjectFormData } from "~/domains/project/domain/validation/project.schema";
@@ -10,6 +11,7 @@ import {
   DialogContent,
   DialogFooter,
 } from "~/shared/components/atoms/Dialog";
+import type { Tag } from "~/shared/components/atoms/TagInput";
 import { ProjectFormFields } from "./ProjectFormFields";
 
 export interface EditProjectDialogProps {
@@ -21,7 +23,7 @@ export interface EditProjectDialogProps {
     description?: string;
     startDate?: string;
     endDate?: string;
-    tags?: string;
+    tags?: string[];
     status?: string;
   };
 }
@@ -34,6 +36,13 @@ export function EditProjectDialog({
 }: EditProjectDialogProps) {
   const { t } = useTranslation();
 
+  // Convert string[] tags to Tag[] objects
+  const tagsArray: Tag[] =
+    project.tags?.map(tag => ({
+      id: uuidv4(),
+      value: tag,
+    })) || [];
+
   // Convert project data to form format (dates need to be in YYYY-MM-DD format)
   const initialValues: Partial<UpdateProjectFormData> = {
     name: project.name,
@@ -42,7 +51,7 @@ export function EditProjectDialog({
       ? dayjs(project.startDate).format("YYYY-MM-DD")
       : "",
     endDate: project.endDate ? dayjs(project.endDate).format("YYYY-MM-DD") : "",
-    tags: project.tags || "",
+    tags: tagsArray,
     status:
       (project.status as "ACTIVE" | "INACTIVE" | "COMPLETED" | "CANCELLED") ||
       "ACTIVE",

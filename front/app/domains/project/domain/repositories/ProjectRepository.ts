@@ -43,6 +43,7 @@ export interface ProjectRepository {
   findById(id: ProjectId): Promise<ProjectEntity | null>;
   findMemberOf(): Promise<ProjectListItemEntity[]>;
   getMembers(projectId: ProjectId): Promise<MemberDTO[]>;
+  searchMembers(projectId: ProjectId, keyword: string): Promise<MemberDTO[]>;
   create(data: CreateProjectData): Promise<string>;
   update(id: ProjectId, data: UpdateProjectData): Promise<string>;
   delete(id: ProjectId): Promise<{ success: boolean }>;

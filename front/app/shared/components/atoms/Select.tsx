@@ -1,7 +1,8 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Button, Flex, Text } from "@radix-ui/themes";
+import { Button, Flex, ScrollArea, Text } from "@radix-ui/themes";
 import { Check, ChevronDown } from "lucide-react";
 import * as React from "react";
+import { Z_INDEX } from "../../styles/zIndex";
 import { cn } from "../../utils/cn";
 
 export interface SelectOption {
@@ -31,6 +32,7 @@ export function Select({
   disabled = false,
   "aria-invalid": ariaInvalid = false,
 }: SelectProps) {
+  const [open, setOpen] = React.useState(false);
   const selectedOption: SelectOption | undefined = options.find(
     opt => opt.value === value
   );
@@ -40,10 +42,11 @@ export function Select({
 
   const handleSelect = (selectedValue: string) => {
     onChange?.(selectedValue);
+    setOpen(false);
   };
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root open={open} onOpenChange={setOpen}>
       <DropdownMenu.Trigger asChild>
         <Button
           type="button"
@@ -73,38 +76,57 @@ export function Select({
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="bg-white rounded-md shadow-lg border border-gray-200 p-2 z-50"
+          className={cn(
+            "bg-white rounded-md shadow-lg border border-gray-200 p-0",
+            "max-h-[300px] overflow-hidden"
+          )}
           align="start"
           sideOffset={5}
-          style={{ width: "var(--radix-dropdown-menu-trigger-width)" }}
+          style={{
+            width: "var(--radix-dropdown-menu-trigger-width)",
+            maxWidth: "var(--radix-dropdown-menu-trigger-width)",
+            zIndex: Z_INDEX.modal,
+          }}
         >
-          {options.map(option => {
-            const isSelected = value === option.value;
-            return (
-              <DropdownMenu.Item
-                key={option.value}
-                className={cn(
-                  "px-3 py-2 rounded-md cursor-pointer outline-none hover:bg-gray-50 focus:bg-gray-50 flex items-center justify-between",
-                  isSelected && "bg-gray-50"
-                )}
-                onSelect={() => handleSelect(option.value)}
-              >
-                <div className="flex items-center gap-2 flex-1">
-                  {option.icon && (
-                    <Text as="span" className="text-gray-400">
-                      {option.icon}
-                    </Text>
-                  )}
-                  <Text as="span" size="2" className="text-sm text-gray-700">
-                    {option.label}
-                  </Text>
-                </div>
-                {isSelected && (
-                  <Check className="w-4 h-4 text-gray-600 ml-2 flex-shrink-0" />
-                )}
-              </DropdownMenu.Item>
-            );
-          })}
+          <ScrollArea
+            type="always"
+            scrollbars="vertical"
+            style={{ maxHeight: "300px" }}
+          >
+            <div className="p-2">
+              {options.map(option => {
+                const isSelected = value === option.value;
+                return (
+                  <DropdownMenu.Item
+                    key={option.value}
+                    className={cn(
+                      "px-3 py-2 rounded-md cursor-pointer outline-none hover:bg-gray-50 focus:bg-gray-50 flex items-center justify-between",
+                      isSelected && "bg-gray-50"
+                    )}
+                    onSelect={() => handleSelect(option.value)}
+                  >
+                    <div className="flex items-center gap-2 flex-1">
+                      {option.icon && (
+                        <Text as="span" className="text-gray-400">
+                          {option.icon}
+                        </Text>
+                      )}
+                      <Text
+                        as="span"
+                        size="2"
+                        className="text-sm text-gray-700"
+                      >
+                        {option.label}
+                      </Text>
+                    </div>
+                    {isSelected && (
+                      <Check className="w-4 h-4 text-gray-600 ml-2 flex-shrink-0" />
+                    )}
+                  </DropdownMenu.Item>
+                );
+              })}
+            </div>
+          </ScrollArea>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

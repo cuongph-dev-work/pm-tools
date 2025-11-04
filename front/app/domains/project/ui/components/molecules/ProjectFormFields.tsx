@@ -1,9 +1,9 @@
-import { Box, Flex, Text } from "@radix-ui/themes";
-import { TagIcon } from "lucide-react";
+import { Box, Flex } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import {
   FormFieldDatePicker,
   FormFieldInput,
+  FormFieldTagInput,
   FormFieldTextarea,
 } from "~/shared/components/molecules/form-field";
 import type { AnyFormApi } from "~/shared/components/molecules/form-field/types";
@@ -55,20 +55,13 @@ export function ProjectFormFields({
         />
       </Flex>
 
-      <Box>
-        <FormFieldInput
-          name="tags"
-          form={form}
-          label={t("project.createForm.tagsLabel")}
-          placeholder={t("project.createForm.tagsPlaceholder")}
-          leftSlot={<TagIcon className="w-4 h-4 text-gray-400" />}
-        />
-        <Box mt="1">
-          <Text as="p" size="1" className="text-xs text-gray-500">
-            {t("project.createForm.tagsDescription")}
-          </Text>
-        </Box>
-      </Box>
+      <FormFieldTagInput
+        name="tags"
+        form={form}
+        label={t("project.createForm.tagsLabel")}
+        placeholder={t("project.createForm.tagsPlaceholder")}
+        description={t("project.createForm.tagsDescription")}
+      />
     </Box>
   );
 }

@@ -31,6 +31,7 @@ export type I18nTranslations = {
         "file_not_found": string;
         "project_update_forbidden": string;
         "project_not_found": string;
+        "project_access_forbidden": string;
         "project_invite_permission_denied": string;
         "user_already_member": string;
         "invitation_already_sent": string;

@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { ProjectMapper } from "../mappers/ProjectMapper";
 import type { ProjectId } from "~/domains/project/domain/entities/Project";
 import {
   updateProjectSchema,
@@ -28,7 +29,7 @@ export function useEditProjectForm({
     defaultValues: {
       name: initialValues.name || "",
       description: initialValues.description || "",
-      tags: initialValues.tags || "",
+      tags: initialValues.tags || [],
       status: initialValues.status || "ACTIVE",
       startDate: initialValues.startDate || "",
       endDate: initialValues.endDate || "",
@@ -36,9 +37,10 @@ export function useEditProjectForm({
     validators: {
       onSubmit: updateProjectSchema(t),
       onSubmitAsync: async ({ value }) => {
+        const projectData = ProjectMapper.toUpdateRequestDTO(value);
         await updateMutation.mutateAsync({
           id: projectId,
-          data: value,
+          data: projectData,
         });
         onSuccess?.();
       },

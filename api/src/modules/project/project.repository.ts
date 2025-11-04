@@ -15,7 +15,11 @@ export class ProjectRepository extends EntityRepository<Project> {
     super(em, Project);
   }
   async findProjectsWithFilters(filters: SearchProjectDto, page: number = 1, limit: number = 10, currentUser: User) {
-    const qb = this.createQueryBuilder('p').leftJoinAndSelect('p.owner', 'owner').leftJoinAndSelect('p.members', 'members').leftJoinAndSelect('p.invites', 'invites');
+    const qb = this.createQueryBuilder('p')
+      .leftJoinAndSelect('p.owner', 'owner')
+      .leftJoinAndSelect('p.members', 'members')
+      .leftJoinAndSelect('p.invites', 'invites')
+      .where({ owner: currentUser });
     // Apply filters
     if (filters.name) {
       qb.andWhere({ name: { $ilike: `%${filters.name}%` } });
@@ -27,10 +31,6 @@ export class ProjectRepository extends EntityRepository<Project> {
 
     if (filters.status) {
       qb.andWhere({ status: filters.status });
-    }
-
-    if (filters.owner_id) {
-      qb.andWhere({ owner: filters.owner_id });
     }
 
     if (filters.member_id) {

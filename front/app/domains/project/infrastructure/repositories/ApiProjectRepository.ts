@@ -75,17 +75,22 @@ export class ApiProjectRepository implements ProjectRepository {
     const project = await this.findById(projectId);
     const ownerId = project?.owner.id;
 
-    return response.map(member => ({
-      id: member.id,
-      name: member.user.fullName,
-      email: member.user.email,
-      role: member.role,
-      status: member.status,
-      isOwner: member.user.id === ownerId,
-      joinedAt: member.joined_at,
-      leftAt: member.left_at,
-      avatarUrl: undefined, // TODO: Add avatar_url if available in API
-    }));
+    return ProjectMapper.toMemberDTOList(response, ownerId);
+  }
+
+  async searchMembers(
+    projectId: ProjectId,
+    keyword: string
+  ): Promise<MemberDTO[]> {
+    const url = PROJECT_ENDPOINTS.MEMBERS.replace(":id", projectId);
+    const response = await apiRequest<MemberResponseDTO[]>(url, {
+      method: "GET",
+      params: {
+        keyword,
+      },
+    });
+
+    return ProjectMapper.toMemberDTOList(response);
   }
 
   async create(data: CreateProjectData): Promise<string> {

@@ -136,8 +136,8 @@
       "startDateLabel": "Start Date",
       "endDateLabel": "End Date",
       "tagsLabel": "Tags",
-      "tagsPlaceholder": "React, E-commerce, Frontend",
-      "tagsDescription": "Each tag will be automatically assigned a color in predefined order",
+      "tagsPlaceholder": "Type and press Enter or comma to add tags...",
+      "tagsDescription": "Example: React, E-commerce, Frontend",
       "statusLabel": "Status"
     },
     "statuses": {
@@ -241,7 +241,10 @@
       "priority": "Priority",
       "estimate": "Estimate (h)",
       "assignee": "Assignee",
-      "assigneePlaceholder": "Name of the person assigned to the task...",
+      "assigneePlaceholder": "Search for assignee...",
+      "assigneeSearchPlaceholder": "Search for assignee...",
+      "assigneeNoResults": "No results found",
+      "assigneeLoading": "Loading...",
       "dueDate": "Due Date",
       "tags": "Tags",
       "tagsPlaceholder": "Enter tags, separated by commas...",

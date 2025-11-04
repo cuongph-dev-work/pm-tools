@@ -3,6 +3,12 @@ import * as v from "valibot";
 import type { I18nT } from "~/shared/types/i18n";
 import { createValidationSchemas } from "~/shared/utils/validation/common";
 
+// Tag Schema - matching Tag interface from TagInput
+const tagSchema = v.object({
+  id: v.string(),
+  value: v.string(),
+});
+
 // Create Project Schema
 export const createProjectSchema = (t: I18nT) => {
   const base = createValidationSchemas(t);
@@ -16,7 +22,7 @@ export const createProjectSchema = (t: I18nT) => {
       description: v.optional(
         base.maxLengthString(t("project.description"), 3000)
       ),
-      tags: base.optionalString(),
+      tags: v.optional(v.array(tagSchema), []),
       startDate: base.optionalString(),
       endDate: base.optionalString(),
     }),
@@ -49,7 +55,7 @@ export const updateProjectSchema = (t: I18nT) => {
       description: v.optional(
         base.maxLengthString(t("project.description"), 3000)
       ),
-      tags: base.optionalString(),
+      tags: v.optional(v.array(tagSchema), []),
       status: v.optional(
         v.picklist(["ACTIVE", "INACTIVE", "COMPLETED", "CANCELLED"])
       ),

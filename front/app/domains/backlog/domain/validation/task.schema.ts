@@ -1,61 +1,54 @@
 import * as v from "valibot";
 import type { I18nT } from "~/shared/types/i18n";
 import { createValidationSchemas } from "~/shared/utils/validation/common";
+import { TASK_PRIORITY, TASK_TYPE } from "../../application/dto/TaskDTO";
 
 // Tag schema
 export const tagSchema = v.object({
-  id: v.optional(v.string()),
-  name: v.pipe(v.string(), v.minLength(1)),
+  id: v.string(), // UUID
+  value: v.pipe(v.string(), v.minLength(1)),
 });
 
-// Create Task schema
-export const createTaskSchema = (t: I18nT) => {
+// Create Task Form schema (for form validation)
+export const createTaskFormSchema = (t: I18nT) => {
   const base = createValidationSchemas(t);
   return v.object({
     title: v.pipe(
-      v.string(),
-      v.minLength(
-        1,
-        t("validation.required", { field: t("backlog.form.title") })
-      ),
+      base.requiredString(t("backlog.form.title")),
       v.maxLength(
         255,
         t("validation.maxLength", { field: t("backlog.form.title"), max: 255 })
       )
     ),
     description: v.optional(
-      v.pipe(
-        v.string(),
-        v.maxLength(
-          3000,
-          t("validation.maxLength", {
-            field: t("backlog.form.description"),
-            max: 3000,
-          })
-        )
-      )
+      base.maxLengthString(t("backlog.form.description"), 3000)
     ),
     type: v.picklist(
-      ["task", "bug", "story", "epic"],
+      [
+        TASK_TYPE.TASK,
+        TASK_TYPE.CHANGE_REQUEST,
+        TASK_TYPE.FEEDBACK,
+        TASK_TYPE.NEW_FEATURE,
+        TASK_TYPE.SUB_TASK,
+        TASK_TYPE.IMPROVEMENT,
+        TASK_TYPE.BUG,
+        TASK_TYPE.BUG_CUSTOMER,
+        TASK_TYPE.LEAKAGE,
+      ],
       t("validation.required", { field: t("backlog.form.type") })
     ),
-    status: v.optional(v.picklist(["todo", "in-progress", "done", "blocked"])),
-    priority: v.optional(v.picklist(["high", "medium", "low"])),
-    estimate: v.optional(v.pipe(v.number(), v.minValue(0))),
-    due_date: v.pipe(
-      v.string(),
-      v.minLength(
-        1,
-        t("validation.required", { field: t("backlog.form.dueDate") })
-      )
+    priority: v.optional(
+      v.picklist([TASK_PRIORITY.HIGH, TASK_PRIORITY.MEDIUM, TASK_PRIORITY.LOW])
     ),
-    assignee_id: v.optional(v.string()),
-    parent_task_id: v.optional(v.string()),
-    sprint_ids: v.optional(v.array(v.string())),
+    estimateHours: v.optional(
+      v.union([v.string(), v.pipe(v.number(), v.minValue(0))])
+    ),
+    dueDate: base.requiredString(t("backlog.form.dueDate")),
+    assignee: base.requiredString(t("backlog.form.assignee")),
     tags: v.array(tagSchema),
   });
 };
 
-export type CreateTaskSchemaInput = v.InferInput<
-  ReturnType<typeof createTaskSchema>
+export type CreateTaskFormData = v.InferOutput<
+  ReturnType<typeof createTaskFormSchema>
 >;

@@ -132,7 +132,7 @@ export default function ProjectManagement() {
                 description: project.description,
                 startDate: project.startDate ?? undefined,
                 endDate: project.endDate ?? undefined,
-                tags: project.tags.join(", "),
+                tags: project.tags,
                 status: project.status,
               }}
             />

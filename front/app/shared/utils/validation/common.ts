@@ -9,7 +9,7 @@ export const PASSWORD_REGEX =
 export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9]+$/;
 
 // Common validation messages
-export const createValidationMessages = (t: TFunction) => ({
+export const createValidationMessages = (t: I18nT) => ({
   required: (field: string) =>
     t("validation.required", {
       field: field,

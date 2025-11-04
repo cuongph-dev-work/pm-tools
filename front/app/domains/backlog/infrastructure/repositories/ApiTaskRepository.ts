@@ -1,4 +1,4 @@
-import { apiClient } from "~/shared/utils/api";
+import { apiRequest } from "~/shared/utils/api";
 import type { CreateTaskDTO, TaskDTO } from "../../application/dto/TaskDTO";
 import { TaskEntity } from "../../domain/entities/Task";
 import type { TaskRepository } from "../../domain/repositories/TaskRepository";
@@ -16,10 +16,9 @@ export class ApiTaskRepository implements TaskRepository {
   }
 
   async create(projectId: string, data: CreateTaskDTO): Promise<TaskDTO> {
-    const response = await apiClient.post<TaskDTO>(
-      TASK_ENDPOINTS.createTask(projectId),
-      data
-    );
-    return response.data;
+    return apiRequest<TaskDTO>(TASK_ENDPOINTS.createTask(projectId), {
+      method: "POST",
+      data,
+    });
   }
 }

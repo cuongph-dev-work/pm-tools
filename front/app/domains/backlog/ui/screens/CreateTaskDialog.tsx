@@ -6,29 +6,35 @@ import {
   DialogContent,
   DialogFooter,
 } from "~/shared/components/atoms/Dialog";
-import {
-  useCreateTaskForm,
-  type CreateTaskFormData,
-} from "../../application/hooks/useCreateTaskForm";
+import { useProjects } from "~/shared/hooks/useProjects";
+import { useCreateTaskForm } from "../../application/hooks/useCreateTaskForm";
 import { CreateTaskForm } from "../components/molecules/CreateTaskForm";
 
 interface CreateTaskDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit?: (data: CreateTaskFormData) => void | Promise<void>;
+  projectId?: string;
 }
 
 export function CreateTaskDialog({
   open,
   onOpenChange,
+  projectId: propProjectId,
 }: CreateTaskDialogProps) {
   const { t } = useTranslation();
+  const { currentProject } = useProjects();
+  const projectId = propProjectId || currentProject?.id || "";
 
-  const { form } = useCreateTaskForm({
+  const { form, isSubmitting } = useCreateTaskForm({
+    projectId,
     onSuccess: () => {
       onOpenChange(false);
     },
   });
+
+  if (!projectId) {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -60,10 +66,12 @@ export function CreateTaskDialog({
               >
                 {t("common.cancel")}
               </Button>
-              <Button type="submit" variant="solid">
-                {t("backlog.createDialog.submitButton", {
-                  defaultValue: "Thêm Task Mới",
-                })}
+              <Button type="submit" variant="solid" disabled={isSubmitting}>
+                {isSubmitting
+                  ? t("common.submitting", { defaultValue: "Đang tạo..." })
+                  : t("backlog.createDialog.submitButton", {
+                      defaultValue: "Thêm Task Mới",
+                    })}
               </Button>
             </Flex>
           </DialogFooter>

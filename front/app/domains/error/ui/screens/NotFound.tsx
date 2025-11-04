@@ -21,7 +21,8 @@ export default function NotFound() {
         <Text
           as="p"
           size="4"
-          className="text-lg text-gray-600 mb-8 max-w-md mx-auto"
+          mb="8"
+          className="text-lg text-gray-600 max-w-md mx-auto"
         >
           {t("errors.notFoundDescription")}
         </Text>

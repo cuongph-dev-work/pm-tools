@@ -1,4 +1,24 @@
-// Task types từ API
+// Task types enum
+export enum TASK_TYPE {
+  TASK = "TASK",
+  CHANGE_REQUEST = "CHANGE_REQUEST",
+  FEEDBACK = "FEEDBACK",
+  NEW_FEATURE = "NEW_FEATURE",
+  SUB_TASK = "SUB_TASK",
+  IMPROVEMENT = "IMPROVEMENT",
+  BUG = "BUG",
+  BUG_CUSTOMER = "BUG_CUSTOMER",
+  LEAKAGE = "LEAKAGE",
+}
+
+// Task priority enum
+export enum TASK_PRIORITY {
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
+}
+
+// Task types từ API (backward compatibility)
 export type TaskType = "task" | "bug" | "story" | "epic";
 export type TaskStatus = "todo" | "in-progress" | "done" | "blocked";
 export type TaskPriority = "high" | "medium" | "low";
@@ -31,9 +51,9 @@ export interface SprintDTO {
 export interface CreateTaskDTO {
   title: string;
   description?: string;
-  type: TaskType;
+  type: TASK_TYPE | string; // API accepts uppercase enum values
   status?: TaskStatus;
-  priority?: TaskPriority;
+  priority?: TASK_PRIORITY | string; // API accepts uppercase enum values
   estimate?: number;
   due_date: string; // format: date (YYYY-MM-DD)
   assignee_id?: string;

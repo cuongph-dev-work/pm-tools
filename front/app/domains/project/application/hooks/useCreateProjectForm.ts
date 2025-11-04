@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { ProjectMapper } from "../mappers/ProjectMapper";
 import {
   createProjectSchema,
   type CreateProjectFormData,
@@ -23,14 +24,15 @@ export function useCreateProjectForm({
     defaultValues: {
       name: "",
       description: "",
-      tags: "",
+      tags: [],
       startDate: "",
       endDate: "",
     } as CreateProjectFormData,
     validators: {
       onSubmit: createProjectSchema(t),
       onSubmitAsync: async ({ value }) => {
-        await createMutation.mutateAsync(value);
+        const projectData = ProjectMapper.toCreateRequestDTO(value);
+        await createMutation.mutateAsync(projectData);
         form.reset();
         onSuccess?.();
       },

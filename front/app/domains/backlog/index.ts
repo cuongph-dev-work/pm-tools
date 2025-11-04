@@ -21,8 +21,11 @@ export { useListTasks } from "./application/hooks/useListTasks";
 export { useListTasksQuery } from "./application/hooks/useListTasksQuery";
 
 // Validation schemas
-export { createTaskSchema, tagSchema } from "./domain/validation/task.schema";
-export type { CreateTaskSchemaInput } from "./domain/validation/task.schema";
+export {
+  createTaskFormSchema,
+  tagSchema,
+} from "./domain/validation/task.schema";
+export type { CreateTaskFormData } from "./domain/validation/task.schema";
 
 // Components
 export { TaskCard } from "./ui/components/atoms/TaskCard";

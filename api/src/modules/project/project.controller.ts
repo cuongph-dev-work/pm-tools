@@ -36,9 +36,9 @@ export class ProjectController {
 
   @Roles([])
   @Get('/:id/members')
-  @Cache('project-members:{0}', { ttl: 1800 }) // Cache for 30 minutes
-  getProjectMembers(@Param('id') id: string, @CurrentUser() currentUser: User) {
-    return this.projectService.getProjectMembers(id, currentUser);
+  @Cache('project-members:{0}:{1}', { ttl: 1800 }) // Cache for 30 minutes
+  getProjectMembers(@Param('id') id: string, @Query('keyword') keyword: string, @CurrentUser() currentUser: User) {
+    return this.projectService.getProjectMembers(id, currentUser, keyword);
   }
 
   @Roles([])

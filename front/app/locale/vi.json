@@ -136,8 +136,8 @@
       "startDateLabel": "Ngày bắt đầu",
       "endDateLabel": "Ngày kết thúc",
       "tagsLabel": "Tags",
-      "tagsPlaceholder": "React, E-commerce, Frontend",
-      "tagsDescription": "Mỗi tag sẽ được tự động gán màu theo thứ tự định sẵn",
+      "tagsPlaceholder": "Nhập và nhấn Enter hoặc dấu phẩy để thêm tags...",
+      "tagsDescription": "Ví dụ: React, E-commerce, Frontend",
       "statusLabel": "Trạng thái"
     },
     "statuses": {
@@ -241,7 +241,10 @@
       "priority": "Độ ưu tiên",
       "estimate": "Ước tính (h)",
       "assignee": "Người thực hiện",
-      "assigneePlaceholder": "Tên người được giao task...",
+      "assigneePlaceholder": "Tìm kiếm người thực hiện...",
+      "assigneeSearchPlaceholder": "Tìm kiếm người thực hiện...",
+      "assigneeNoResults": "Không tìm thấy kết quả",
+      "assigneeLoading": "Đang tải...",
       "dueDate": "Ngày đến hạn",
       "tags": "Tags",
       "tagsPlaceholder": "Nhập tags, phân cách bằng dấu phẩy...",

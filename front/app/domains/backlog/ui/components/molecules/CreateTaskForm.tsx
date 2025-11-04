@@ -1,10 +1,25 @@
 import { Box, Flex } from "@radix-ui/themes";
-import { FileText } from "lucide-react";
+import {
+  IconAlertTriangle,
+  IconBug,
+  IconBulb,
+  IconChecklist,
+  IconMessageCircle,
+  IconSparkles,
+  IconTrendingUp,
+  IconUsers,
+} from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import {
+  TASK_PRIORITY,
+  TASK_TYPE,
+} from "~/domains/backlog/application/dto/TaskDTO";
+import {
+  FormFieldAssigneeSearch,
   FormFieldDatePicker,
   FormFieldInput,
   FormFieldSelect,
+  FormFieldTagInput,
   FormFieldTextarea,
 } from "~/shared/components/molecules/form-field";
 import type { SelectOption } from "~/shared/components/molecules/form-field/FormFieldSelect";
@@ -19,56 +34,58 @@ export function CreateTaskForm({ form }: CreateTaskFormProps) {
 
   const taskTypeOptions: SelectOption[] = [
     {
-      value: "task",
+      value: TASK_TYPE.TASK,
       label: t("backlog.taskTypes.task"),
-      icon: <FileText className="w-4 h-4" />,
+      icon: <IconChecklist className="w-4 h-4 text-blue-600" stroke={2} />,
     },
     {
-      value: "changeRequest",
+      value: TASK_TYPE.CHANGE_REQUEST,
       label: t("backlog.taskTypes.changeRequest"),
-      icon: <FileText className="w-4 h-4" />,
+      icon: <IconTrendingUp className="w-4 h-4 text-orange-600" stroke={2} />,
     },
     {
-      value: "feedback",
+      value: TASK_TYPE.FEEDBACK,
       label: t("backlog.taskTypes.feedback"),
-      icon: <FileText className="w-4 h-4" />,
+      icon: (
+        <IconMessageCircle className="w-4 h-4 text-purple-600" stroke={2} />
+      ),
     },
     {
-      value: "newFeature",
+      value: TASK_TYPE.NEW_FEATURE,
       label: t("backlog.taskTypes.newFeature"),
-      icon: <FileText className="w-4 h-4" />,
+      icon: <IconSparkles className="w-4 h-4 text-green-600" stroke={2} />,
     },
     {
-      value: "subTask",
+      value: TASK_TYPE.SUB_TASK,
       label: t("backlog.taskTypes.subTask"),
-      icon: <FileText className="w-4 h-4" />,
+      icon: <IconChecklist className="w-4 h-4 text-cyan-600" stroke={2} />,
     },
     {
-      value: "improvement",
+      value: TASK_TYPE.IMPROVEMENT,
       label: t("backlog.taskTypes.improvement"),
-      icon: <FileText className="w-4 h-4" />,
+      icon: <IconBulb className="w-4 h-4 text-yellow-600" stroke={2} />,
     },
     {
-      value: "bug",
+      value: TASK_TYPE.BUG,
       label: t("backlog.taskTypes.bug"),
-      icon: <FileText className="w-4 h-4" />,
+      icon: <IconBug className="w-4 h-4 text-red-600" stroke={2} />,
     },
     {
-      value: "bugCustomer",
+      value: TASK_TYPE.BUG_CUSTOMER,
       label: t("backlog.taskTypes.bugCustomer"),
-      icon: <FileText className="w-4 h-4" />,
+      icon: <IconUsers className="w-4 h-4 text-pink-600" stroke={2} />,
     },
     {
-      value: "leakage",
+      value: TASK_TYPE.LEAKAGE,
       label: t("backlog.taskTypes.leakage"),
-      icon: <FileText className="w-4 h-4" />,
+      icon: <IconAlertTriangle className="w-4 h-4 text-rose-600" stroke={2} />,
     },
   ];
 
   const priorityOptions: SelectOption[] = [
-    { value: "low", label: t("backlog.priority.low") },
-    { value: "medium", label: t("backlog.priority.medium") },
-    { value: "high", label: t("backlog.priority.high") },
+    { value: TASK_PRIORITY.LOW, label: t("backlog.priority.low") },
+    { value: TASK_PRIORITY.MEDIUM, label: t("backlog.priority.medium") },
+    { value: TASK_PRIORITY.HIGH, label: t("backlog.priority.high") },
   ];
 
   return (
@@ -79,7 +96,9 @@ export function CreateTaskForm({ form }: CreateTaskFormProps) {
         label={t("backlog.form.type")}
         options={taskTypeOptions}
         placeholder={t("backlog.taskTypes.task")}
-        leftIcon={<FileText className="w-4 h-4" />}
+        leftIcon={
+          <IconChecklist className="w-4 h-4 text-blue-600" stroke={2} />
+        }
         isRequired
       />
 
@@ -100,23 +119,30 @@ export function CreateTaskForm({ form }: CreateTaskFormProps) {
       />
 
       <Flex gap="2">
-        <FormFieldSelect
-          name="priority"
-          form={form}
-          label={t("backlog.form.priority")}
-          options={priorityOptions}
-          placeholder={t("backlog.priority.medium")}
-        />
-        <FormFieldInput
-          name="estimateHours"
-          form={form}
-          type="number"
-          label={t("backlog.form.estimate")}
-          placeholder="0"
-        />
+        <Box className="w-[200px]">
+          <FormFieldSelect
+            name="priority"
+            form={form}
+            label={t("backlog.form.priority")}
+            options={priorityOptions}
+            placeholder={t("backlog.priority.medium")}
+          />
+        </Box>
+        <Box className="w-[200px]">
+          <FormFieldInput
+            name="estimateHours"
+            form={form}
+            type="text"
+            label={t("backlog.form.estimate")}
+            placeholder="3.5h, 2d 1h, 3w 2d 1h"
+            description={t("backlog.form.estimateHint", {
+              defaultValue: "Ví dụ: 3.5, 3.5h, 2d 1h, 3w 2d 1h",
+            })}
+          />
+        </Box>
       </Flex>
 
-      <FormFieldInput
+      <FormFieldAssigneeSearch
         name="assignee"
         form={form}
         label={t("backlog.form.assignee")}
@@ -128,9 +154,10 @@ export function CreateTaskForm({ form }: CreateTaskFormProps) {
         name="dueDate"
         form={form}
         label={t("backlog.form.dueDate")}
+        isRequired
       />
 
-      <FormFieldInput
+      <FormFieldTagInput
         name="tags"
         form={form}
         label={t("backlog.form.tags")}

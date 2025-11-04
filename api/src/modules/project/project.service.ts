@@ -139,14 +139,14 @@ export class ProjectService {
     });
   }
 
-  async getProjectMembers(id: string, currentUser: User): Promise<ProjectMemberResponseDto[]> {
+  async getProjectMembers(id: string, currentUser: User, keyword?: string): Promise<ProjectMemberResponseDto[]> {
     const project = await this.projectRepository.findProjectById(id);
 
     if (!project) {
       throw new NotFoundException(this.i18n.t('message.project_not_found'));
     }
 
-    const members = project.members?.getItems() || [];
+    let members = project.members?.getItems() || [];
 
     // Check if user is member or owner
     const isOwner = project.owner.id === currentUser.id;
@@ -154,6 +154,12 @@ export class ProjectService {
 
     if (!isOwner && !isMember) {
       throw new ForbiddenException(this.i18n.t('message.project_access_forbidden'));
+    }
+
+    // Filter by email keyword if provided
+    if (keyword) {
+      const keywordLower = keyword.toLowerCase();
+      members = members.filter(member => member.user.email?.toLowerCase().includes(keywordLower));
     }
 
     return members.map(member => plainToInstance(ProjectMemberResponseDto, member));

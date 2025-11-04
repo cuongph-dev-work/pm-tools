@@ -1,6 +1,13 @@
 {
   "permissions": {
-    "allow": ["Bash(pnpm typecheck:*)", "Bash(pnpm add:*)"],
+    "allow": [
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm lint:fix:*)",
+      "Bash(pnpm exec prettier:*)"
+    ],
     "deny": [],
     "ask": []
   }
