@@ -6,7 +6,7 @@ import { Task } from '@entities/task.entity';
 import { User } from '@entities/user.entity';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateTaskDto, SearchTaskDto, SearchTaskInSprintDto, UpdateTaskDto } from './dtos';
+import { CreateTaskDto, SearchTaskDto, SearchTaskInSprintDto, SearchTaskQueryDto, UpdateTaskDto } from './dtos';
 
 export interface UpdateSprintDto {
   task_id: string;
@@ -75,6 +75,33 @@ export class TaskRepository extends EntityRepository<Task> {
         orderBy: { created_at: 'DESC' },
       },
     );
+  }
+
+  async searchTasksByProject(projectId: string, searchDto: SearchTaskQueryDto): Promise<Task[]> {
+    const { keyword, type, status, priority, tags } = searchDto;
+
+    const where: any = {
+      project: projectId,
+    };
+
+    if (keyword) {
+      where.$or = [{ title: { $ilike: `%${keyword}%` } }, { description: { $ilike: `%${keyword}%` } }];
+    }
+
+    if (type) where.type = type;
+    if (status) where.status = status;
+    if (priority) where.priority = priority;
+
+    const options: any = {
+      populate: ['assignee', 'sprints', 'tags', 'sub_tasks'],
+      orderBy: { created_at: 'DESC' },
+    };
+
+    if (tags && tags.length > 0) {
+      where.tags = { id: { $in: tags } };
+    }
+
+    return this.find(where, options);
   }
 
   async findTasksBySprint(sprintId?: string, searchDto?: SearchTaskInSprintDto): Promise<Task[]> {

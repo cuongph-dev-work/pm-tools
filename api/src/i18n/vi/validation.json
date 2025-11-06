@@ -16,6 +16,19 @@
     },
     "tag": {
       "name": "tên tag"
+    },
+    "task": {
+      "title": "tiêu đề",
+      "description": "mô tả",
+      "type": "loại",
+      "status": "trạng thái",
+      "priority": "độ ưu tiên",
+      "estimate": "ước tính",
+      "due_date": "ngày hết hạn",
+      "assignee_id": "người được giao",
+      "parent_task_id": "task cha",
+      "sprint_ids": "sprint",
+      "tags": "tags"
     }
   },
   "IsString": "{property} phải là chuỗi",

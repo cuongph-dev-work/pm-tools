@@ -5,9 +5,9 @@ import {
   createTaskFormSchema,
   type CreateTaskFormData,
 } from "../../domain/validation/task.schema";
-import { TASK_PRIORITY, TASK_TYPE } from "../dto/TaskDTO";
+import { TASK_PRIORITY, TASK_TYPE } from "../dto/TaskDto";
 import { TaskMapper } from "../mappers/TaskMapper";
-import { useCreateTaskMutation } from "./useCreateTaskMutation";
+import { useCreateTaskMutation } from "./mutation/create.mutation";
 
 export interface UseCreateTaskFormOptions {
   projectId: string;
@@ -30,6 +30,7 @@ export function useCreateTaskForm({
       estimateHours: "" as string | number | undefined,
       assignee: "",
       dueDate: "",
+      parentTaskId: "",
       tags: [],
     } as CreateTaskFormData,
     validators: {

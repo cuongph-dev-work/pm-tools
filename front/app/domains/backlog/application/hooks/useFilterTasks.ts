@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { TaskDTO } from "../dto/TaskDTO";
+import type { TaskDTO } from "../dto/TaskDto";
 
 export interface TaskFilters {
   keyword: string;

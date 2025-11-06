@@ -22,7 +22,7 @@ export const createProjectSchema = (t: I18nT) => {
       description: v.optional(
         base.maxLengthString(t("project.description"), 3000)
       ),
-      tags: v.optional(v.array(tagSchema), []),
+      tags: v.array(tagSchema),
       startDate: base.optionalString(),
       endDate: base.optionalString(),
     }),
@@ -55,7 +55,7 @@ export const updateProjectSchema = (t: I18nT) => {
       description: v.optional(
         base.maxLengthString(t("project.description"), 3000)
       ),
-      tags: v.optional(v.array(tagSchema), []),
+      tags: v.optional(v.array(tagSchema)),
       status: v.optional(
         v.picklist(["ACTIVE", "INACTIVE", "COMPLETED", "CANCELLED"])
       ),

@@ -67,6 +67,19 @@ export type I18nTranslations = {
             "tag": {
                 "name": string;
             };
+            "task": {
+                "title": string;
+                "description": string;
+                "type": string;
+                "status": string;
+                "priority": string;
+                "estimate": string;
+                "due_date": string;
+                "assignee_id": string;
+                "parent_task_id": string;
+                "sprint_ids": string;
+                "tags": string;
+            };
         };
         "IsString": string;
         "IsNotEmpty": string;

@@ -1,7 +1,7 @@
 import { CurrentUser } from '@decorators/current-user.decorator';
 import { User } from '@entities/user.entity';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
-import { CreateTaskDto, SearchTaskInSprintDto, UpdateTaskDto } from './dtos';
+import { CreateTaskDto, SearchTaskInSprintDto, SearchTaskQueryDto, UpdateTaskDto } from './dtos';
 import { TaskService } from './task.service';
 
 @Controller('projects/:projectId/tasks')
@@ -18,9 +18,9 @@ export class TaskController {
     return this.taskService.updateTask(projectId, taskId, updateTaskDto, currentUser);
   }
 
-  @Get('backlog')
-  async getTaskFromBacklog(@Param('projectId') projectId: string, @Query() searchDto: SearchTaskInSprintDto) {
-    return this.taskService.getTaskFromBacklog(projectId, searchDto);
+  @Get()
+  async searchTasks(@Param('projectId') projectId: string, @Query() searchDto: SearchTaskQueryDto) {
+    return this.taskService.searchTasks(projectId, searchDto);
   }
 
   @Get(':id')

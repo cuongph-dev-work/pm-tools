@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
-import { FakeTaskRepository } from "../../infrastructure/repositories/FakeTaskRepository";
-import type { TaskDTO } from "../dto/TaskDTO";
-import { ListTasksUseCase } from "../use-cases/ListTasks";
+import type { SearchTasksParams } from "../../infrastructure/repositories/ApiTaskRepository";
+import { ApiTaskRepository } from "../../infrastructure/repositories/ApiTaskRepository";
+import type { TaskDTO } from "../dto/TaskDto";
 
-export function useListTasks() {
+export function useListTasks(params?: SearchTasksParams) {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const repo = new FakeTaskRepository();
-    const usecase = new ListTasksUseCase(repo);
-    usecase.execute().then(data => {
-      setTasks(data);
-      setLoading(false);
-    });
-  }, []);
+    const repo = new ApiTaskRepository();
+    // This hook is deprecated, use useSearchTasks instead
+    // Keeping for backward compatibility
+    repo
+      .search("", params || {})
+      .then(data => {
+        setTasks(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [params]);
 
   return {
     tasks,

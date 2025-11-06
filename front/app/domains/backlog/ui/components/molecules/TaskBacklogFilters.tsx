@@ -1,9 +1,11 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { Check, ChevronDown, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { TaskFilters } from "~/domains/backlog/application/hooks/useFilterTasks";
 import Input from "~/shared/components/atoms/TеxtInput";
+import { useDebounce } from "~/shared/hooks/useDebounce";
 
 interface TaskBacklogFiltersProps {
   filters: TaskFilters;
@@ -23,6 +25,18 @@ export function TaskBacklogFilters({
   className = "",
 }: TaskBacklogFiltersProps) {
   const { t } = useTranslation();
+  const [keywordInput, setKeywordInput] = useState(filters.keyword || "");
+  const debouncedKeyword = useDebounce(keywordInput, 500);
+
+  // Sync keywordInput với filters.keyword khi filters thay đổi từ bên ngoài (ví dụ: reset filters)
+  useEffect(() => {
+    setKeywordInput(filters.keyword || "");
+  }, [filters.keyword]);
+
+  // Gọi onFilterChange khi debouncedKeyword thay đổi
+  useEffect(() => {
+    onFilterChange("keyword", debouncedKeyword || null);
+  }, [debouncedKeyword]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getSelectedLabel = (
     value: string | null,
@@ -39,8 +53,8 @@ export function TaskBacklogFilters({
         <Box className="flex-1 min-w-[200px]">
           <Input
             placeholder={t("backlog.searchPlaceholder")}
-            value={filters.keyword}
-            onChange={e => onFilterChange("keyword", e.target.value)}
+            value={keywordInput}
+            onChange={e => setKeywordInput(e.target.value)}
             leftSlot={<Search className="w-4 h-4 text-gray-400" />}
           />
         </Box>

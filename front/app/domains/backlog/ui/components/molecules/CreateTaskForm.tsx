@@ -9,84 +9,82 @@ import {
   IconTrendingUp,
   IconUsers,
 } from "@tabler/icons-react";
+import { useField } from "@tanstack/react-form";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  TASK_PRIORITY,
-  TASK_TYPE,
-} from "~/domains/backlog/application/dto/TaskDTO";
+import { TASK_TYPE } from "~/domains/backlog/application/dto/TaskDto";
 import {
   FormFieldAssigneeSearch,
   FormFieldDatePicker,
   FormFieldInput,
   FormFieldSelect,
   FormFieldTagInput,
+  FormFieldTaskSearch,
   FormFieldTextarea,
 } from "~/shared/components/molecules/form-field";
-import type { SelectOption } from "~/shared/components/molecules/form-field/FormFieldSelect";
 import type { AnyFormApi } from "~/shared/components/molecules/form-field/types";
+import {
+  getTaskPriorityOptions,
+  getTaskTypeOptionsWithIcons,
+} from "~/shared/constants/taskOptions";
+import { useProjects } from "~/shared/hooks/useProjects";
 
 interface CreateTaskFormProps {
   form: AnyFormApi;
+  projectId?: string;
 }
 
-export function CreateTaskForm({ form }: CreateTaskFormProps) {
+export function CreateTaskForm({
+  form,
+  projectId: propProjectId,
+}: CreateTaskFormProps) {
   const { t } = useTranslation();
+  const { currentProject } = useProjects();
+  const projectId = propProjectId || currentProject?.id || "";
+  const typeField = useField({ name: "type", form });
+  const taskType = typeField.state.value;
+  const isSubTask = taskType === TASK_TYPE.SUB_TASK;
 
-  const taskTypeOptions: SelectOption[] = [
-    {
-      value: TASK_TYPE.TASK,
-      label: t("backlog.taskTypes.task"),
-      icon: <IconChecklist className="w-4 h-4 text-blue-600" stroke={2} />,
-    },
-    {
-      value: TASK_TYPE.CHANGE_REQUEST,
-      label: t("backlog.taskTypes.changeRequest"),
-      icon: <IconTrendingUp className="w-4 h-4 text-orange-600" stroke={2} />,
-    },
-    {
-      value: TASK_TYPE.FEEDBACK,
-      label: t("backlog.taskTypes.feedback"),
-      icon: (
+  // Task type icons mapping
+  const taskTypeIcons = useMemo(
+    () => ({
+      [TASK_TYPE.TASK]: (
+        <IconChecklist className="w-4 h-4 text-blue-600" stroke={2} />
+      ),
+      [TASK_TYPE.CHANGE_REQUEST]: (
+        <IconTrendingUp className="w-4 h-4 text-orange-600" stroke={2} />
+      ),
+      [TASK_TYPE.FEEDBACK]: (
         <IconMessageCircle className="w-4 h-4 text-purple-600" stroke={2} />
       ),
-    },
-    {
-      value: TASK_TYPE.NEW_FEATURE,
-      label: t("backlog.taskTypes.newFeature"),
-      icon: <IconSparkles className="w-4 h-4 text-green-600" stroke={2} />,
-    },
-    {
-      value: TASK_TYPE.SUB_TASK,
-      label: t("backlog.taskTypes.subTask"),
-      icon: <IconChecklist className="w-4 h-4 text-cyan-600" stroke={2} />,
-    },
-    {
-      value: TASK_TYPE.IMPROVEMENT,
-      label: t("backlog.taskTypes.improvement"),
-      icon: <IconBulb className="w-4 h-4 text-yellow-600" stroke={2} />,
-    },
-    {
-      value: TASK_TYPE.BUG,
-      label: t("backlog.taskTypes.bug"),
-      icon: <IconBug className="w-4 h-4 text-red-600" stroke={2} />,
-    },
-    {
-      value: TASK_TYPE.BUG_CUSTOMER,
-      label: t("backlog.taskTypes.bugCustomer"),
-      icon: <IconUsers className="w-4 h-4 text-pink-600" stroke={2} />,
-    },
-    {
-      value: TASK_TYPE.LEAKAGE,
-      label: t("backlog.taskTypes.leakage"),
-      icon: <IconAlertTriangle className="w-4 h-4 text-rose-600" stroke={2} />,
-    },
-  ];
+      [TASK_TYPE.NEW_FEATURE]: (
+        <IconSparkles className="w-4 h-4 text-green-600" stroke={2} />
+      ),
+      [TASK_TYPE.SUB_TASK]: (
+        <IconChecklist className="w-4 h-4 text-cyan-600" stroke={2} />
+      ),
+      [TASK_TYPE.IMPROVEMENT]: (
+        <IconBulb className="w-4 h-4 text-yellow-600" stroke={2} />
+      ),
+      [TASK_TYPE.BUG]: <IconBug className="w-4 h-4 text-red-600" stroke={2} />,
+      [TASK_TYPE.BUG_CUSTOMER]: (
+        <IconUsers className="w-4 h-4 text-pink-600" stroke={2} />
+      ),
+      [TASK_TYPE.LEAKAGE]: (
+        <IconAlertTriangle className="w-4 h-4 text-rose-600" stroke={2} />
+      ),
+    }),
+    []
+  );
 
-  const priorityOptions: SelectOption[] = [
-    { value: TASK_PRIORITY.LOW, label: t("backlog.priority.low") },
-    { value: TASK_PRIORITY.MEDIUM, label: t("backlog.priority.medium") },
-    { value: TASK_PRIORITY.HIGH, label: t("backlog.priority.high") },
-  ];
+  // Task type options - using constants with icons
+  const taskTypeOptions = useMemo(
+    () => getTaskTypeOptionsWithIcons(t, taskTypeIcons),
+    [t, taskTypeIcons]
+  );
+
+  // Priority options - using constants
+  const priorityOptions = useMemo(() => getTaskPriorityOptions(t), [t]);
 
   return (
     <Box className="space-y-4 mt-2">
@@ -101,6 +99,21 @@ export function CreateTaskForm({ form }: CreateTaskFormProps) {
         }
         isRequired
       />
+
+      {isSubTask && (
+        <FormFieldTaskSearch
+          name="parentTaskId"
+          form={form}
+          projectId={projectId}
+          label={t("backlog.form.parentTask", {
+            defaultValue: "Task cha",
+          })}
+          placeholder={t("backlog.form.parentTaskPlaceholder", {
+            defaultValue: "Chọn task cha",
+          })}
+          isRequired
+        />
+      )}
 
       <FormFieldInput
         name="title"

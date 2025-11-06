@@ -11,14 +11,14 @@ export type {
   TaskType,
   UpdateTaskDTO,
   UserDTO,
-} from "./application/dto/TaskDTO";
+} from "./application/dto/TaskDto";
 
 // Hooks
+export { useCreateTaskMutation } from "./application/hooks/mutation/create.mutation";
+export { useSearchTasks } from "./application/hooks/query/search.query";
 export { useCreateTaskForm } from "./application/hooks/useCreateTaskForm";
-export { useCreateTaskMutation } from "./application/hooks/useCreateTaskMutation";
 export { useFilterTasks } from "./application/hooks/useFilterTasks";
 export { useListTasks } from "./application/hooks/useListTasks";
-export { useListTasksQuery } from "./application/hooks/useListTasksQuery";
 
 // Validation schemas
 export {

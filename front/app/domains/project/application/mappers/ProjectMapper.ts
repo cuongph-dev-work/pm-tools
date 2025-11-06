@@ -95,7 +95,7 @@ export class ProjectMapper {
     return {
       name: formData.name,
       description: formData.description,
-      tags: this.tagObjectsToString(formData.tags),
+      tags: this.tagObjectsToString(formData.tags || []),
       start_date: formData.startDate,
       end_date: formData.endDate,
     };
@@ -108,7 +108,7 @@ export class ProjectMapper {
     return {
       name: formData.name,
       description: formData.description,
-      tags: this.tagObjectsToString(formData.tags),
+      tags: this.tagObjectsToString(formData.tags || []),
       status: formData.status,
       start_date: formData.startDate,
       end_date: formData.endDate,
@@ -168,7 +168,7 @@ export class ProjectMapper {
   // Member Response DTO to Member DTO
   static toMemberDTO(dto: MemberResponseDTO, ownerId?: string): MemberDTO {
     return {
-      id: dto.id,
+      id: dto.user.id,
       name: dto.user.fullName,
       email: dto.user.email,
       role: dto.role,

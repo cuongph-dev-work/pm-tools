@@ -1,5 +1,5 @@
 import type { TaskRepository } from "../../domain/repositories/TaskRepository";
-import type { CreateTaskDTO, TaskDTO } from "../dto/TaskDTO";
+import type { CreateTaskDTO, TaskDTO } from "../dto/TaskDto";
 
 export class CreateTaskUseCase {
   constructor(private repository: TaskRepository) {}

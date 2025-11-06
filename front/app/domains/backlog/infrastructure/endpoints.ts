@@ -3,7 +3,7 @@
 
 export const TASK_ENDPOINTS = {
   createTask: (projectId: string) => `/projects/${projectId}/tasks`,
-  listTasks: (projectId: string) => `/projects/${projectId}/tasks`,
+  searchTasks: (projectId: string) => `/projects/${projectId}/tasks`,
   getTaskById: (projectId: string, taskId: string) =>
     `/projects/${projectId}/tasks/${taskId}`,
   updateTask: (projectId: string, taskId: string) =>

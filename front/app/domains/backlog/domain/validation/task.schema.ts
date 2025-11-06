@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import type { I18nT } from "~/shared/types/i18n";
 import { createValidationSchemas } from "~/shared/utils/validation/common";
-import { TASK_PRIORITY, TASK_TYPE } from "../../application/dto/TaskDTO";
+import { TASK_PRIORITY, TASK_TYPE } from "../../application/dto/TaskDto";
 
 // Tag schema
 export const tagSchema = v.object({
@@ -45,6 +45,7 @@ export const createTaskFormSchema = (t: I18nT) => {
     ),
     dueDate: base.requiredString(t("backlog.form.dueDate")),
     assignee: base.requiredString(t("backlog.form.assignee")),
+    parentTaskId: v.optional(v.string()),
     tags: v.array(tagSchema),
   });
 };

@@ -107,6 +107,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
           const property = this.i18n.t(prefix ? `validation.label.${prefix}.${childMessage.property}` : `validation.label.${childMessage.property}`, {
             lang,
           });
+          
+          // Format enum array to string for IsEnum validation
+          if (key === 'IsEnum' && Array.isArray(params.enum)) {
+            params.enum = params.enum.join(',');
+          }
+          
           const constraintValues = Object.values(params);
           allMessages.push({
             path: childMessage.property,
@@ -142,6 +148,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
               .toLowerCase();
             i++;
           }
+        }
+
+        // Format enum array to string for IsEnum validation
+        if (key === 'IsEnum' && Array.isArray(params.enum)) {
+          params.enum = params.enum.join(',');
         }
 
         const constraintValues = Object.values(params);

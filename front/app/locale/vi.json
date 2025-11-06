@@ -210,6 +210,7 @@
     "searchPlaceholder": "Tìm kiếm tasks...",
     "noTasks": "Không có task nào",
     "assignee": "Người thực hiện",
+    "unassignee": "Chưa giao",
     "updatedDate": "Ngày cập nhật",
     "filters": {
       "allStatuses": "Tất cả trạng thái",
@@ -217,9 +218,15 @@
       "allSprints": "Tất cả sprints"
     },
     "status": {
-      "todo": "Cần làm",
+      "open": "Mở",
+      "reopen": "Mở lại",
       "inProgress": "Đang làm",
+      "inReview": "Đang xem xét",
+      "resolved": "Đã giải quyết",
       "done": "Hoàn thành",
+      "pending": "Đang chờ",
+      "cancelled": "Đã hủy",
+      "todo": "Cần làm",
       "blocked": "Bị chặn"
     },
     "priority": {

@@ -5,7 +5,7 @@ import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nest
 import { plainToInstance } from 'class-transformer';
 import { I18nService } from 'nestjs-i18n';
 import { WrapperType } from 'src/types/request.type';
-import { CreateTaskDto, SearchTaskInSprintDto, TaskResponseDto, UpdateTaskDto } from './dtos';
+import { CreateTaskDto, SearchTaskInSprintDto, SearchTaskQueryDto, TaskResponseDto, UpdateTaskDto } from './dtos';
 import { TaskRepository } from './task.repository';
 
 @Injectable()
@@ -113,9 +113,9 @@ export class TaskService {
     };
   }
 
-  async getTaskFromBacklog(projectId: string, searchDto: SearchTaskInSprintDto): Promise<{ data: TaskResponseDto[] }> {
+  async searchTasks(projectId: string, searchDto: SearchTaskQueryDto): Promise<{ data: TaskResponseDto[] }> {
     await this.findProjectById(projectId);
-    const tasks = await this.taskRepository.findTasksBySprint(undefined, searchDto);
+    const tasks = await this.taskRepository.searchTasksByProject(projectId, searchDto);
     return {
       data: tasks.map(task => {
         const sprints = task.sprints.getItems();

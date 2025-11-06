@@ -210,6 +210,7 @@
     "searchPlaceholder": "Search tasks...",
     "noTasks": "No tasks",
     "assignee": "Assignee",
+    "unassignee": "Unassigned",
     "updatedDate": "Updated Date",
     "filters": {
       "allStatuses": "All statuses",
@@ -217,9 +218,15 @@
       "allSprints": "All sprints"
     },
     "status": {
-      "todo": "To Do",
+      "open": "Open",
+      "reopen": "Reopen",
       "inProgress": "In Progress",
+      "inReview": "In Review",
+      "resolved": "Resolved",
       "done": "Done",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "todo": "To Do",
       "blocked": "Blocked"
     },
     "priority": {

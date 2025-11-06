@@ -11,6 +11,21 @@ export enum TASK_TYPE {
   LEAKAGE = "LEAKAGE",
 }
 
+// Task status enum - matches API validation requirements
+export enum TASK_STATUS {
+  OPEN = "OPEN",
+  REOPEN = "REOPEN",
+  IN_PROGRESS = "IN_PROGRESS",
+  IN_REVIEW = "IN_REVIEW",
+  RESOLVED = "RESOLVED",
+  DONE = "DONE",
+  PENDING = "PENDING",
+  CANCELLED = "CANCELLED",
+  // Legacy statuses for backward compatibility
+  TODO = "TODO",
+  BLOCKED = "BLOCKED",
+}
+
 // Task priority enum
 export enum TASK_PRIORITY {
   LOW = "LOW",
@@ -20,7 +35,7 @@ export enum TASK_PRIORITY {
 
 // Task types từ API (backward compatibility)
 export type TaskType = "task" | "bug" | "story" | "epic";
-export type TaskStatus = "todo" | "in-progress" | "done" | "blocked";
+export type TaskStatus = "todo" | "in-progress" | "done" | "blocked" | "open";
 export type TaskPriority = "high" | "medium" | "low";
 
 // Tag DTO
@@ -81,25 +96,25 @@ export interface UpdateTaskDTO {
   remove_sprint_ids?: string[];
 }
 
-// Task Response DTO
+// Task Response DTO - matches API response format
 export interface TaskDTO {
   id: string;
   title: string;
-  description?: string;
-  type: TaskType;
-  status: TaskStatus;
-  priority?: TaskPriority;
-  estimate?: number;
-  due_date?: string;
-  assignee?: UserDTO;
-  sprints?: SprintDTO[];
-  project_id: string;
-  tags?: TagDTO[];
-  parent_task?: TaskDTO;
-  sub_tasks?: TaskDTO[];
-  created_by?: UserDTO;
-  updated_by?: UserDTO;
-  created_at?: string;
-  updated_at?: string;
-  is_overdue?: boolean;
+  description?: string | null;
+  type: TASK_TYPE | string; // API returns uppercase enum values like "TASK"
+  status: TASK_STATUS | string; // API returns uppercase enum values like "OPEN"
+  priority?: TASK_PRIORITY | string | null; // API returns uppercase enum values like "MEDIUM"
+  estimate?: number | null;
+  due_date?: string | null; // ISO string format
+  assignee?: UserDTO | null;
+  sprints?: SprintDTO[] | null;
+  project_id?: string; // Optional, may not be in response
+  tags?: TagDTO[] | null;
+  parent_task?: TaskDTO | null;
+  sub_tasks?: TaskDTO[] | null;
+  created_by?: UserDTO | null;
+  updated_by?: UserDTO | null;
+  created_at?: string | null; // ISO string format
+  updated_at?: string | null; // ISO string format
+  is_overdue?: boolean | null;
 }

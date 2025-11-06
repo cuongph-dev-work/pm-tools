@@ -55,7 +55,7 @@ export function CreateTaskDialog({
             form.handleSubmit();
           }}
         >
-          <CreateTaskForm form={form} />
+          <CreateTaskForm form={form} projectId={projectId} />
 
           <DialogFooter className="mt-6">
             <Flex justify="end" gap="2">

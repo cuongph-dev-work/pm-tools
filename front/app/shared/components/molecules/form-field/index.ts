@@ -6,3 +6,4 @@ export { default as FormFieldDatePicker } from "./FormFieldDatePicker";
 export { default as FormFieldSelect } from "./FormFieldSelect";
 export { default as FormFieldTagInput } from "./FormFieldTagInput";
 export { default as FormFieldAssigneeSearch } from "./FormFieldAssigneeSearch";
+export { default as FormFieldTaskSearch } from "./FormFieldTaskSearch";

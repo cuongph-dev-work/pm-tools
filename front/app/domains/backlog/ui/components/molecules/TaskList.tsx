@@ -1,6 +1,6 @@
 import { Box, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
-import type { TaskDTO } from "../../../application/dto/TaskDTO";
+import type { TaskDTO } from "../../../application/dto/TaskDto";
 import { TaskCard } from "../atoms/TaskCard";
 
 interface TaskListProps {
